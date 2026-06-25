@@ -2908,13 +2908,24 @@ body > .print-actions{display:none!important;}
   #receiptPrint .receipt-slogan{font-size:8.8px!important;margin-bottom:3px!important;white-space:nowrap!important}
 }
 
-/* TIỆM CỦA THÚY - LOGIN SLOGAN 2 DÒNG + TÀI KHOẢN RIÊNG */
+/* TIỆM CỦA THÚY - LOGIN SLOGAN GỌN, KHÔNG HIỆN DANH SÁCH TÀI KHOẢN */
 #loginBrandSlogan{
   white-space:normal!important;
-  line-height:1.35!important;
+  line-height:1.28!important;
   text-align:center!important;
 }
-#loginBrandSlogan br{content:"";display:block}
+#loginBrandSlogan .login-brand-line{
+  display:block;
+  font-size:12px;
+  font-weight:900;
+  white-space:nowrap;
+}
+#loginBrandSlogan .login-slogan-line{
+  display:block;
+  font-size:12px;
+  font-weight:900;
+  white-space:nowrap;
+}
 </style>
 
 </head>
@@ -2930,16 +2941,12 @@ body > .print-actions{display:none!important;}
         <span class="gm-leaf">●</span>
       </div>
       <div id="loginBrandTitle" class="logo gm-logo-text">TIỆM CỦA THÚY</div>
-      <div id="loginBrandSlogan" class="slogan" style="white-space:nowrap;font-size:15px;">Cà phê nguyên chất – Gu Việt đậm đà</div>
+      <div id="loginBrandSlogan" class="slogan"><span class="login-brand-line">CAFE-TRÀ SỮA-ĂN VẶT</span><span class="login-slogan-line">Cà phê nguyên chất – Gu Việt đậm đà</span></div>
     </div>
 
     <label>Tên đăng nhập / email của Tiệm của Thúy</label><input id="loginUser" name="gm_login_user_manual_2026" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" inputmode="text" placeholder="Ví dụ: admin@tiemcuathuy.com" value="">
     <label>Mật khẩu</label><div class="pass-row"><input id="loginPass" name="gm_login_pass_manual_2026" type="password" autocomplete="new-password" autocorrect="off" autocapitalize="off" spellcheck="false" value=""><button class="eye" onclick="togglePass()">👁️</button></div>
     <button id="loginBtn" class="btn-blue full" type="button" onclick="login()">Đăng nhập</button>
-    <div style="margin-top:10px;text-align:center;font-size:12px;color:#0f766e;font-weight:700;line-height:1.45">
-      Tài khoản quán: <b>admin@tiemcuathuy.com</b><br>
-      Thu ngân: <b>thungan1@tiemcuathuy.com</b> • <b>thungan2@tiemcuathuy.com</b>
-    </div>
     <p id="loginMsg" class="msg"></p>
   </div>
 </section>
@@ -3969,7 +3976,7 @@ function renderStoreInfo(){
   if(lTitle) lTitle.textContent = shopName;
   const lSlogan = document.getElementById('loginBrandSlogan');
   if(lSlogan){
-    lSlogan.innerHTML = `${escapeHTML(brandTitle)}<br>${escapeHTML(slogan).replace(/\s*[–-]\s*/,'<br>– ')}`;
+    lSlogan.innerHTML = `<span class="login-brand-line">${escapeHTML(brandTitle)}</span><span class="login-slogan-line">${escapeHTML(slogan)}</span>`;
   }
   const loginUserInput = document.getElementById('loginUser');
   if(loginUserInput && !loginUserInput.value){
