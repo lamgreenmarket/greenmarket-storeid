@@ -4476,6 +4476,151 @@ body{
 }
 </style>
 
+
+<style id="tiem-thuy-4o-final-polish">
+/* =========================================================
+   5C - BƯỚC 4O FINAL POLISH
+   - Giữ sidebar sạch như 4N
+   - Làm khối logo trái nổi hơn, cân hơn
+   - Rút khối hoàn trả tháng này để dashboard cân hơn
+   - Không đụng logic
+   ========================================================= */
+@media (min-width:901px){
+
+  /* ===== Sidebar tổng thể ===== */
+  .sidebar, .left-sidebar, #sidebar, .app-sidebar{
+    padding-top:12px!important;
+    padding-bottom:12px!important;
+  }
+
+  /* ===== Khối thương hiệu bên trái ===== */
+  .sidebar .brand-card,
+  .sidebar .sidebar-brand,
+  .sidebar .store-brand,
+  .sidebar .logo-box,
+  .sidebar .shop-brand,
+  .sidebar .tiem-brand,
+  .sidebar > .card:first-child,
+  .sidebar > div:first-child{
+    border-radius:18px!important;
+    padding:14px 12px 12px!important;
+    min-height:auto!important;
+    box-shadow:0 8px 24px rgba(10,90,60,.10)!important;
+  }
+
+  /* icon ly trà / logo */
+  .sidebar .brand-card img,
+  .sidebar .sidebar-brand img,
+  .sidebar .store-brand img,
+  .sidebar .logo-box img,
+  .sidebar .shop-brand img,
+  .sidebar .tiem-brand img,
+  .sidebar > .card:first-child img,
+  .sidebar > div:first-child img{
+    transform:scale(1.08)!important;
+    transform-origin:center!important;
+  }
+
+  /* Tên tiệm nổi hơn chút */
+  .sidebar .brand-card h1, .sidebar .brand-card h2, .sidebar .brand-card .brand-title,
+  .sidebar .sidebar-brand h1, .sidebar .sidebar-brand h2, .sidebar .sidebar-brand .brand-title,
+  .sidebar .store-brand h1, .sidebar .store-brand h2, .sidebar .store-brand .brand-title,
+  .sidebar .logo-box h1, .sidebar .logo-box h2, .sidebar .logo-box .brand-title,
+  .sidebar .shop-brand h1, .sidebar .shop-brand h2, .sidebar .shop-brand .brand-title,
+  .sidebar .tiem-brand h1, .sidebar .tiem-brand h2, .sidebar .tiem-brand .brand-title,
+  .sidebar > .card:first-child h1, .sidebar > .card:first-child h2,
+  .sidebar > div:first-child h1, .sidebar > div:first-child h2{
+    font-size:17px!important;
+    line-height:1.08!important;
+    font-weight:900!important;
+    letter-spacing:-0.2px!important;
+    margin-bottom:4px!important;
+  }
+
+  /* slogan gọn, dễ đọc */
+  .sidebar .brand-card p, .sidebar .brand-card small,
+  .sidebar .sidebar-brand p, .sidebar .sidebar-brand small,
+  .sidebar .store-brand p, .sidebar .store-brand small,
+  .sidebar .logo-box p, .sidebar .logo-box small,
+  .sidebar .shop-brand p, .sidebar .shop-brand small,
+  .sidebar .tiem-brand p, .sidebar .tiem-brand small,
+  .sidebar > .card:first-child p, .sidebar > .card:first-child small,
+  .sidebar > div:first-child p, .sidebar > div:first-child small{
+    font-size:11.3px!important;
+    line-height:1.3!important;
+    opacity:.95!important;
+  }
+
+  /* ===== Nút sidebar cân hơn ===== */
+  .menu > button,
+  .sidebar button{
+    min-height:42px!important;
+    padding-top:10px!important;
+    padding-bottom:10px!important;
+    border-radius:14px!important;
+  }
+
+  /* ===== Khối hoàn trả tháng này rút gọn ===== */
+  /* card bao ngoài */
+  .refund-overview-card,
+  .refund-summary-card,
+  .dashboard-refund-card,
+  .returns-month-card{
+    min-height:auto!important;
+  }
+
+  /* các ô con trong khối hoàn trả */
+  .refund-overview-card .metric-card,
+  .refund-summary-card .metric-card,
+  .dashboard-refund-card .metric-card,
+  .returns-month-card .metric-card,
+  .refund-overview-card > div > div,
+  .refund-summary-card > div > div,
+  .dashboard-refund-card > div > div,
+  .returns-month-card > div > div{
+    min-height:54px!important;
+    padding:10px 14px!important;
+    border-radius:14px!important;
+  }
+
+  /* giảm cỡ label/số để đỡ cao */
+  .refund-overview-card .metric-label,
+  .refund-summary-card .metric-label,
+  .dashboard-refund-card .metric-label,
+  .returns-month-card .metric-label{
+    font-size:11.5px!important;
+  }
+
+  .refund-overview-card .metric-value,
+  .refund-summary-card .metric-value,
+  .dashboard-refund-card .metric-value,
+  .returns-month-card .metric-value{
+    font-size:16px!important;
+    line-height:1.1!important;
+  }
+
+  /* Fallback theo text card của bản hiện tại: khối đầu cột trái sau "Món bán chạy" */
+  .dashboard-section .grid > .card:nth-child(1) .stat-box,
+  .dashboard-grid > .card:nth-child(1) .stat-box{
+    min-height:54px!important;
+    padding:10px 14px!important;
+  }
+
+  /* ===== Top món bị trả khi trống: đỡ trống hơn ===== */
+  .returns-top-card .empty-state,
+  .top-return-card .empty-state{
+    padding:16px 12px!important;
+    text-align:left!important;
+    opacity:.92!important;
+  }
+
+  /* ===== Header trên cùng gọn hơn 1 chút ===== */
+  .topbar, .header, .main-header{
+    min-height:58px!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <!-- =========================================================
