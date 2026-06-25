@@ -3449,40 +3449,40 @@ body > .print-actions{display:none!important;}
      12. HTML BÁN HÀNG
      ========================================================= -->
   <section id="sell" class="page hidden card pos-page">
-    <h2>🧾 POS bán hàng</h2>
+    <h2>☕ Quầy order & thanh toán</h2>
     <div class="pos-shell">
       <div class="pos-panel">
-        <div class="pos-title"><h3>🔎 Tìm / chọn món</h3></div>
+        <div class="pos-title"><h3>☕ Menu / gọi món</h3><span class="muted">Tiệm của Thúy</span></div>
         <div class="pos-search">
-          <input id="posSearch" placeholder="Quét mã tự động hoặc gõ đúng tên món..." autocomplete="off" oninput="handleScannerInput(event)" onkeydown="posSearchEnter(event)" autofocus>
+          <input id="posSearch" placeholder="Quét mã món hoặc gõ tên đồ uống, trà sữa, topping..." autocomplete="off" oninput="handleScannerInput(event)" onkeydown="posSearchEnter(event)" autofocus>
         </div>
         <div id="posProductGrid" class="pos-products"></div>
       </div>
 
       <div class="pos-panel pos-cart">
-        <div class="pos-title"><h3>🛒 Giỏ hàng hiện tại</h3><span id="posItemCount" class="muted">0 dòng</span></div>
+        <div class="pos-title"><h3>🛒 Hóa đơn đang phục vụ</h3><span id="posItemCount" class="muted">0 dòng món</span></div>
         <div class="grid">
-          <div><label>Chọn món</label><select id="sellProduct" onchange="fillSell()" onkeydown="sellProductEnter(event)"></select></div>
-          <div><label>Số lượng</label><input id="sellQty" type="number" value="1" min="1" oninput="calcSell()" onkeydown="if(event.key==='Enter'){event.preventDefault(); addToCart();}"></div>
-          <div><label>Đơn giá</label><input id="sellPrice" readonly></div>
-          <div><label>Thành tiền</label><input id="sellTotal" readonly></div>
+          <div><label>Món đang gọi</label><select id="sellProduct" onchange="fillSell()" onkeydown="sellProductEnter(event)"></select></div>
+          <div><label>Số ly / phần</label><input id="sellQty" type="number" value="1" min="1" oninput="calcSell()" onkeydown="if(event.key==='Enter'){event.preventDefault(); addToCart();}"></div>
+          <div><label>Giá bán</label><input id="sellPrice" readonly></div>
+          <div><label>Tạm tính</label><input id="sellTotal" readonly></div>
         </div>
-        <button class="btn-blue full" onclick="addToCart()">➕ Thêm món đã chọn vào hóa đơn</button>
+        <button class="btn-blue full" onclick="addToCart()">➕ Thêm món vào hóa đơn khách</button>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>STT</th><th>Tên hàng</th><th>SL</th><th>Đơn giá</th><th>Thành tiền</th><th>Thao tác</th></tr></thead>
+            <thead><tr><th>STT</th><th>Món / đồ uống</th><th>SL</th><th>Đơn giá</th><th>Thành tiền</th><th>Thao tác</th></tr></thead>
             <tbody id="cartBody"></tbody>
           </table>
         </div>
       </div>
 
       <div class="pos-panel">
-        <div class="pos-title"><h3>💳 Thanh toán</h3><span class="muted">máy thu ngân</span></div>
+        <div class="pos-title"><h3>💳 Thanh toán</h3><span class="muted">quầy thu ngân Tiệm của Thúy</span></div>
         <div class="pos-total-box">
-          <div class="label">Tổng tiền khách cần trả</div>
+          <div class="label">Tổng tiền khách cần thanh toán</div>
           <div id="posGrandTotal" class="total">0 VNĐ</div>
         </div>
-        <label>Phương thức thanh toán</label>
+        <label>Hình thức thanh toán</label>
         <div class="pos-methods">
           <button id="payCashBtn" class="active-pay" onclick="setPaymentMethod('cash')">💵 Tiền mặt</button>
           <button id="payQrBtn" onclick="setPaymentMethod('qr')">📱 QR</button>
@@ -3496,15 +3496,15 @@ body > .print-actions{display:none!important;}
           </select>
         </div>
         <div id="cashBox" class="pos-cash-box">
-          <label>Khách đưa tiền</label>
-          <input id="customerCash" type="number" placeholder="Nhập số tiền khách đưa" oninput="updatePaymentBox()" onkeydown="if(event.key==='Enter'){event.preventDefault(); checkout();}">
+          <label>Khách đưa tiền / xác nhận chuyển khoản</label>
+          <input id="customerCash" type="number" placeholder="Nhập số tiền khách đưa nếu thanh toán tiền mặt" oninput="updatePaymentBox()" onkeydown="if(event.key==='Enter'){event.preventDefault(); checkout();}">
         </div>
         <div id="paymentStatus" class="pos-status">💵 Đang chọn thanh toán tiền mặt. Hệ thống sẽ tính tiền thối lại.</div>
         <div id="paymentQrPanel" class="payment-qr-panel">
           <div id="paymentQrImageBox"></div>
           <div id="paymentQrEmpty" class="muted">Chưa cài QR thanh toán. Vào Dữ liệu → QR thanh toán để cài ảnh QR của cửa hàng.</div>
         </div>
-        <div class="mobile-print-note">📵 Điện thoại chỉ dùng để xem/quản lý. In hóa đơn vui lòng thực hiện trên máy tính hoặc máy POS tại quầy.</div>
+        <div class="mobile-print-note">📵 Điện thoại chỉ dùng để xem/quản lý. In hóa đơn vui lòng thực hiện tại quầy thu ngân của Tiệm của Thúy.</div>
         <div class="pos-pay-row"><span>Tổng hóa đơn</span><span id="posPayTotal">0 VNĐ</span></div>
         <div class="pos-pay-row" id="cashTextRow"><span>Tiền khách đưa</span><span id="posCashText">0 VNĐ</span></div>
         <div class="pos-pay-row"><span id="changeLabel">Tiền thối lại</span><span id="posChange" class="pos-change">0 VNĐ</span></div>
