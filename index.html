@@ -3146,6 +3146,79 @@ body > .print-actions{display:none!important;}
 }
 </style>
 
+
+
+<style id="gd5c-step3c-pos-layout-fix">
+/* =========================================================
+   5C BƯỚC 3C - FIX BÁN HÀNG: KHÔNG XUỐNG DÒNG QUẦY THU NGÂN + Ô GIÁ KHÔNG MẤT VNĐ
+   Chỉ chỉnh bố cục/hiển thị, không đổi logic bán hàng/in/Firebase.
+   ========================================================= */
+@media (min-width:901px){
+  #sell .pos-shell{
+    grid-template-columns:minmax(330px,1fr) minmax(690px,1.9fr) minmax(330px,.95fr)!important;
+    gap:18px!important;
+  }
+  #sell .pos-cart .grid{
+    display:grid!important;
+    grid-template-columns:minmax(230px,2fr) minmax(130px,.9fr) minmax(145px,1fr) minmax(155px,1fr)!important;
+    gap:10px!important;
+    align-items:end!important;
+  }
+  #sell .pos-cart .grid input,
+  #sell .pos-cart .grid select{
+    min-width:0!important;
+    width:100%!important;
+    font-size:13px!important;
+    padding-left:8px!important;
+    padding-right:8px!important;
+    text-align:center!important;
+  }
+  #sell .pos-cart .grid label{
+    white-space:nowrap!important;
+  }
+  #sell .pos-payment-panel .pos-title{
+    display:block!important;
+    margin-bottom:10px!important;
+  }
+  #sell .pos-payment-panel .pos-title h3{
+    white-space:nowrap!important;
+    font-size:18px!important;
+    line-height:1.15!important;
+    margin:0 0 2px!important;
+  }
+  #sell .pos-payment-panel .pos-title .muted{
+    display:block!important;
+    font-size:12px!important;
+    line-height:1.25!important;
+    white-space:nowrap!important;
+  }
+  #sell .pos-payment-panel .pos-methods{
+    grid-template-columns:1fr!important;
+    gap:7px!important;
+  }
+  #sell .pos-payment-panel .pos-methods button{
+    width:100%!important;
+    min-height:38px!important;
+    font-size:12.5px!important;
+    white-space:nowrap!important;
+  }
+}
+@media (min-width:901px) and (max-width:1280px){
+  #sell .pos-shell{
+    grid-template-columns:minmax(310px,1fr) minmax(640px,1.75fr) minmax(300px,.9fr)!important;
+  }
+  #sell .pos-cart .grid{
+    grid-template-columns:minmax(210px,1.8fr) minmax(120px,.85fr) minmax(132px,1fr) minmax(142px,1fr)!important;
+  }
+  #sell .pos-cart .grid input,
+  #sell .pos-cart .grid select{
+    font-size:12.5px!important;
+    padding-left:6px!important;
+    padding-right:6px!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <!-- =========================================================
@@ -3476,8 +3549,8 @@ body > .print-actions{display:none!important;}
         </div>
       </div>
 
-      <div class="pos-panel">
-        <div class="pos-title"><h3>💳 Quầy thu ngân</h3><span class="muted">Thanh toán hóa đơn Tiệm của Thúy</span></div>
+      <div class="pos-panel pos-payment-panel">
+        <div class="pos-title"><h3>💳 Quầy thu ngân</h3><span class="muted">Tiệm của Thúy</span></div>
         <div class="pos-total-box">
           <div class="label">Tổng tiền khách cần thanh toán tại quầy</div>
           <div id="posGrandTotal" class="total">0 VNĐ</div>
@@ -6106,6 +6179,79 @@ ${'<scr' + 'ipt src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcod
   #headerBrandSlogan .brand-slogan-line{font-size:12px!important;}
 }
 </style>
+
+
+<style id="gd5c-step3c-pos-layout-fix">
+/* =========================================================
+   5C BƯỚC 3C - FIX BÁN HÀNG: KHÔNG XUỐNG DÒNG QUẦY THU NGÂN + Ô GIÁ KHÔNG MẤT VNĐ
+   Chỉ chỉnh bố cục/hiển thị, không đổi logic bán hàng/in/Firebase.
+   ========================================================= */
+@media (min-width:901px){
+  #sell .pos-shell{
+    grid-template-columns:minmax(330px,1fr) minmax(690px,1.9fr) minmax(330px,.95fr)!important;
+    gap:18px!important;
+  }
+  #sell .pos-cart .grid{
+    display:grid!important;
+    grid-template-columns:minmax(230px,2fr) minmax(130px,.9fr) minmax(145px,1fr) minmax(155px,1fr)!important;
+    gap:10px!important;
+    align-items:end!important;
+  }
+  #sell .pos-cart .grid input,
+  #sell .pos-cart .grid select{
+    min-width:0!important;
+    width:100%!important;
+    font-size:13px!important;
+    padding-left:8px!important;
+    padding-right:8px!important;
+    text-align:center!important;
+  }
+  #sell .pos-cart .grid label{
+    white-space:nowrap!important;
+  }
+  #sell .pos-payment-panel .pos-title{
+    display:block!important;
+    margin-bottom:10px!important;
+  }
+  #sell .pos-payment-panel .pos-title h3{
+    white-space:nowrap!important;
+    font-size:18px!important;
+    line-height:1.15!important;
+    margin:0 0 2px!important;
+  }
+  #sell .pos-payment-panel .pos-title .muted{
+    display:block!important;
+    font-size:12px!important;
+    line-height:1.25!important;
+    white-space:nowrap!important;
+  }
+  #sell .pos-payment-panel .pos-methods{
+    grid-template-columns:1fr!important;
+    gap:7px!important;
+  }
+  #sell .pos-payment-panel .pos-methods button{
+    width:100%!important;
+    min-height:38px!important;
+    font-size:12.5px!important;
+    white-space:nowrap!important;
+  }
+}
+@media (min-width:901px) and (max-width:1280px){
+  #sell .pos-shell{
+    grid-template-columns:minmax(310px,1fr) minmax(640px,1.75fr) minmax(300px,.9fr)!important;
+  }
+  #sell .pos-cart .grid{
+    grid-template-columns:minmax(210px,1.8fr) minmax(120px,.85fr) minmax(132px,1fr) minmax(142px,1fr)!important;
+  }
+  #sell .pos-cart .grid input,
+  #sell .pos-cart .grid select{
+    font-size:12.5px!important;
+    padding-left:6px!important;
+    padding-right:6px!important;
+  }
+}
+</style>
+
 </head>
 <body>
 ${area.innerHTML}
@@ -9835,6 +9981,79 @@ function buildImportReceiptPrintHtml(data){
   #headerBrandSlogan .brand-slogan-line{font-size:12px!important;}
 }
 </style>
+
+
+<style id="gd5c-step3c-pos-layout-fix">
+/* =========================================================
+   5C BƯỚC 3C - FIX BÁN HÀNG: KHÔNG XUỐNG DÒNG QUẦY THU NGÂN + Ô GIÁ KHÔNG MẤT VNĐ
+   Chỉ chỉnh bố cục/hiển thị, không đổi logic bán hàng/in/Firebase.
+   ========================================================= */
+@media (min-width:901px){
+  #sell .pos-shell{
+    grid-template-columns:minmax(330px,1fr) minmax(690px,1.9fr) minmax(330px,.95fr)!important;
+    gap:18px!important;
+  }
+  #sell .pos-cart .grid{
+    display:grid!important;
+    grid-template-columns:minmax(230px,2fr) minmax(130px,.9fr) minmax(145px,1fr) minmax(155px,1fr)!important;
+    gap:10px!important;
+    align-items:end!important;
+  }
+  #sell .pos-cart .grid input,
+  #sell .pos-cart .grid select{
+    min-width:0!important;
+    width:100%!important;
+    font-size:13px!important;
+    padding-left:8px!important;
+    padding-right:8px!important;
+    text-align:center!important;
+  }
+  #sell .pos-cart .grid label{
+    white-space:nowrap!important;
+  }
+  #sell .pos-payment-panel .pos-title{
+    display:block!important;
+    margin-bottom:10px!important;
+  }
+  #sell .pos-payment-panel .pos-title h3{
+    white-space:nowrap!important;
+    font-size:18px!important;
+    line-height:1.15!important;
+    margin:0 0 2px!important;
+  }
+  #sell .pos-payment-panel .pos-title .muted{
+    display:block!important;
+    font-size:12px!important;
+    line-height:1.25!important;
+    white-space:nowrap!important;
+  }
+  #sell .pos-payment-panel .pos-methods{
+    grid-template-columns:1fr!important;
+    gap:7px!important;
+  }
+  #sell .pos-payment-panel .pos-methods button{
+    width:100%!important;
+    min-height:38px!important;
+    font-size:12.5px!important;
+    white-space:nowrap!important;
+  }
+}
+@media (min-width:901px) and (max-width:1280px){
+  #sell .pos-shell{
+    grid-template-columns:minmax(310px,1fr) minmax(640px,1.75fr) minmax(300px,.9fr)!important;
+  }
+  #sell .pos-cart .grid{
+    grid-template-columns:minmax(210px,1.8fr) minmax(120px,.85fr) minmax(132px,1fr) minmax(142px,1fr)!important;
+  }
+  #sell .pos-cart .grid input,
+  #sell .pos-cart .grid select{
+    font-size:12.5px!important;
+    padding-left:6px!important;
+    padding-right:6px!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <div class="print-actions"><button class="btn" onclick="window.print()">🖨️ In</button><button class="btn2" onclick="window.close()">Đóng</button></div>
@@ -10983,6 +11202,79 @@ function buildDailyImportReportPrintHtml(selected, list){
   #headerBrandSlogan .brand-slogan-line{font-size:12px!important;}
 }
 </style>
+
+
+<style id="gd5c-step3c-pos-layout-fix">
+/* =========================================================
+   5C BƯỚC 3C - FIX BÁN HÀNG: KHÔNG XUỐNG DÒNG QUẦY THU NGÂN + Ô GIÁ KHÔNG MẤT VNĐ
+   Chỉ chỉnh bố cục/hiển thị, không đổi logic bán hàng/in/Firebase.
+   ========================================================= */
+@media (min-width:901px){
+  #sell .pos-shell{
+    grid-template-columns:minmax(330px,1fr) minmax(690px,1.9fr) minmax(330px,.95fr)!important;
+    gap:18px!important;
+  }
+  #sell .pos-cart .grid{
+    display:grid!important;
+    grid-template-columns:minmax(230px,2fr) minmax(130px,.9fr) minmax(145px,1fr) minmax(155px,1fr)!important;
+    gap:10px!important;
+    align-items:end!important;
+  }
+  #sell .pos-cart .grid input,
+  #sell .pos-cart .grid select{
+    min-width:0!important;
+    width:100%!important;
+    font-size:13px!important;
+    padding-left:8px!important;
+    padding-right:8px!important;
+    text-align:center!important;
+  }
+  #sell .pos-cart .grid label{
+    white-space:nowrap!important;
+  }
+  #sell .pos-payment-panel .pos-title{
+    display:block!important;
+    margin-bottom:10px!important;
+  }
+  #sell .pos-payment-panel .pos-title h3{
+    white-space:nowrap!important;
+    font-size:18px!important;
+    line-height:1.15!important;
+    margin:0 0 2px!important;
+  }
+  #sell .pos-payment-panel .pos-title .muted{
+    display:block!important;
+    font-size:12px!important;
+    line-height:1.25!important;
+    white-space:nowrap!important;
+  }
+  #sell .pos-payment-panel .pos-methods{
+    grid-template-columns:1fr!important;
+    gap:7px!important;
+  }
+  #sell .pos-payment-panel .pos-methods button{
+    width:100%!important;
+    min-height:38px!important;
+    font-size:12.5px!important;
+    white-space:nowrap!important;
+  }
+}
+@media (min-width:901px) and (max-width:1280px){
+  #sell .pos-shell{
+    grid-template-columns:minmax(310px,1fr) minmax(640px,1.75fr) minmax(300px,.9fr)!important;
+  }
+  #sell .pos-cart .grid{
+    grid-template-columns:minmax(210px,1.8fr) minmax(120px,.85fr) minmax(132px,1fr) minmax(142px,1fr)!important;
+  }
+  #sell .pos-cart .grid input,
+  #sell .pos-cart .grid select{
+    font-size:12.5px!important;
+    padding-left:6px!important;
+    padding-right:6px!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <div class="print-actions"><button class="btn" onclick="window.print()">🖨️ In</button><button class="btn2" onclick="window.close()">Đóng</button></div>
