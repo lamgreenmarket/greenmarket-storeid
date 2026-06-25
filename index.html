@@ -17467,6 +17467,213 @@ setSyncStatus("ℹ️ Đăng nhập để đồng bộ Firebase", true);
 })();
 </script>
 
+
+
+<style id="tiem-thuy-4H-sidebar-clean-final">
+/* =========================================================
+   4H - SỬA SẠCH SIDEBAR / CHỐT GIAO DIỆN THẬT
+   Chỉ can thiệp sidebar + khoảng cách layout desktop.
+   Không đụng logic bán hàng / Firebase / in hóa đơn.
+   ========================================================= */
+@media (min-width:901px){
+  /* Thu sidebar lại và bỏ kéo full-height gây mảng trống phía dưới */
+  .app{
+    padding-left:304px!important;
+    padding-top:104px!important;
+    padding-right:24px!important;
+    padding-bottom:30px!important;
+  }
+  #appPage::before{
+    left:284px!important;
+    height:104px!important;
+  }
+  .header{
+    left:304px!important;
+    right:24px!important;
+  }
+
+  .menu{
+    top:16px!important;
+    left:16px!important;
+    bottom:auto!important;
+    width:256px!important;
+    height:auto!important;
+    max-height:calc(100vh - 32px)!important;
+    min-height:0!important;
+    padding:12px 12px 13px!important;
+    gap:7px!important;
+    border-radius:24px!important;
+    overflow-y:auto!important;
+    overflow-x:hidden!important;
+    align-content:flex-start!important;
+    background:linear-gradient(180deg,#ffffff 0%,#f6fffb 58%,#ecfeff 100%)!important;
+  }
+
+  /* Brand chỉ còn 1 khối, gọn và không làm sidebar quá cao */
+  .menu .sidebar-brand-card,
+  .menu::before,
+  .menu::after{
+    display:none!important;
+    content:none!important;
+  }
+  .sidebar-brand{
+    padding:13px 10px 12px!important;
+    margin:0 0 10px!important;
+    border-radius:22px!important;
+    box-shadow:0 10px 22px rgba(5,150,105,.10)!important;
+  }
+  .sidebar-brand .sb-icon{
+    width:44px!important;
+    height:44px!important;
+    min-width:44px!important;
+    min-height:44px!important;
+    border-radius:15px!important;
+    font-size:24px!important;
+    margin:0 0 8px!important;
+  }
+  .sidebar-brand .sb-title{
+    font-size:18px!important;
+    line-height:1.08!important;
+    margin-bottom:5px!important;
+  }
+  .sidebar-brand .sb-industry{
+    font-size:11.4px!important;
+    line-height:1.18!important;
+    margin-bottom:3px!important;
+  }
+  .sidebar-brand .sb-slogan{
+    font-size:10.8px!important;
+    line-height:1.18!important;
+    max-width:205px!important;
+  }
+  .sidebar-brand .sb-powered{
+    font-size:9px!important;
+    margin-top:5px!important;
+  }
+
+  /* Nút menu gọn hơn, không dày, không tạo chân thừa */
+  .menu button,
+  .menu-dropdown .menu-btn{
+    height:40px!important;
+    min-height:40px!important;
+    padding:0 13px!important;
+    border-radius:14px!important;
+    font-size:13.2px!important;
+    line-height:1.12!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:flex-start!important;
+    text-align:left!important;
+    white-space:normal!important;
+    overflow:hidden!important;
+  }
+  .menu button.menu-active{
+    padding-left:17px!important;
+  }
+  .menu button.menu-active:after{
+    left:6px!important;
+    top:9px!important;
+    bottom:9px!important;
+    width:4px!important;
+  }
+
+  /* Chia cụm tinh tế hơn */
+  .menu > button:nth-of-type(4),
+  .menu > button:nth-of-type(8),
+  .menu-dropdown{
+    margin-top:7px!important;
+    padding-top:7px!important;
+    border-top:1px solid rgba(5,150,105,.12)!important;
+  }
+
+  /* Dropdown dữ liệu: mở ra không bị khuất chữ, nhưng không làm vỡ sidebar */
+  .menu-dropdown{
+    width:100%!important;
+    display:block!important;
+    position:relative!important;
+  }
+  .dropdown-content{
+    position:static!important;
+    width:100%!important;
+    max-width:100%!important;
+    min-width:0!important;
+    margin-top:6px!important;
+    padding-top:3px!important;
+    background:transparent!important;
+    border:0!important;
+    box-shadow:none!important;
+    overflow:visible!important;
+  }
+  .dropdown-content button{
+    min-height:36px!important;
+    height:auto!important;
+    padding:8px 10px!important;
+    margin:4px 0 0!important;
+    border-radius:12px!important;
+    font-size:12.2px!important;
+    line-height:1.22!important;
+    white-space:normal!important;
+    overflow:visible!important;
+    overflow-wrap:anywhere!important;
+    word-break:normal!important;
+  }
+
+  /* Nếu dropdown đóng, sidebar kết thúc ngay sau Dữ liệu, không còn mảng chân trống */
+  .menu:not(.show) .dropdown-content{
+    display:none;
+  }
+
+  /* Header status bar gọn hơn một chút */
+  .header{
+    min-height:56px!important;
+    padding:9px 16px!important;
+    border-radius:20px!important;
+  }
+  .header > div:last-child{
+    gap:8px!important;
+    font-size:13px!important;
+  }
+  #mainLogoutBtn{
+    height:36px!important;
+    min-height:36px!important;
+  }
+
+  /* Canh nội dung bên phải sau khi sidebar thu gọn */
+  .dashboard-title{
+    margin-top:0!important;
+  }
+}
+</style>
+
+<script id="tiem-thuy-4H-sidebar-clean-js">
+(function(){
+  function cleanSidebar4H(){
+    try{
+      const menu = document.querySelector('#appPage .menu');
+      if(!menu) return;
+      document.querySelectorAll('.sidebar-brand-card').forEach(function(el){ el.remove(); });
+      const brands = menu.querySelectorAll('.sidebar-brand');
+      brands.forEach(function(el, idx){ if(idx > 0) el.remove(); });
+      // Đảm bảo không còn style inline cũ làm menu kéo full-height.
+      menu.style.bottom = 'auto';
+      menu.style.height = 'auto';
+      menu.style.minHeight = '0';
+    }catch(e){}
+  }
+  document.addEventListener('DOMContentLoaded', cleanSidebar4H);
+  setTimeout(cleanSidebar4H, 250);
+  setTimeout(cleanSidebar4H, 900);
+  if(typeof renderAll === 'function'){
+    const old4HRenderAll = renderAll;
+    renderAll = function(){
+      const r = old4HRenderAll.apply(this, arguments);
+      cleanSidebar4H();
+      return r;
+    };
+  }
+})();
+</script>
+
 </body>
 </html>
 <!-- GREEN MARKET CLEAN LOGS PATCH: bỏ chú thích nhật ký, tự động lọc, sửa ngày nhóm -->
