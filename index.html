@@ -1600,7 +1600,7 @@ tr:hover td{background:#f0fdf4!important}
 
 /* =========================================================
    DASHBOARD GỌN V3 - SẮP XẾP LẠI THEO GÓP Ý
-   - Sản phẩm bán chạy và Nhân viên bán tốt nằm cùng một hàng
+   - Món bán chạy và Nhân viên bán tốt nằm cùng một hàng
    - Bỏ dòng mô tả trùng trong Mặt hàng trong kho
    - Tăng chiều cao biểu đồ để không bị cắt đáy
    ========================================================= */
@@ -2835,8 +2835,8 @@ body > .print-actions{display:none!important;}
     <button data-permission="shift" onclick="showPage('shift')">⏱ Ca làm việc</button>
     <button data-permission="sell" onclick="showPage('sell')">🛒 Bán hàng</button>
     <button data-permission="shiftReport" onclick="showPage('shiftReport')">📊 Báo cáo ca</button>
-    <button data-permission="stock" onclick="showStockAll()">📦 Kho hàng</button>
-    <button data-permission="imports" onclick="showPage('imports')">📥 Hàng mới nhập</button>
+    <button data-permission="stock" onclick="showStockAll()">📦 Kho món</button>
+    <button data-permission="imports" onclick="showPage('imports')">📥 Nhập món / nguyên liệu</button>
     <button data-permission="barcodeA4" onclick="showBarcodePage()">🏷️ In tem mã vạch A4</button>
     <button onclick="showPage('bills')">🧾 Hóa đơn</button>
     <button data-permission="money" onclick="showPage('money')">💵 Thu chi</button>
@@ -2917,7 +2917,7 @@ body > .print-actions{display:none!important;}
   <section id="home" class="page">
     <div class="dashboard-title">
       <h2>📊 Tổng quan vận hành</h2>
-      <p id="storeIntroLine" class="muted" style="margin:8px 0 0;font-weight:800">☕ Store A: Green Market Cafe</p>
+      <p id="storeIntroLine" class="muted" style="margin:8px 0 0;font-weight:800">☕ Store A: Green Market Cafe – mô hình quán cafe chạy trong Green Market POS</p>
     </div>
     <div class="dashboard-pro-panel">
       <div class="dashboard-pro-card dashboard-pro-wide dashboard-pro-revenue">
@@ -2937,7 +2937,7 @@ body > .print-actions{display:none!important;}
         <strong id="statProducts">0 mặt hàng</strong>
       </div>
       <div class="dashboard-pro-card dashboard-pro-top-card">
-        <h3>🔥 Sản phẩm bán chạy</h3>
+        <h3>🔥 Món bán chạy</h3>
         <div class="dashboard-top-tabs">
           <button type="button" class="active" onclick="setProTopRange(this,'today')">Hôm nay</button>
           <button type="button" onclick="setProTopRange(this,'yesterday')">Hôm qua</button>
@@ -2977,7 +2977,7 @@ body > .print-actions{display:none!important;}
       <div class="dashboard-pro-card dashboard-pro-top-return-card">
         <h3>📦 Top mặt hàng bị trả</h3>
         <ol id="proTopReturnedProducts" class="dashboard-pro-list"><li>Chưa có dữ liệu</li></ol>
-        <div id="proTopReturnedSummary" class="return-top-summary">Tổng sản phẩm bị trả: 0 SP • Tổng số lần trả: 0 lần</div>
+        <div id="proTopReturnedSummary" class="return-top-summary">Tổng món bị trả: 0 SP • Tổng số lần trả: 0 lần</div>
       </div>
       <div class="dashboard-pro-card profit-real-card" id="profitRealPanel">
         <h3>💰 Lợi nhuận thực</h3>
@@ -3056,9 +3056,9 @@ body > .print-actions{display:none!important;}
     <h2>🧾 POS bán hàng</h2>
     <div class="pos-shell">
       <div class="pos-panel">
-        <div class="pos-title"><h3>🔎 Tìm / quét sản phẩm</h3></div>
+        <div class="pos-title"><h3>🔎 Tìm / chọn món</h3></div>
         <div class="pos-search">
-          <input id="posSearch" placeholder="Quét mã tự động hoặc gõ đúng tên sản phẩm..." autocomplete="off" oninput="handleScannerInput(event)" onkeydown="posSearchEnter(event)" autofocus>
+          <input id="posSearch" placeholder="Quét mã tự động hoặc gõ đúng tên món..." autocomplete="off" oninput="handleScannerInput(event)" onkeydown="posSearchEnter(event)" autofocus>
         </div>
         <div id="posProductGrid" class="pos-products"></div>
       </div>
@@ -3066,12 +3066,12 @@ body > .print-actions{display:none!important;}
       <div class="pos-panel pos-cart">
         <div class="pos-title"><h3>🛒 Giỏ hàng hiện tại</h3><span id="posItemCount" class="muted">0 dòng</span></div>
         <div class="grid">
-          <div><label>Chọn sản phẩm</label><select id="sellProduct" onchange="fillSell()" onkeydown="sellProductEnter(event)"></select></div>
+          <div><label>Chọn món</label><select id="sellProduct" onchange="fillSell()" onkeydown="sellProductEnter(event)"></select></div>
           <div><label>Số lượng</label><input id="sellQty" type="number" value="1" min="1" oninput="calcSell()" onkeydown="if(event.key==='Enter'){event.preventDefault(); addToCart();}"></div>
           <div><label>Đơn giá</label><input id="sellPrice" readonly></div>
           <div><label>Thành tiền</label><input id="sellTotal" readonly></div>
         </div>
-        <button class="btn-blue full" onclick="addToCart()">➕ Thêm sản phẩm đã chọn vào hóa đơn</button>
+        <button class="btn-blue full" onclick="addToCart()">➕ Thêm món đã chọn vào hóa đơn</button>
         <div class="table-wrap">
           <table>
             <thead><tr><th>STT</th><th>Tên hàng</th><th>SL</th><th>Đơn giá</th><th>Thành tiền</th><th>Thao tác</th></tr></thead>
@@ -3129,7 +3129,8 @@ body > .print-actions{display:none!important;}
      Gộp tất cả kho + cảnh báo vào 1 mục duy nhất.
      ========================================================= -->
   <section id="stock" class="page hidden card">
-    <h2>📦 Kho hàng</h2>
+    <h2>📦 Kho món</h2>
+    <p class="muted" style="font-weight:800">☕ Store A Cafe: quản lý món uống, bánh ngọt và tồn kho theo ly / chai / phần.</p>
   
     <div class="alert-grid"><div class="alert-box"><h3 class="status-low">⚠️ Hàng sắp hết</h3><ul id="lowStockList"></ul></div><div class="alert-box"><h3 class="status-out">❌ Hàng đã hết</h3><ul id="outStockList"></ul></div></div>
     <hr>
@@ -3143,7 +3144,7 @@ body > .print-actions{display:none!important;}
 
   <div class="barcode-a4-controls">
     <div>
-      <label>Chọn sản phẩm</label>
+      <label>Chọn món</label>
       <select id="barcodeProductSelect" onchange="syncBarcodeForm()"></select>
     </div>
     <div>
@@ -3199,7 +3200,8 @@ body > .print-actions{display:none!important;}
      15. HTML HÓA ĐƠN / THU CHI / NHÂN VIÊN / NHẬT KÝ
      ========================================================= -->
   <section id="imports" class="page hidden card">
-    <h2>📥 Hàng mới nhập / Phiếu nhập kho</h2>
+    <h2>📥 Nhập món / nguyên liệu / Phiếu nhập kho</h2>
+    <p class="muted" style="font-weight:800">☕ Dùng để nhập thêm món, nước đóng chai, bánh hoặc nguyên liệu đơn giản cho quán cafe.</p>
 
     <div class="import-science-box">
       <h3>🧾 Thông tin phiếu nhập</h3>
@@ -3374,7 +3376,7 @@ body > .print-actions{display:none!important;}
             <th>Nhà cung cấp</th>
             <th>Số phiếu nhà cung cấp</th>
             <th>Ghi chú</th>
-            <th>Sản phẩm</th>
+            <th>Món</th>
             <th>Mã vạch</th>
             <th>Nhập theo</th>
             <th>Số lượng nhập</th>
@@ -3413,7 +3415,7 @@ body > .print-actions{display:none!important;}
       </div>
       <div class="table-wrap">
         <table>
-          <thead><tr><th>STT</th><th>Mã phiếu</th><th>Thời gian</th><th>Nhà cung cấp</th><th>Số phiếu nhà cung cấp</th><th>Ghi chú</th><th>Sản phẩm</th><th>Tồn tăng</th><th>Giá lô</th><th>Giá nhập/đv</th><th>Giá bán</th></tr></thead>
+          <thead><tr><th>STT</th><th>Mã phiếu</th><th>Thời gian</th><th>Nhà cung cấp</th><th>Số phiếu nhà cung cấp</th><th>Ghi chú</th><th>Món</th><th>Tồn tăng</th><th>Giá lô</th><th>Giá nhập/đv</th><th>Giá bán</th></tr></thead>
           <tbody id="importReportBody"></tbody>
         </table>
       </div>
@@ -3423,7 +3425,7 @@ body > .print-actions{display:none!important;}
     <div class="import-science-box">
       <div class="table-wrap">
         <table>
-          <thead><tr><th>STT</th><th>Mã phiếu</th><th>Sản phẩm</th><th>Tồn tăng</th><th>Giá nhập/đv</th><th>Giá bán</th><th>Lãi/đv</th><th>Lợi nhuận dự kiến</th></tr></thead>
+          <thead><tr><th>STT</th><th>Mã phiếu</th><th>Món</th><th>Tồn tăng</th><th>Giá nhập/đv</th><th>Giá bán</th><th>Lãi/đv</th><th>Lợi nhuận dự kiến</th></tr></thead>
           <tbody id="lotProfitBody"></tbody>
         </table>
       </div>
@@ -3433,7 +3435,7 @@ body > .print-actions{display:none!important;}
     <div class="import-science-box">
       <div class="table-wrap">
         <table>
-          <thead><tr><th>STT</th><th>Sản phẩm</th><th>Mã vạch</th><th>Giá nhập cũ</th><th>Giá nhập mới</th><th>Tăng</th><th>Thời gian</th></tr></thead>
+          <thead><tr><th>STT</th><th>Món</th><th>Mã vạch</th><th>Giá nhập cũ</th><th>Giá nhập mới</th><th>Tăng</th><th>Thời gian</th></tr></thead>
           <tbody id="priceIncreaseBody"></tbody>
         </table>
       </div>
@@ -3446,7 +3448,7 @@ body > .print-actions{display:none!important;}
     <div class="bill-filter-row">
       <div>
         <label>Tìm hóa đơn</label>
-        <input id="billSearch" placeholder="Nhập mã hóa đơn, nhân viên, sản phẩm..." oninput="renderAll()">
+        <input id="billSearch" placeholder="Nhập mã hóa đơn, nhân viên, món..." oninput="renderAll()">
       </div>
       <div>
         <label>Từ ngày</label>
@@ -3763,7 +3765,7 @@ function setupStoreACafe(){
     return;
   }
   ensureStoreA();
-  const ok = confirm('Tạo dữ liệu mẫu cho Store A - Green Market Cafe?\n\nHệ thống sẽ sao lưu danh sách sản phẩm hiện tại vào localStorage trước, rồi thay bằng menu quán cafe mẫu. Hóa đơn cũ không bị xóa.');
+  const ok = confirm('Tạo dữ liệu mẫu cho Store A - Green Market Cafe?\n\nHệ thống sẽ sao lưu danh sách món / hàng hiện tại vào localStorage trước, rồi thay bằng menu quán cafe mẫu. Hóa đơn cũ không bị xóa.');
   if(!ok) return;
 
   try{
@@ -4308,7 +4310,7 @@ function migrateProducts(){
     storeId: p.storeId || DEFAULT_STORE_ID
   }));
 
-  // Dọn dữ liệu cũ: mỗi sản phẩm 1 mã riêng, bắt đầu từ 893001.
+  // Dọn dữ liệu cũ: mỗi món 1 mã riêng, bắt đầu từ 893001.
   const used = new Set();
   products.forEach(p => {
     let code = normalizeBarcodeCode(p.barcode);
@@ -4580,7 +4582,7 @@ function roleCanAction(action=''){
   // Quản lý: được vận hành/sửa kho/giá/nhập hàng, nhưng không được backup/restore/xóa dữ liệu/xóa nhân viên.
   if(r === 'manager'){
     if(a.includes('backup') || a.includes('dữ liệu') || a.includes('khôi phục') || a.includes('restore')) return false;
-    if(a.includes('xóa nhân viên') || a.includes('xóa sản phẩm') || a.includes('xóa dữ liệu')) return false;
+    if(a.includes('xóa nhân viên') || a.includes('xóa món') || a.includes('xóa dữ liệu')) return false;
     return true;
   }
 
@@ -4975,7 +4977,7 @@ function syncBarcodeForm(){
 function makeBarcodeLabel(product, code){
   return `
     <div class="barcode-label">
-      <div class="barcode-label-name">${escapeHTML(product?.name || 'Sản phẩm')}</div>
+      <div class="barcode-label-name">${escapeHTML(product?.name || 'Món')}</div>
       <svg class="barcode-svg" data-code="${escapeHTML(code)}"></svg>
       <div class="barcode-label-code">${escapeHTML(code)}</div>
     </div>
@@ -5017,12 +5019,12 @@ function generateBarcodeLabels(){
   if(!select || !codeInput || !qtyInput || !area){ alert('Chưa tìm thấy khu vực in tem'); return; }
 
   const p = products.find(x => String(x.id) === String(select.value));
-  if(!p){ alert('Chưa chọn sản phẩm'); return; }
+  if(!p){ alert('Chưa chọn món'); return; }
 
   let code = normalizeBarcodeCode(codeInput.value) || ensureProductBarcode(p);
   const duplicate = findProductByBarcode(code, p.id);
   if(duplicate){
-    alert(`Mã ${code} đã thuộc sản phẩm khác: ${duplicate.name}. Hệ thống sẽ tạo mã mới cho sản phẩm này.`);
+    alert(`Mã ${code} đã thuộc món khác: ${duplicate.name}. Hệ thống sẽ tạo mã mới cho món này.`);
     code = nextInternalBarcode(p.id);
     codeInput.value = code;
   }
@@ -6010,7 +6012,7 @@ function autoGenerateMissingBarcodes(){
   renderBarcodeControls();
   syncBarcodeForm();
 
-  alert(count ? `Đã tự tạo mã cho ${count} sản phẩm chưa có mã.` : 'Tất cả sản phẩm đã có mã.');
+  alert(count ? `Đã tự tạo mã cho ${count} món chưa có mã.` : 'Tất cả món đã có mã.');
 }
 
 
@@ -6020,7 +6022,7 @@ function autoGenerateMissingBarcodes(){
    không tạo thêm dòng rác nữa.
    ========================================================= */
 function addProduct(){
-  if(!requireAdmin('thêm / nhập kho sản phẩm')) return;
+  if(!requireAdmin('thêm / nhập kho món')) return;
   let name = cleanText(pName.value);
   let barcode = normalizeBarcodeCode(pBarcode.value);
   const qty = Number(pQty.value || 0);
@@ -6110,7 +6112,7 @@ function addProduct(){
       amount: qty * importPrice
     });
 
-    addLog('Thêm sản phẩm mới', `${name}: ${qty}`);
+    addLog('Thêm món mới', `${name}: ${qty}`);
   }
 
   save();
@@ -6130,15 +6132,15 @@ function addProduct(){
 }
 
 function delProduct(id){
-  if(!requireAdmin('xóa sản phẩm')) return;
+  if(!requireAdmin('xóa món')) return;
   if(current.role !== 'admin'){
-    alert('Chỉ admin được xóa sản phẩm');
+    alert('Chỉ admin được xóa món');
     return;
   }
 
   const p = products.find(x => x.id === id);
   if(!p){
-    alert('Không tìm thấy sản phẩm');
+    alert('Không tìm thấy món');
     return;
   }
 
@@ -6149,36 +6151,36 @@ function delProduct(id){
     'Mã vạch: ' + (p.barcode || '') + '\n' +
     'Tồn kho hiện tại: ' + stockQty + '\n\n' +
     (stockQty > 0
-      ? 'Sản phẩm này vẫn còn tồn kho. Nếu là hàng hư/hết hạn/thanh lý, nên điều chỉnh kho về 0 trước khi xóa.\n\n'
+      ? 'Món này vẫn còn tồn kho. Nếu là hàng hư/hết hạn/thanh lý, nên điều chỉnh kho về 0 trước khi xóa.\n\n'
       : '') +
-    'Bạn có chắc chắn muốn xóa sản phẩm này không?';
+    'Bạn có chắc chắn muốn xóa món này không?';
 
   if(!confirm(confirmMsg)) return;
 
   const reason = prompt(
-    'Nhập lý do xóa sản phẩm:\n\n' +
-    'Ví dụ: Tạo nhầm sản phẩm / Hàng hết hạn đã điều chỉnh kho / Ngừng kinh doanh mặt hàng này'
+    'Nhập lý do xóa món:\n\n' +
+    'Ví dụ: Tạo nhầm món / Hàng hết hạn đã điều chỉnh kho / Ngừng kinh doanh mặt hàng này'
   );
 
   if(reason === null) return;
 
   const cleanReason = String(reason).trim();
   if(!cleanReason){
-    alert('Bắt buộc nhập lý do xóa sản phẩm. Chưa xóa.');
+    alert('Bắt buộc nhập lý do xóa món. Chưa xóa.');
     return;
   }
 
   products = products.filter(x => x.id !== id);
 
   addLog(
-    'Xóa sản phẩm',
+    'Xóa món',
     `${p.name || ''} | Mã: ${p.barcode || ''} | Tồn còn: ${stockQty} | Lý do: ${cleanReason}`
   );
 
   save();
   renderAll();
 
-  alert('Đã xóa sản phẩm và ghi nhật ký lý do.');
+  alert('Đã xóa món và ghi nhật ký lý do.');
 
   if(document.getElementById('shiftReportBody')){
     renderShiftReport();
@@ -6186,17 +6188,17 @@ function delProduct(id){
 }
 
 function editProductPrice(id){
-  if(!requireAdmin('sửa thông tin sản phẩm')) return;
+  if(!requireAdmin('sửa thông tin món')) return;
   const p = products.find(x => x.id === id);
-  if(!p){ alert('Không tìm thấy sản phẩm'); return; }
+  if(!p){ alert('Không tìm thấy món'); return; }
 
   // QUY TẮC KHO AN TOÀN:
-  // - Sửa sản phẩm chỉ được sửa thông tin mô tả / giá bán / cảnh báo.
+  // - Sửa món chỉ được sửa thông tin mô tả / giá bán / cảnh báo.
   // - KHÔNG cho sửa trực tiếp số lượng tồn và giá nhập lịch sử.
   // - Muốn tăng/giảm tồn phải dùng nút "Điều chỉnh kho" để có lý do + nhật ký riêng.
-  alert(`Sửa thông tin sản phẩm\n\nTồn hiện tại: ${Number(p.qty || 0)}\nGiá nhập hiện tại: ${money(p.importPrice)}\n\nLưu ý: Không được sửa trực tiếp tồn kho hoặc giá nhập lịch sử. Muốn đổi tồn kho hãy dùng nút "Điều chỉnh kho".`);
+  alert(`Sửa thông tin món\n\nTồn hiện tại: ${Number(p.qty || 0)}\nGiá nhập hiện tại: ${money(p.importPrice)}\n\nLưu ý: Không được sửa trực tiếp tồn kho hoặc giá nhập lịch sử. Muốn đổi tồn kho hãy dùng nút "Điều chỉnh kho".`);
 
-  const newName = prompt('Tên sản phẩm:', p.name);
+  const newName = prompt('Tên món:', p.name);
   if(newName === null) return;
 
   const newBarcode = prompt('Mã vạch:', p.barcode || '');
@@ -6205,17 +6207,17 @@ function editProductPrice(id){
   const name = cleanText(newName);
   const barcode = normalizeBarcodeCode(newBarcode) || nextInternalBarcode(id);
 
-  if(!name){ alert('Tên sản phẩm không được để trống'); return; }
+  if(!name){ alert('Tên món không được để trống'); return; }
 
   const duplicateBarcode = findProductByBarcode(barcode, id);
   if(duplicateBarcode){
-    alert(`Mã vạch ${barcode} đã thuộc sản phẩm khác: ${duplicateBarcode.name}`);
+    alert(`Mã vạch ${barcode} đã thuộc món khác: ${duplicateBarcode.name}`);
     return;
   }
 
   const duplicateName = findProductByName(name, id);
   if(duplicateName){
-    alert(`Tên sản phẩm này đã tồn tại với mã: ${duplicateName.barcode}`);
+    alert(`Tên món này đã tồn tại với mã: ${duplicateName.barcode}`);
     return;
   }
 
@@ -6245,7 +6247,7 @@ function editProductPrice(id){
 
   p.name = name;
   p.barcode = barcode;
-  // KHÓA TỒN KHO + GIÁ NHẬP: giữ nguyên, không nhận sửa từ màn hình Sửa sản phẩm.
+  // KHÓA TỒN KHO + GIÁ NHẬP: giữ nguyên, không nhận sửa từ màn hình Sửa món.
   p.qty = oldSnapshot.qty;
   p.importPrice = oldSnapshot.importPrice;
   p.sellPrice = sellPrice;
@@ -6260,13 +6262,13 @@ function editProductPrice(id){
   });
 
   addLog(
-    'Sửa thông tin sản phẩm',
+    'Sửa thông tin món',
     `${p.name} | Tên: ${oldSnapshot.name} → ${p.name}; Mã: ${oldSnapshot.barcode} → ${p.barcode}; Tồn kho: giữ nguyên ${oldSnapshot.qty}; Giá nhập: giữ nguyên ${money(oldSnapshot.importPrice)}; Giá bán: ${money(oldSnapshot.sellPrice)} → ${money(p.sellPrice)}; Cảnh báo: ${oldSnapshot.lowLimit} → ${p.lowLimit}`
   );
   save();
   renderAll();
   if(document.getElementById('barcodeProductSelect')) renderBarcodeControls();
-  alert('Đã sửa thông tin sản phẩm. Tồn kho và giá nhập lịch sử được giữ nguyên.');
+  alert('Đã sửa thông tin món. Tồn kho và giá nhập lịch sử được giữ nguyên.');
 }
 
 function adjustStockProduct(id){
@@ -6279,11 +6281,11 @@ function adjustStockProduct(id){
   }
 
   const p = products.find(x => x.id === id);
-  if(!p){ alert('Không tìm thấy sản phẩm'); return; }
+  if(!p){ alert('Không tìm thấy món'); return; }
 
   const oldQty = Number(p.qty || 0);
   const rawDelta = prompt(
-    `ĐIỀU CHỈNH KHO\n\nSản phẩm: ${p.name}\nTồn hiện tại: ${oldQty}\n\nNhập số lượng cần điều chỉnh:\nVí dụ: -1 nếu hàng hư/mất, +5 nếu kiểm kê thừa`,
+    `ĐIỀU CHỈNH KHO\n\nMón: ${p.name}\nTồn hiện tại: ${oldQty}\n\nNhập số lượng cần điều chỉnh:\nVí dụ: -1 nếu hàng hư/mất, +5 nếu kiểm kê thừa`,
     ''
   );
   if(rawDelta === null) return;
@@ -6312,7 +6314,7 @@ function adjustStockProduct(id){
   }
 
   const type = delta > 0 ? 'Tăng tồn kho' : 'Giảm tồn kho';
-  const confirmMsg = `${type} cho sản phẩm ${p.name}\n\nTồn cũ: ${oldQty}\nĐiều chỉnh: ${delta > 0 ? '+' + delta : delta}\nTồn mới: ${newQty}\nLý do: ${reason}\n\nXác nhận lưu phiếu điều chỉnh kho?`;
+  const confirmMsg = `${type} cho món ${p.name}\n\nTồn cũ: ${oldQty}\nĐiều chỉnh: ${delta > 0 ? '+' + delta : delta}\nTồn mới: ${newQty}\nLý do: ${reason}\n\nXác nhận lưu phiếu điều chỉnh kho?`;
   if(!confirm(confirmMsg)) return;
 
   p.qty = newQty;
@@ -6459,7 +6461,7 @@ function renderStock(){
     `).join('')
     : `
       <tr>
-        <td colspan="9">Không có sản phẩm phù hợp</td>
+        <td colspan="9">Không có món phù hợp</td>
       </tr>
     `;
 
@@ -6575,7 +6577,7 @@ function ensureOpenShift(clearCartWhenFail = false){
   qty = Number(qty || 0);
 
   if(!p || qty <= 0){
-    alert('Chọn sản phẩm và số lượng');
+    alert('Chọn món và số lượng');
     return false;
   }
 
@@ -6768,7 +6770,7 @@ function posSearchEnter(e){
 
   if(!p){
     try{ beepScanner(false); }catch(err){}
-    alert('Không tìm thấy sản phẩm: ' + keyword);
+    alert('Không tìm thấy món: ' + keyword);
     return false;
   }
 
@@ -6791,7 +6793,7 @@ function posSearchEnter(e){
 function sellProductEnter(e){
   if(e.key !== 'Enter') return true;
 
-  // Chặn trình duyệt mở lại danh sách xổ xuống khi đang đứng ở ô chọn sản phẩm.
+  // Chặn trình duyệt mở lại danh sách xổ xuống khi đang đứng ở ô chọn món.
   e.preventDefault();
   e.stopPropagation();
   if(e.stopImmediatePropagation) e.stopImmediatePropagation();
@@ -6818,17 +6820,17 @@ function renderPosProducts(){
 
   box.innerHTML = list.length
     ? list.map(p => `
-      <div class="pos-product-card" onclick="selectProduct(${p.id})" title="Click để chọn sản phẩm">
+      <div class="pos-product-card" onclick="selectProduct(${p.id})" title="Click để chọn món">
         <b>${escapeHTML(p.name)}</b>
         <div class="price">${money(p.sellPrice)}</div>
         <div class="stock">Tồn: ${Number(p.qty) || 0} ${p.barcode ? '• Mã: ' + escapeHTML(p.barcode) : ''}</div>
-        <div class="pos-select-hint">Click thẻ: chọn sản phẩm</div>
+        <div class="pos-select-hint">Click thẻ: chọn món</div>
         <div class="pos-card-actions">
           <button type="button" class="pos-quick-btn" onclick="event.stopPropagation(); directQuickAddProduct(${p.id})">⚡ Thêm nhanh +1</button>
         </div>
       </div>
     `).join('')
-    : '<div class="muted">Không tìm thấy sản phẩm phù hợp</div>';
+    : '<div class="muted">Không tìm thấy món phù hợp</div>';
 }
 
 function selectProduct(id){
@@ -6895,7 +6897,7 @@ let scannerTimer = null;
 function handleScannerInput(e){
   const input = e.target;
 
-  // Vẫn cho ô tìm kiếm lọc danh sách sản phẩm khi gõ chữ
+  // Vẫn cho ô tìm kiếm lọc danh sách món khi gõ chữ
   renderPosProducts();
 
   if(scannerTimer) clearTimeout(scannerTimer);
@@ -6909,7 +6911,7 @@ function handleScannerInput(e){
       String(x.name || '').toLowerCase() === code.toLowerCase()
     );
 
-    // Gõ gần đúng thì chỉ lọc sản phẩm, không tự thêm để tránh nhầm hàng
+    // Gõ gần đúng thì chỉ lọc món, không tự thêm để tránh nhầm hàng
     if(!p) return;
 
     // Scanner tự động = thêm nhanh vào giỏ.
@@ -6943,7 +6945,7 @@ function checkout(){
     const p = products.find(x => x.id === c.id);
 
     if(!p || p.qty < c.qty){
-      alert(`Kho không đủ cho sản phẩm: ${c.name}`);
+      alert(`Kho không đủ cho món: ${c.name}`);
       return;
     }
   }
@@ -7151,7 +7153,7 @@ function scanBarcode(){
 
   if(!p){
     beepScanner(false);
-    scanResult.innerHTML = '❌ Không tìm thấy sản phẩm có mã: ' + code;
+    scanResult.innerHTML = '❌ Không tìm thấy món có mã: ' + code;
     return;
   }
 
@@ -8647,7 +8649,7 @@ function renderImportTrace(force = false){
   }).join('');
 
   result.innerHTML = `<div class="table-wrap"><table>
-    <thead><tr><th>STT</th><th>Mã phiếu</th><th>Thời gian</th><th>Nhà cung cấp</th><th>Số phiếu nhà cung cấp</th><th>Sản phẩm</th><th>Mã vạch</th><th>Tồn tăng</th><th>Giá lô</th><th>Ghi chú</th><th>In</th></tr></thead>
+    <thead><tr><th>STT</th><th>Mã phiếu</th><th>Thời gian</th><th>Nhà cung cấp</th><th>Số phiếu nhà cung cấp</th><th>Món</th><th>Mã vạch</th><th>Tồn tăng</th><th>Giá lô</th><th>Ghi chú</th><th>In</th></tr></thead>
     <tbody>${rows}</tbody>
   </table></div>${list.length > 50 ? '<p class="muted">Chỉ hiển thị 50 dòng đầu. Hãy nhập từ khóa cụ thể hơn.</p>' : ''}`;
 }
@@ -9095,7 +9097,7 @@ function buildImportReceiptPrintHtml(data){
     <div><b>Số phiếu nhà cung cấp:</b> ${escapeHTML(data.supplierInvoice || '-')}</div>
   </div>
   <table>
-    <thead><tr><th>STT</th><th>Sản phẩm / Mã vạch</th><th>Nhập theo</th><th>SL nhập</th><th>Quy đổi</th><th>Tồn tăng</th><th>Giá nhập/đv</th><th>Thành tiền</th></tr></thead>
+    <thead><tr><th>STT</th><th>Món / Mã vạch</th><th>Nhập theo</th><th>SL nhập</th><th>Quy đổi</th><th>Tồn tăng</th><th>Giá nhập/đv</th><th>Thành tiền</th></tr></thead>
     <tbody>${rows || '<tr><td colspan="8">Chưa có dòng hàng</td></tr>'}</tbody>
   </table>
   <div class="summary"><table><tr><td>Tổng tồn tăng</td><td>${totalQty}</td></tr><tr><td>Tổng tiền phiếu</td><td>${money(total)}</td></tr></table></div>
@@ -10126,7 +10128,7 @@ function buildDailyImportReportPrintHtml(selected, list){
     <div class="card"><b>Tổng tiền nhập</b><strong>${money(total)}</strong></div>
   </div>
   <table>
-    <thead><tr><th>STT</th><th>Mã phiếu</th><th>Thời gian</th><th>Nhà cung cấp</th><th>Số phiếu nhà cung cấp</th><th>Sản phẩm / Mã vạch</th><th>Tồn tăng</th><th>Thành tiền</th><th>Ghi chú</th></tr></thead>
+    <thead><tr><th>STT</th><th>Mã phiếu</th><th>Thời gian</th><th>Nhà cung cấp</th><th>Số phiếu nhà cung cấp</th><th>Món / Mã vạch</th><th>Tồn tăng</th><th>Thành tiền</th><th>Ghi chú</th></tr></thead>
     <tbody>${rows || '<tr><td colspan="9">Ngày này chưa có dữ liệu nhập kho</td></tr>'}</tbody>
   </table>
   <div class="total"><table><tr><td>Tổng dòng nhập</td><td>${list.length}</td></tr><tr><td>Tổng tồn tăng</td><td>${totalQty}</td></tr><tr><td>Tổng tiền nhập</td><td>${money(total)}</td></tr></table></div>
@@ -10800,7 +10802,7 @@ function exportDailyImportReportExcel(){
   const total = list.reduce((s,x) => s + Number(x.lotPrice ?? (Number(x.qty||0) * Number(x.importPrice||0))), 0);
   const totalQty = list.reduce((s,x) => s + Number(x.unitQty ?? x.qty ?? 0), 0);
 
-  const headers = ['STT','Mã phiếu','Thời gian','Nhà cung cấp','Số phiếu NCC','Ghi chú','Sản phẩm','Mã vạch','Tồn tăng','Giá lô','Giá nhập/đv','Giá bán/đv','Nhân viên'];
+  const headers = ['STT','Mã phiếu','Thời gian','Nhà cung cấp','Số phiếu NCC','Ghi chú','Món','Mã vạch','Tồn tăng','Giá lô','Giá nhập/đv','Giá bán/đv','Nhân viên'];
   const dataRows = list.map((x,i) => {
     const saleUnit = x.saleUnit || 'cái';
     const unitQty = Number(x.unitQty ?? x.qty ?? 0);
@@ -10986,11 +10988,11 @@ function exportAccountingExcel(){
       saleDetail.push([saleDetail.length + 1, excelDateText(b.time), bi + 1, excelSafe(b.staff), excelSafe(it.name), excelNumber(it.qty), formatVNDExcel(it.price), formatVNDExcel(it.total), excelSafe(b.paymentMethod || '')]);
     });
   });
-  const saleHeaders = ['STT','Thời gian','Số HĐ','Nhân viên','Sản phẩm','SL','Đơn giá','Thành tiền','Phương thức'];
+  const saleHeaders = ['STT','Thời gian','Số HĐ','Nhân viên','Món','SL','Đơn giá','Thành tiền','Phương thức'];
   const wsSale = makeMisaSheet('CHI TIẾT HÀNG BÁN','Xuất lúc: ' + exportedAt,saleHeaders,saleDetail,[6,22,10,18,28,10,16,18,18],'Chi tiet ban hang');
   XLSX.utils.book_append_sheet(wb, wsSale, 'Chi tiet ban hang');
 
-  const importHeaders = ['STT','Mã phiếu','Thời gian','Nhà cung cấp','Số phiếu NCC','Sản phẩm','Mã vạch','Nhập theo','SL nhập','Quy đổi','Tồn tăng','Giá lô','Giá nhập/đv','Giá bán/đv','Nhân viên'];
+  const importHeaders = ['STT','Mã phiếu','Thời gian','Nhà cung cấp','Số phiếu NCC','Món','Mã vạch','Nhập theo','SL nhập','Quy đổi','Tồn tăng','Giá lô','Giá nhập/đv','Giá bán/đv','Nhân viên'];
   const importRows = importHistory.map((x,i) => {
     const saleUnit = x.saleUnit || 'cái';
     return [
@@ -11014,7 +11016,7 @@ function exportAccountingExcel(){
   const wsImport = makeMisaSheet('LỊCH SỬ NHẬP KHO','Xuất lúc: ' + exportedAt,importHeaders,importRows,[6,20,20,24,20,26,18,12,10,10,14,16,16,16,18],'Nhap kho');
   XLSX.utils.book_append_sheet(wb, wsImport, 'Nhap kho');
 
-  const returnHeaders = ['STT','Thời gian trả','Mã phiếu trả','Mã HĐ','Người xử lý','Nhân viên bán','Lý do','Sản phẩm','SL trả','Đơn giá','Thành tiền'];
+  const returnHeaders = ['STT','Thời gian trả','Mã phiếu trả','Mã HĐ','Người xử lý','Nhân viên bán','Lý do','Món','SL trả','Đơn giá','Thành tiền'];
   const returnRows = [];
   bills.forEach((b, bi) => {
     const billCode = getBillCode(b, bi);
@@ -11050,7 +11052,7 @@ function exportAccountingExcel(){
   const wsStock = makeMisaSheet('TỒN KHO HIỆN TẠI','Xuất lúc: ' + exportedAt,stockHeaders,stockRows,[6,28,18,14,16,16,14,14],'Ton kho');
   XLSX.utils.book_append_sheet(wb, wsStock, 'Ton kho');
 
-  const profitHeaders = ['STT','Mã phiếu','Sản phẩm','Tồn tăng','Giá nhập/đv','Giá bán','Lãi/đv','Lợi nhuận theo lô'];
+  const profitHeaders = ['STT','Mã phiếu','Món','Tồn tăng','Giá nhập/đv','Giá bán','Lãi/đv','Lợi nhuận theo lô'];
   const profitRows = importHistory.map((x,i) => {
     const unitQty = Number(x.unitQty ?? x.qty ?? 0);
     const importPrice = Number(x.importPrice || 0);
@@ -11062,7 +11064,7 @@ function exportAccountingExcel(){
   XLSX.utils.book_append_sheet(wb, wsProfit, 'Loi nhuan');
 
   const alerts = buildPriceIncreaseAlertsArray();
-  const alertHeaders = ['STT','Sản phẩm','Mã vạch','Giá nhập cũ','Giá nhập mới','Tăng','Thời gian'];
+  const alertHeaders = ['STT','Món','Mã vạch','Giá nhập cũ','Giá nhập mới','Tăng','Thời gian'];
   const alertRows = alerts.map((x,i) => [i+1, excelSafe(x.name), excelSafe(x.barcode), formatVNDExcel(x.oldPrice), formatVNDExcel(x.newPrice), formatVNDExcel(x.diff), excelDateText(x.time)]);
   const wsAlert = makeMisaSheet('CẢNH BÁO GIÁ NHẬP TĂNG','Xuất lúc: ' + exportedAt,alertHeaders,alertRows,[6,28,18,16,16,16,22],'Canh bao gia');
   XLSX.utils.book_append_sheet(wb, wsAlert, 'Canh bao gia');
@@ -11186,11 +11188,11 @@ function adjustImportStockFromHistory(index){
 
   const p = findProductForImportItem(item);
   if(!p){
-    alert('Sản phẩm này không còn trong kho. Không thể điều chỉnh trực tiếp.');
+    alert('Món này không còn trong kho. Không thể điều chỉnh trực tiếp.');
     return;
   }
 
-  const productName = p.name || item.name || 'Sản phẩm';
+  const productName = p.name || item.name || 'Món';
   const saleUnit = p.saleUnit || p.unit || item.saleUnit || 'đơn vị';
   const currentQty = Number(p.qty || 0);
   const qtyText = prompt(
@@ -11310,7 +11312,7 @@ function editImportHistory(index){
   const newNote = prompt('Ghi chú:', oldNote);
   if(newNote === null) return;
 
-  const newName = prompt('Tên sản phẩm:', oldName);
+  const newName = prompt('Tên món:', oldName);
   if(newName === null) return;
 
   const newBarcode = prompt('Mã vạch:', oldBarcode);
@@ -11345,7 +11347,7 @@ function editImportHistory(index){
   }
 
   if(!p){
-    alert('Sản phẩm này không còn trong kho. Lịch sử vẫn giữ lại để đối chiếu, nhưng không sửa trực tiếp.');
+    alert('Món này không còn trong kho. Lịch sử vẫn giữ lại để đối chiếu, nhưng không sửa trực tiếp.');
     return;
   }
 
@@ -12349,7 +12351,7 @@ function renderProTopReturnedProducts(returnEvents){
     : '<li>Chưa có dữ liệu hoàn trả</li>';
 
   if(summaryBox){
-    summaryBox.textContent = `Tổng sản phẩm bị trả: ${totalQty} SP • Tổng số lần trả: ${totalReturnTimes} lần`;
+    summaryBox.textContent = `Tổng món bị trả: ${totalQty} SP • Tổng số lần trả: ${totalReturnTimes} lần`;
   }
 }
 
