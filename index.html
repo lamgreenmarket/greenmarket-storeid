@@ -2715,6 +2715,157 @@ body > .print-actions{display:none!important;}
   }
 }
 
+
+
+/* =========================================================
+   5C - 4D SIDEBAR TRÁI CHO TIỆM CỦA THÚY
+   Chỉ đổi bố cục desktop: menu ngang -> menu dọc bên trái.
+   Mobile vẫn giữ menu ngang kéo được như cũ.
+   ========================================================= */
+@media (min-width:901px){
+  .app{
+    padding:20px 20px 30px 300px!important;
+    padding-top:155px!important;
+  }
+
+  #appPage::before{
+    left:280px!important;
+    height:155px!important;
+    background:linear-gradient(180deg,var(--bg) 0%,rgba(233,251,255,.98) 78%,rgba(233,251,255,.80) 100%)!important;
+  }
+
+  .header{
+    top:20px!important;
+    left:300px!important;
+    right:20px!important;
+    min-height:104px!important;
+    padding:20px 24px!important;
+    justify-content:flex-end!important;
+    gap:14px!important;
+  }
+
+  /* Brand chuyển sang sidebar để giống bố cục quản trị dọc */
+  .header .app-brand{
+    display:none!important;
+  }
+
+  .menu{
+    position:fixed!important;
+    top:20px!important;
+    left:20px!important;
+    right:auto!important;
+    bottom:20px!important;
+    width:250px!important;
+    height:auto!important;
+    display:flex!important;
+    flex-direction:column!important;
+    align-items:stretch!important;
+    justify-content:flex-start!important;
+    flex-wrap:nowrap!important;
+    gap:8px!important;
+    overflow-y:auto!important;
+    overflow-x:hidden!important;
+    padding:18px 14px!important;
+    border-radius:26px!important;
+    z-index:10001!important;
+    background:linear-gradient(180deg,#ffffff 0%,#f0fdf4 56%,#ecfeff 100%)!important;
+    border:1px solid rgba(5,150,105,.16)!important;
+    box-shadow:0 18px 45px rgba(15,118,110,.16)!important;
+  }
+
+  .menu:before{
+    content:"☕\A Tiệm của Thúy\A CAFE – TRÀ SỮA – ĂN VẶT\A Cà phê nguyên chất – Gu Việt đậm đà";
+    white-space:pre-line;
+    display:block;
+    text-align:center;
+    color:#064e3b;
+    font-family:Inter,Arial,sans-serif;
+    font-weight:900;
+    line-height:1.18;
+    font-size:18px;
+    padding:8px 6px 14px;
+    margin:0 0 8px;
+    border-bottom:1px solid rgba(5,150,105,.16);
+  }
+
+  .menu button,
+  .menu-dropdown .menu-btn{
+    width:100%!important;
+    min-width:0!important;
+    height:44px!important;
+    min-height:44px!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:flex-start!important;
+    text-align:left!important;
+    padding:0 15px!important;
+    border-radius:14px!important;
+    font-size:14px!important;
+    white-space:nowrap!important;
+    box-shadow:none!important;
+  }
+
+  .menu button.menu-active{
+    background:linear-gradient(135deg,#0ea5e9,#059669)!important;
+    box-shadow:0 10px 22px rgba(5,150,105,.20)!important;
+    transform:none!important;
+  }
+
+  .menu button.menu-active:after{
+    left:0!important;
+    right:auto!important;
+    top:9px!important;
+    bottom:9px!important;
+    width:4px!important;
+    height:auto!important;
+    border-radius:999px!important;
+    background:#ffffff!important;
+  }
+
+  .menu-dropdown{
+    width:100%!important;
+    display:block!important;
+    position:relative!important;
+  }
+
+  .menu-dropdown .menu-btn{
+    margin:0!important;
+  }
+
+  .dropdown-content{
+    position:static!important;
+    min-width:0!important;
+    width:100%!important;
+    margin:6px 0 0!important;
+    padding:6px!important;
+    border-radius:16px!important;
+    box-shadow:inset 0 0 0 1px rgba(14,165,233,.10)!important;
+    background:rgba(255,255,255,.75)!important;
+  }
+
+  .dropdown-content button{
+    height:38px!important;
+    min-height:38px!important;
+    padding:0 11px!important;
+    font-size:13px!important;
+    border-radius:12px!important;
+    color:#12324a!important;
+    background:transparent!important;
+  }
+
+  .page{
+    scroll-margin-top:170px!important;
+  }
+
+  body.menu-scrolled .menu{
+    box-shadow:0 18px 45px rgba(15,118,110,.20)!important;
+  }
+
+  body.menu-scrolled .header{
+    box-shadow:0 14px 32px rgba(15,76,129,.14)!important;
+  }
+}
+
 </style>
 
 <style id="greenmarket-pos-logo-final-v2">
@@ -16209,270 +16360,6 @@ setSyncStatus("ℹ️ Đăng nhập để đồng bộ Firebase", true);
   .header .app-brand h1#headerBrandTitle{font-size:24px!important;white-space:normal!important;}
   #headerBrandSlogan .brand-industry-line{font-size:12.4px!important;white-space:normal!important;}
   #headerBrandSlogan .brand-slogan-line{font-size:12.2px!important;white-space:normal!important;}
-}
-
-
-/* =========================================================
-   5C BƯỚC 4D - TRANG TỔNG QUAN VẬN HÀNH THEO BỐ CỤC DỌC
-   - Hàng đầu: Doanh thu + Lợi nhuận + Món trong thực đơn
-   - Các khối còn lại xếp dọc, full ngang, dễ đọc cho Tiệm của Thúy
-   - Chỉ chỉnh bố cục dashboard, không đụng logic/Firebase/in hóa đơn
-   ========================================================= */
-#home .dashboard-pro-panel{
-  display:grid!important;
-  grid-template-columns:repeat(12,minmax(0,1fr))!important;
-  gap:16px!important;
-  align-items:stretch!important;
-  margin-top:16px!important;
-}
-#home .dashboard-pro-card{
-  min-height:138px!important;
-  height:auto!important;
-  padding:20px!important;
-}
-#home .dashboard-pro-revenue{
-  grid-column:span 6!important;
-  order:1!important;
-}
-#home .dashboard-pro-profit{
-  grid-column:span 3!important;
-  order:2!important;
-}
-#home .dashboard-pro-stock-card{
-  grid-column:span 3!important;
-  order:3!important;
-}
-#home .dashboard-pro-top-card{
-  grid-column:1 / -1!important;
-  order:4!important;
-  min-height:150px!important;
-}
-#home .dashboard-pro-staff-card{
-  grid-column:1 / -1!important;
-  order:5!important;
-  min-height:140px!important;
-}
-#home .dashboard-pro-warning{
-  grid-column:1 / -1!important;
-  order:6!important;
-  min-height:135px!important;
-}
-#home .dashboard-pro-return-card{
-  grid-column:1 / -1!important;
-  order:7!important;
-}
-#home .dashboard-pro-top-return-card{
-  grid-column:1 / -1!important;
-  order:8!important;
-  min-height:150px!important;
-}
-#home .dashboard-pro-list{
-  columns:1!important;
-  max-width:100%!important;
-  line-height:1.75!important;
-  font-size:16px!important;
-}
-#home .dashboard-mini-metrics{
-  grid-template-columns:repeat(3,minmax(0,1fr))!important;
-}
-#home .dashboard-pro-card h3{
-  font-size:16px!important;
-}
-#home .dashboard-pro-card strong{
-  font-size:26px!important;
-}
-@media(max-width:1100px){
-  #home .dashboard-pro-revenue,
-  #home .dashboard-pro-profit,
-  #home .dashboard-pro-stock-card{
-    grid-column:1 / -1!important;
-  }
-}
-@media(max-width:768px){
-  #home .dashboard-pro-panel{
-    grid-template-columns:1fr!important;
-    gap:10px!important;
-  }
-  #home .dashboard-pro-revenue,
-  #home .dashboard-pro-profit,
-  #home .dashboard-pro-stock-card,
-  #home .dashboard-pro-top-card,
-  #home .dashboard-pro-staff-card,
-  #home .dashboard-pro-warning,
-  #home .dashboard-pro-return-card,
-  #home .dashboard-pro-top-return-card{
-    grid-column:1 / -1!important;
-  }
-  #home .dashboard-mini-metrics{
-    grid-template-columns:1fr!important;
-  }
-  #home .dashboard-pro-list{
-    font-size:14px!important;
-  }
-}
-
-</style>
-
-
-
-<style id="gm-5c-4d-v2-dashboard-doc-that-su">
-/* =========================================================
-   5C BƯỚC 4D V2 - TỔNG QUAN VẬN HÀNH XẾP DỌC THẬT SỰ
-   Mỗi khối chiếm 1 hàng full ngang, đọc từ trên xuống.
-   Chỉ chỉnh layout dashboard, không đụng logic/Firebase/in.
-   ========================================================= */
-#home .dashboard-pro-panel{
-  display:grid!important;
-  grid-template-columns:1fr!important;
-  gap:16px!important;
-  align-items:stretch!important;
-  margin-top:16px!important;
-}
-#home .dashboard-pro-panel > .dashboard-pro-card{
-  grid-column:1 / -1!important;
-  width:100%!important;
-  min-height:auto!important;
-  height:auto!important;
-  padding:22px!important;
-}
-#home .dashboard-pro-revenue{order:1!important;}
-#home .dashboard-pro-profit{order:2!important;}
-#home .dashboard-pro-stock-card{order:3!important;}
-#home .dashboard-pro-top-card:not(.dashboard-pro-staff-card){order:4!important;}
-#home .dashboard-pro-staff-card{order:5!important;}
-#home .dashboard-pro-warning{order:6!important;}
-#home .dashboard-pro-return-card{order:7!important;}
-#home .dashboard-pro-top-return-card{order:8!important;}
-#home .profit-real-card{order:9!important;}
-
-#home .dashboard-mini-metrics{
-  display:grid!important;
-  grid-template-columns:repeat(3,minmax(0,1fr))!important;
-  gap:12px!important;
-}
-#home .dashboard-pro-card h3{
-  font-size:18px!important;
-  margin-bottom:12px!important;
-}
-#home .dashboard-pro-card strong{
-  font-size:28px!important;
-}
-#home .dashboard-pro-list{
-  columns:1!important;
-  max-width:100%!important;
-  font-size:16px!important;
-  line-height:1.75!important;
-}
-#home .dashboard-pro-card .return-metric{
-  max-width:100%!important;
-}
-#home .profit-real-grid{
-  grid-template-columns:repeat(5,minmax(0,1fr))!important;
-}
-@media(max-width:1100px){
-  #home .profit-real-grid{grid-template-columns:1fr!important;}
-  #home .dashboard-mini-metrics{grid-template-columns:1fr!important;}
-}
-@media(max-width:768px){
-  #home .dashboard-pro-panel{gap:10px!important;}
-  #home .dashboard-pro-panel > .dashboard-pro-card{padding:14px!important;}
-  #home .dashboard-pro-card h3{font-size:16px!important;}
-  #home .dashboard-pro-card strong{font-size:22px!important;}
-}
-</style>
-
-
-
-<style id="gm-5c-4d-v3-dashboard-doc-toan-bo">
-/* =========================================================
-   5C BƯỚC 4D V3 - TỔNG QUAN VẬN HÀNH DỌC TOÀN BỘ
-   Ép toàn bộ khối trong Trang chủ đi theo 1 cột từ trên xuống.
-   Kể cả 3 ô Hôm nay/Tuần này/Tháng này trong Doanh thu.
-   Chỉ chỉnh giao diện Trang chủ, không đụng logic/Firebase/in.
-   ========================================================= */
-#home .dashboard,
-#home .dashboard-pro-panel,
-#home .dashboard-mini-metrics,
-#home .profit-real-grid,
-#home .chart-row{
-  display:grid!important;
-  grid-template-columns:1fr!important;
-  gap:14px!important;
-  width:100%!important;
-}
-
-#home .stat,
-#home .dashboard-pro-card,
-#home .dashboard-pro-panel > *,
-#home .dashboard-mini-metrics > *,
-#home .profit-real-grid > *,
-#home .chart-row > *{
-  grid-column:1 / -1!important;
-  width:100%!important;
-  max-width:100%!important;
-}
-
-#home .dashboard-pro-revenue,
-#home .dashboard-pro-profit,
-#home .dashboard-pro-stock-card,
-#home .dashboard-pro-top-card,
-#home .dashboard-pro-staff-card,
-#home .dashboard-pro-warning,
-#home .dashboard-pro-return-card,
-#home .dashboard-pro-top-return-card{
-  grid-column:1 / -1!important;
-}
-
-#home .dashboard-mini-metrics div{
-  min-height:76px!important;
-  display:flex!important;
-  flex-direction:column!important;
-  justify-content:center!important;
-}
-
-#home .dashboard-pro-card{
-  min-height:auto!important;
-  padding:20px 22px!important;
-}
-
-#home .dashboard-pro-card h3,
-#home .stat h3{
-  font-size:18px!important;
-  margin-bottom:12px!important;
-}
-
-#home .dashboard-pro-card strong,
-#home .stat p{
-  font-size:28px!important;
-}
-
-#home .dashboard-pro-list{
-  columns:1!important;
-  font-size:16px!important;
-  line-height:1.8!important;
-}
-
-#home .chart-row .card{
-  height:auto!important;
-  min-height:360px!important;
-}
-
-#home .chart-row canvas{
-  height:280px!important;
-  max-height:280px!important;
-}
-
-@media(max-width:768px){
-  #home .dashboard,
-  #home .dashboard-pro-panel,
-  #home .dashboard-mini-metrics,
-  #home .profit-real-grid,
-  #home .chart-row{
-    gap:10px!important;
-  }
-  #home .dashboard-pro-card{padding:14px!important;}
-  #home .dashboard-pro-card h3,#home .stat h3{font-size:16px!important;}
-  #home .dashboard-pro-card strong,#home .stat p{font-size:22px!important;}
 }
 </style>
 
