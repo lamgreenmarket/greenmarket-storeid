@@ -4055,20 +4055,40 @@ function getCurrentStore(){
 
 function getStoreReceiptInfo(){
   const store = getCurrentStore();
-  const shopName = store.name || 'Tiệm của Thúy';
+  let shopName = store.name || 'Tiệm của Thúy';
+  let industry = store.industry || 'CAFE – TRÀ SỮA – ĂN VẶT';
+  let slogan = store.slogan || 'Cà phê nguyên chất – Gu Việt đậm đà';
   const brandTitle = store.brandTitle || 'COFFEE & MILK TEA';
+  if(String(shopName).toLowerCase().includes('thúy') || String(shopName).toLowerCase().includes('thuy')){
+    shopName = 'Tiệm của Thúy';
+    industry = 'CAFE – TRÀ SỮA – ĂN VẶT';
+    slogan = 'Cà phê nguyên chất – Gu Việt đậm đà';
+  }
   return {
     logo: store.logoEmoji || '🧋',
     name: shopName,
     brandTitle,
     titleLine: shopName,
     subTitleLine: brandTitle,
-    slogan: store.slogan || 'Cà phê nguyên chất – Gu Việt đậm đà',
+    industryLine: industry,
+    slogan,
     phone: store.phone || '0989756103',
     address: store.address || 'Nha Trang, Khánh Hòa',
     receiptFooter: store.receiptFooter || 'Tiệm của Thúy xin cảm ơn!',
     poweredBy: store.poweredBy || 'Green Market POS'
   };
+}
+
+function buildReceiptBrandBlock(storeInfo, options = {}){
+  const showPoweredBy = !!options.showPoweredBy;
+  return `
+    <div class="receipt-title">${storeInfo.logo} ${escapeHTML(storeInfo.titleLine || storeInfo.name || storeInfo.brandTitle)}</div>
+    <div class="receipt-shop-name">${escapeHTML(storeInfo.industryLine || storeInfo.subTitleLine || storeInfo.brandTitle || "")}</div>
+    <div class="receipt-slogan">${escapeHTML(storeInfo.slogan || '')}</div>
+    ${storeInfo.phone ? `<div style="text-align:center;font-size:12px">☎ ${escapeHTML(storeInfo.phone)}</div>` : ''}
+    ${storeInfo.address ? `<div style="text-align:center;font-size:12px">${escapeHTML(storeInfo.address)}</div>` : ''}
+    ${showPoweredBy ? `<div style="text-align:center;font-size:11px;color:#666;margin-top:2px">Powered by ${escapeHTML(storeInfo.poweredBy || 'Green Market POS')}</div>` : ''}
+  `;
 }
 
 function renderStoreInfo(){
@@ -7551,11 +7571,7 @@ function printReceipt(total, paymentText = 'Tiền mặt'){
 
   function buildSaleReceipt(copyLabel = ''){
     return `
-      <div class="receipt-title">${storeInfo.logo} ${escapeHTML(storeInfo.titleLine || storeInfo.name || storeInfo.brandTitle)}</div>
-      <div class="receipt-shop-name">${escapeHTML(storeInfo.subTitleLine || storeInfo.brandTitle || "")}</div>
-      <div class="receipt-slogan">${escapeHTML(storeInfo.slogan)}</div>
-      ${storeInfo.phone ? `<div style="text-align:center;font-size:12px">☎ ${escapeHTML(storeInfo.phone)}</div>` : ''}
-      ${storeInfo.address ? `<div style="text-align:center;font-size:12px">${escapeHTML(storeInfo.address)}</div>` : ''}
+      ${buildReceiptBrandBlock(storeInfo)}
       ${copyLabel ? `<div class="receipt-reprint-stamp">${copyLabel}</div>` : ''}
       <div class="receipt-line"></div>
 
@@ -9723,7 +9739,7 @@ function buildImportReceiptPrintHtml(data){
 <div class="print-actions"><button class="btn" onclick="window.print()">🖨️ In</button><button class="btn2" onclick="window.close()">Đóng</button></div>
 <div class="sheet">
   <div class="top">
-    <div class="brand"><h1>${storeInfo.logo} ${escapeHTML(storeInfo.name)}</h1><p>${escapeHTML(storeInfo.industry || storeInfo.subTitleLine || storeInfo.brandTitle)}</p><p>${escapeHTML(storeInfo.slogan)}</p><p>${storeInfo.phone ? "☎ " + escapeHTML(storeInfo.phone) + " • " : ""}${escapeHTML(storeInfo.address || "")}</p><p class="muted">Powered by ${escapeHTML(storeInfo.poweredBy)}</p></div>
+    <div class="brand"><h1>${storeInfo.logo} ${escapeHTML(storeInfo.name)}</h1><p>${escapeHTML(storeInfo.industryLine || storeInfo.subTitleLine || storeInfo.brandTitle)}</p><p>${escapeHTML(storeInfo.slogan)}</p><p>${storeInfo.phone ? "☎ " + escapeHTML(storeInfo.phone) + " • " : ""}${escapeHTML(storeInfo.address || "")}</p><p class="muted">Powered by ${escapeHTML(storeInfo.poweredBy)}</p></div>
     <div class="code">Mã phiếu nhập<div class="box">${escapeHTML(data.receiptCode || '-')}</div></div>
   </div>
   <h2>PHIẾU NHẬP KHO</h2>
@@ -12764,11 +12780,7 @@ function printReturnReceiptByIndex(index){
   receiptPrint.classList.remove('hidden');
   const storeInfo = getStoreReceiptInfo();
   receiptPrint.innerHTML = `
-    <div class="receipt-title">${storeInfo.logo} ${escapeHTML(storeInfo.titleLine || storeInfo.name || storeInfo.brandTitle)}</div>
-      <div class="receipt-shop-name">${escapeHTML(storeInfo.subTitleLine || storeInfo.brandTitle || "")}</div>
-      <div class="receipt-slogan">${escapeHTML(storeInfo.slogan)}</div>
-      ${storeInfo.phone ? `<div style="text-align:center;font-size:12px">☎ ${escapeHTML(storeInfo.phone)}</div>` : ''}
-      ${storeInfo.address ? `<div style="text-align:center;font-size:12px">${escapeHTML(storeInfo.address)}</div>` : ''}
+      ${buildReceiptBrandBlock(storeInfo)}
     <div class="receipt-return-stamp">PHIẾU TRẢ HÀNG</div>
     <div class="receipt-line"></div>
 
@@ -12904,11 +12916,7 @@ if(admin){
   receiptPrint.classList.remove('hidden');
   const storeInfo = getStoreReceiptInfo();
   receiptPrint.innerHTML = `
-    <div class="receipt-title">${storeInfo.logo} ${escapeHTML(storeInfo.titleLine || storeInfo.name || storeInfo.brandTitle)}</div>
-      <div class="receipt-shop-name">${escapeHTML(storeInfo.subTitleLine || storeInfo.brandTitle || "")}</div>
-      <div class="receipt-slogan">${escapeHTML(storeInfo.slogan)}</div>
-      ${storeInfo.phone ? `<div style="text-align:center;font-size:12px">☎ ${escapeHTML(storeInfo.phone)}</div>` : ''}
-      ${storeInfo.address ? `<div style="text-align:center;font-size:12px">${escapeHTML(storeInfo.address)}</div>` : ''}
+      ${buildReceiptBrandBlock(storeInfo)}
     <div class="receipt-reprint-stamp">BẢN IN LẠI</div>
     <div class="receipt-reprint-note">Lần in lại: ${nextCount}</div>
     <div class="receipt-line"></div>
