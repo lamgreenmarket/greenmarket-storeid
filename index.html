@@ -2609,6 +2609,62 @@ body, input, select, button, table, th, td, label, .menu, .card, .page{
 body > .print-actions{display:none!important;}
 #receiptPrint.hidden{display:none!important;}
 
+
+/* =========================================================
+   FIX GĐ5A.1 - HÓA ĐƠN 58MM: KHÔNG CẮT DẤU TIẾNG VIỆT / CHỮ CUỐI
+   - Tăng khoảng thở dòng tiêu đề
+   - Giảm nhẹ font tiêu đề dài
+   - Chừa mép trên khi in để chữ có dấu không bị mất
+   ========================================================= */
+.receipt{
+  padding-top:3.2mm!important;
+  overflow:visible!important;
+}
+.receipt-title{
+  display:block!important;
+  width:100%!important;
+  text-align:center!important;
+  font-size:14.6px!important;
+  line-height:1.38!important;
+  padding:1.2mm 0.8mm 0.8mm!important;
+  margin:0 0 2px!important;
+  letter-spacing:0!important;
+  white-space:normal!important;
+  word-break:normal!important;
+  overflow-wrap:break-word!important;
+  overflow:visible!important;
+}
+.receipt-slogan{
+  line-height:1.28!important;
+  margin-top:1px!important;
+  overflow:visible!important;
+}
+@media print{
+  #receiptPrint{
+    padding-top:2.8mm!important;
+    overflow:visible!important;
+  }
+  #receiptPrint .receipt{
+    padding-top:3.2mm!important;
+    overflow:visible!important;
+  }
+  #receiptPrint .receipt-title{
+    font-size:14.2px!important;
+    line-height:1.38!important;
+    padding:1.2mm 0.8mm 0.7mm!important;
+    margin:0 0 1px!important;
+    white-space:normal!important;
+    overflow-wrap:break-word!important;
+    overflow:visible!important;
+  }
+  #receiptPrint .receipt-slogan{
+    font-size:8.8px!important;
+    line-height:1.24!important;
+    white-space:normal!important;
+    overflow:visible!important;
+  }
+}
+
 </style>
 
 <style id="greenmarket-pos-logo-final-v2">
@@ -2871,11 +2927,11 @@ body > .print-actions{display:none!important;}
       <div class="qr-settings-grid">
         <div>
           <label>Tên cửa hàng</label>
-          <input id="storeProfileName" placeholder="Ví dụ: Tiệm của Thủy">
+          <input id="storeProfileName" placeholder="Ví dụ: Tiệm của Thúy">
         </div>
         <div>
           <label>Tên thương hiệu lớn (in hoa)</label>
-          <input id="storeProfileBrandTitle" placeholder="Ví dụ: TIỆM CỦA THỦY">
+          <input id="storeProfileBrandTitle" placeholder="Ví dụ: TIỆM CỦA THÚY">
         </div>
         <div>
           <label>Slogan</label>
@@ -2895,7 +2951,7 @@ body > .print-actions{display:none!important;}
         </div>
         <div>
           <label>Ghi chú hóa đơn</label>
-          <input id="storeProfileReceiptFooter" placeholder="Ví dụ: Cảm ơn bạn đã ủng hộ Tiệm của Thủy!">
+          <input id="storeProfileReceiptFooter" placeholder="Ví dụ: Cảm ơn bạn đã ủng hộ Tiệm của Thúy!">
         </div>
         <div>
           <label>Dòng Powered by</label>
