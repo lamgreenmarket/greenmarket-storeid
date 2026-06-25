@@ -16381,6 +16381,101 @@ setSyncStatus("ℹ️ Đăng nhập để đồng bộ Firebase", true);
 }
 </style>
 
+
+
+<style id="gm-5c-4d-v3-dashboard-doc-toan-bo">
+/* =========================================================
+   5C BƯỚC 4D V3 - TỔNG QUAN VẬN HÀNH DỌC TOÀN BỘ
+   Ép toàn bộ khối trong Trang chủ đi theo 1 cột từ trên xuống.
+   Kể cả 3 ô Hôm nay/Tuần này/Tháng này trong Doanh thu.
+   Chỉ chỉnh giao diện Trang chủ, không đụng logic/Firebase/in.
+   ========================================================= */
+#home .dashboard,
+#home .dashboard-pro-panel,
+#home .dashboard-mini-metrics,
+#home .profit-real-grid,
+#home .chart-row{
+  display:grid!important;
+  grid-template-columns:1fr!important;
+  gap:14px!important;
+  width:100%!important;
+}
+
+#home .stat,
+#home .dashboard-pro-card,
+#home .dashboard-pro-panel > *,
+#home .dashboard-mini-metrics > *,
+#home .profit-real-grid > *,
+#home .chart-row > *{
+  grid-column:1 / -1!important;
+  width:100%!important;
+  max-width:100%!important;
+}
+
+#home .dashboard-pro-revenue,
+#home .dashboard-pro-profit,
+#home .dashboard-pro-stock-card,
+#home .dashboard-pro-top-card,
+#home .dashboard-pro-staff-card,
+#home .dashboard-pro-warning,
+#home .dashboard-pro-return-card,
+#home .dashboard-pro-top-return-card{
+  grid-column:1 / -1!important;
+}
+
+#home .dashboard-mini-metrics div{
+  min-height:76px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+}
+
+#home .dashboard-pro-card{
+  min-height:auto!important;
+  padding:20px 22px!important;
+}
+
+#home .dashboard-pro-card h3,
+#home .stat h3{
+  font-size:18px!important;
+  margin-bottom:12px!important;
+}
+
+#home .dashboard-pro-card strong,
+#home .stat p{
+  font-size:28px!important;
+}
+
+#home .dashboard-pro-list{
+  columns:1!important;
+  font-size:16px!important;
+  line-height:1.8!important;
+}
+
+#home .chart-row .card{
+  height:auto!important;
+  min-height:360px!important;
+}
+
+#home .chart-row canvas{
+  height:280px!important;
+  max-height:280px!important;
+}
+
+@media(max-width:768px){
+  #home .dashboard,
+  #home .dashboard-pro-panel,
+  #home .dashboard-mini-metrics,
+  #home .profit-real-grid,
+  #home .chart-row{
+    gap:10px!important;
+  }
+  #home .dashboard-pro-card{padding:14px!important;}
+  #home .dashboard-pro-card h3,#home .stat h3{font-size:16px!important;}
+  #home .dashboard-pro-card strong,#home .stat p{font-size:22px!important;}
+}
+</style>
+
 </body>
 </html>
 <!-- GREEN MARKET CLEAN LOGS PATCH: bỏ chú thích nhật ký, tự động lọc, sửa ngày nhóm -->
