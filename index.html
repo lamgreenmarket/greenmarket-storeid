@@ -2928,6 +2928,123 @@ body > .print-actions{display:none!important;}
 }
 </style>
 
+
+<style id="tiem-thuy-5c-step1b-real-3line">
+/* =========================================================
+   TIỆM CỦA THÚY - 5C BƯỚC 1B
+   Bố cục thương hiệu 3 dòng thật sự: tên quán / lĩnh vực / slogan.
+   Chỉ chỉnh giao diện, không đụng logic Firebase, bán hàng, kho, in.
+   ========================================================= */
+#loginPage .brand-lockup{
+  margin-bottom:30px!important;
+}
+#loginBrandTitle{
+  margin-top:6px!important;
+  margin-bottom:10px!important;
+  font-size:36px!important;
+  line-height:1.08!important;
+  letter-spacing:.2px!important;
+}
+#loginBrandSlogan,
+#loginBrandSlogan.slogan,
+#loginBrandSlogan.cafe-brand-3line{
+  display:block!important;
+  width:100%!important;
+  max-width:360px!important;
+  margin:0 auto 26px!important;
+  padding:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  text-align:center!important;
+  color:#047857!important;
+}
+#loginBrandSlogan .login-brand-line{
+  display:block!important;
+  font-size:15px!important;
+  line-height:1.25!important;
+  font-weight:900!important;
+  letter-spacing:.45px!important;
+  text-transform:uppercase!important;
+  color:#047857!important;
+  white-space:nowrap!important;
+  margin:0 0 5px!important;
+}
+#loginBrandSlogan .login-slogan-line{
+  display:block!important;
+  font-size:14px!important;
+  line-height:1.28!important;
+  font-weight:800!important;
+  letter-spacing:.05px!important;
+  color:#0f766e!important;
+  white-space:nowrap!important;
+  margin:0!important;
+}
+#loginBrandSlogan:before{
+  content:"";
+  display:block;
+  width:96px;
+  height:2px;
+  margin:0 auto 8px;
+  border-radius:999px;
+  background:linear-gradient(90deg,transparent,#10b981,transparent);
+}
+#loginBrandSlogan:after{
+  content:"";
+  display:block;
+  width:96px;
+  height:2px;
+  margin:9px auto 0;
+  border-radius:999px;
+  background:linear-gradient(90deg,transparent,#10b981,transparent);
+}
+.app-brand h1#headerBrandTitle{
+  font-size:30px!important;
+  line-height:1.08!important;
+  margin-bottom:6px!important;
+}
+#headerBrandSlogan,
+#headerBrandSlogan.cafe-header-3line{
+  display:block!important;
+  margin:4px 0 0!important;
+  padding:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  color:#047857!important;
+  line-height:1.25!important;
+}
+#headerBrandSlogan .brand-industry-line{
+  display:block!important;
+  font-size:13.5px!important;
+  line-height:1.25!important;
+  font-weight:900!important;
+  letter-spacing:.35px!important;
+  text-transform:uppercase!important;
+  color:#047857!important;
+  margin-bottom:3px!important;
+}
+#headerBrandSlogan .brand-slogan-line{
+  display:block!important;
+  font-size:13px!important;
+  line-height:1.25!important;
+  font-weight:800!important;
+  color:#0f766e!important;
+}
+#headerPoweredBy{
+  font-size:12px!important;
+  opacity:.72!important;
+  margin-top:5px!important;
+}
+@media(max-width:768px){
+  #loginBrandTitle{font-size:30px!important;margin-bottom:9px!important;}
+  #loginBrandSlogan{max-width:300px!important;margin-bottom:22px!important;}
+  #loginBrandSlogan .login-brand-line{font-size:12.5px!important;white-space:normal!important;}
+  #loginBrandSlogan .login-slogan-line{font-size:12.5px!important;white-space:normal!important;}
+  .app-brand h1#headerBrandTitle{font-size:24px!important;}
+  #headerBrandSlogan .brand-industry-line{font-size:12px!important;}
+  #headerBrandSlogan .brand-slogan-line{font-size:12px!important;}
+}
+</style>
 </head>
 <body>
 <!-- =========================================================
@@ -2941,7 +3058,10 @@ body > .print-actions{display:none!important;}
         <span class="gm-leaf">●</span>
       </div>
       <div id="loginBrandTitle" class="logo gm-logo-text">TIỆM CỦA THÚY</div>
-      <div id="loginBrandSlogan" class="slogan"><span class="login-brand-line">CAFE-TRÀ SỮA-ĂN VẶT</span><span class="login-slogan-line">Cà phê nguyên chất – Gu Việt đậm đà</span></div>
+      <div id="loginBrandSlogan" class="slogan cafe-brand-3line">
+        <span class="login-brand-line">CAFE – TRÀ SỮA – ĂN VẶT</span>
+        <span class="login-slogan-line">Cà phê nguyên chất – Gu Việt đậm đà</span>
+      </div>
     </div>
 
     <label>Tên đăng nhập / email của Tiệm của Thúy</label><input id="loginUser" name="gm_login_user_manual_2026" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" inputmode="text" placeholder="Ví dụ: admin@tiemcuathuy.com" value="">
@@ -2955,7 +3075,7 @@ body > .print-actions{display:none!important;}
 <!-- =========================================================
      10. HTML HEADER + MENU
      ========================================================= -->
-  <div class="header"><div class="app-brand"><h1 id="headerBrandTitle"><span class="header-logo-mark">☕</span> TIỆM CỦA THÚY</h1><p id="headerBrandSlogan">Cà phê nguyên chất – Gu Việt đậm đà</p><small id="headerPoweredBy" style="display:block;margin-top:4px;color:#64748b;font-weight:700">Powered by Green Market POS</small></div><div>Xin chào: <b id="userName"></b> - Quyền: <b id="userRole"></b> <span id="firebaseSyncStatus" style="display:inline-block;margin-left:8px;padding:4px 10px;border-radius:999px;background:#eef7ff;color:#075985;font-weight:800;font-size:12px">☁️ Firebase</span> <span id="currentStoreBadge" style="display:inline-block;margin-left:8px;padding:4px 10px;border-radius:999px;background:#f0fdf4;color:#047857;font-weight:900;font-size:12px">☕ Store A</span> <button id="mainLogoutBtn" class="btn-gray" onclick="confirmLogout()">Đăng xuất</button></div></div>
+  <div class="header"><div class="app-brand"><h1 id="headerBrandTitle"><span class="header-logo-mark">☕</span> TIỆM CỦA THÚY</h1><p id="headerBrandSlogan" class="cafe-header-3line"><span class="brand-industry-line">CAFE – TRÀ SỮA – ĂN VẶT</span><span class="brand-slogan-line">Cà phê nguyên chất – Gu Việt đậm đà</span></p><small id="headerPoweredBy" style="display:block;margin-top:4px;color:#64748b;font-weight:700">Powered by Green Market POS</small></div><div>Xin chào: <b id="userName"></b> - Quyền: <b id="userRole"></b> <span id="firebaseSyncStatus" style="display:inline-block;margin-left:8px;padding:4px 10px;border-radius:999px;background:#eef7ff;color:#075985;font-weight:800;font-size:12px">☁️ Firebase</span> <span id="currentStoreBadge" style="display:inline-block;margin-left:8px;padding:4px 10px;border-radius:999px;background:#f0fdf4;color:#047857;font-weight:900;font-size:12px">☕ Store A</span> <button id="mainLogoutBtn" class="btn-gray" onclick="confirmLogout()">Đăng xuất</button></div></div>
   <div class="menu">
     <button onclick="showPage('home')">🏠 Trang chủ</button>
     <button data-permission="shift" onclick="showPage('shift')">⏱ Ca làm việc</button>
@@ -5740,6 +5860,123 @@ ${'<scr' + 'ipt src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcod
   .qr-settings-actions button{width:100%!important}
 }
 
+</style>
+
+<style id="tiem-thuy-5c-step1b-real-3line">
+/* =========================================================
+   TIỆM CỦA THÚY - 5C BƯỚC 1B
+   Bố cục thương hiệu 3 dòng thật sự: tên quán / lĩnh vực / slogan.
+   Chỉ chỉnh giao diện, không đụng logic Firebase, bán hàng, kho, in.
+   ========================================================= */
+#loginPage .brand-lockup{
+  margin-bottom:30px!important;
+}
+#loginBrandTitle{
+  margin-top:6px!important;
+  margin-bottom:10px!important;
+  font-size:36px!important;
+  line-height:1.08!important;
+  letter-spacing:.2px!important;
+}
+#loginBrandSlogan,
+#loginBrandSlogan.slogan,
+#loginBrandSlogan.cafe-brand-3line{
+  display:block!important;
+  width:100%!important;
+  max-width:360px!important;
+  margin:0 auto 26px!important;
+  padding:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  text-align:center!important;
+  color:#047857!important;
+}
+#loginBrandSlogan .login-brand-line{
+  display:block!important;
+  font-size:15px!important;
+  line-height:1.25!important;
+  font-weight:900!important;
+  letter-spacing:.45px!important;
+  text-transform:uppercase!important;
+  color:#047857!important;
+  white-space:nowrap!important;
+  margin:0 0 5px!important;
+}
+#loginBrandSlogan .login-slogan-line{
+  display:block!important;
+  font-size:14px!important;
+  line-height:1.28!important;
+  font-weight:800!important;
+  letter-spacing:.05px!important;
+  color:#0f766e!important;
+  white-space:nowrap!important;
+  margin:0!important;
+}
+#loginBrandSlogan:before{
+  content:"";
+  display:block;
+  width:96px;
+  height:2px;
+  margin:0 auto 8px;
+  border-radius:999px;
+  background:linear-gradient(90deg,transparent,#10b981,transparent);
+}
+#loginBrandSlogan:after{
+  content:"";
+  display:block;
+  width:96px;
+  height:2px;
+  margin:9px auto 0;
+  border-radius:999px;
+  background:linear-gradient(90deg,transparent,#10b981,transparent);
+}
+.app-brand h1#headerBrandTitle{
+  font-size:30px!important;
+  line-height:1.08!important;
+  margin-bottom:6px!important;
+}
+#headerBrandSlogan,
+#headerBrandSlogan.cafe-header-3line{
+  display:block!important;
+  margin:4px 0 0!important;
+  padding:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  color:#047857!important;
+  line-height:1.25!important;
+}
+#headerBrandSlogan .brand-industry-line{
+  display:block!important;
+  font-size:13.5px!important;
+  line-height:1.25!important;
+  font-weight:900!important;
+  letter-spacing:.35px!important;
+  text-transform:uppercase!important;
+  color:#047857!important;
+  margin-bottom:3px!important;
+}
+#headerBrandSlogan .brand-slogan-line{
+  display:block!important;
+  font-size:13px!important;
+  line-height:1.25!important;
+  font-weight:800!important;
+  color:#0f766e!important;
+}
+#headerPoweredBy{
+  font-size:12px!important;
+  opacity:.72!important;
+  margin-top:5px!important;
+}
+@media(max-width:768px){
+  #loginBrandTitle{font-size:30px!important;margin-bottom:9px!important;}
+  #loginBrandSlogan{max-width:300px!important;margin-bottom:22px!important;}
+  #loginBrandSlogan .login-brand-line{font-size:12.5px!important;white-space:normal!important;}
+  #loginBrandSlogan .login-slogan-line{font-size:12.5px!important;white-space:normal!important;}
+  .app-brand h1#headerBrandTitle{font-size:24px!important;}
+  #headerBrandSlogan .brand-industry-line{font-size:12px!important;}
+  #headerBrandSlogan .brand-slogan-line{font-size:12px!important;}
+}
 </style>
 </head>
 <body>
@@ -9357,6 +9594,123 @@ function buildImportReceiptPrintHtml(data){
 }
 
 </style>
+
+<style id="tiem-thuy-5c-step1b-real-3line">
+/* =========================================================
+   TIỆM CỦA THÚY - 5C BƯỚC 1B
+   Bố cục thương hiệu 3 dòng thật sự: tên quán / lĩnh vực / slogan.
+   Chỉ chỉnh giao diện, không đụng logic Firebase, bán hàng, kho, in.
+   ========================================================= */
+#loginPage .brand-lockup{
+  margin-bottom:30px!important;
+}
+#loginBrandTitle{
+  margin-top:6px!important;
+  margin-bottom:10px!important;
+  font-size:36px!important;
+  line-height:1.08!important;
+  letter-spacing:.2px!important;
+}
+#loginBrandSlogan,
+#loginBrandSlogan.slogan,
+#loginBrandSlogan.cafe-brand-3line{
+  display:block!important;
+  width:100%!important;
+  max-width:360px!important;
+  margin:0 auto 26px!important;
+  padding:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  text-align:center!important;
+  color:#047857!important;
+}
+#loginBrandSlogan .login-brand-line{
+  display:block!important;
+  font-size:15px!important;
+  line-height:1.25!important;
+  font-weight:900!important;
+  letter-spacing:.45px!important;
+  text-transform:uppercase!important;
+  color:#047857!important;
+  white-space:nowrap!important;
+  margin:0 0 5px!important;
+}
+#loginBrandSlogan .login-slogan-line{
+  display:block!important;
+  font-size:14px!important;
+  line-height:1.28!important;
+  font-weight:800!important;
+  letter-spacing:.05px!important;
+  color:#0f766e!important;
+  white-space:nowrap!important;
+  margin:0!important;
+}
+#loginBrandSlogan:before{
+  content:"";
+  display:block;
+  width:96px;
+  height:2px;
+  margin:0 auto 8px;
+  border-radius:999px;
+  background:linear-gradient(90deg,transparent,#10b981,transparent);
+}
+#loginBrandSlogan:after{
+  content:"";
+  display:block;
+  width:96px;
+  height:2px;
+  margin:9px auto 0;
+  border-radius:999px;
+  background:linear-gradient(90deg,transparent,#10b981,transparent);
+}
+.app-brand h1#headerBrandTitle{
+  font-size:30px!important;
+  line-height:1.08!important;
+  margin-bottom:6px!important;
+}
+#headerBrandSlogan,
+#headerBrandSlogan.cafe-header-3line{
+  display:block!important;
+  margin:4px 0 0!important;
+  padding:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  color:#047857!important;
+  line-height:1.25!important;
+}
+#headerBrandSlogan .brand-industry-line{
+  display:block!important;
+  font-size:13.5px!important;
+  line-height:1.25!important;
+  font-weight:900!important;
+  letter-spacing:.35px!important;
+  text-transform:uppercase!important;
+  color:#047857!important;
+  margin-bottom:3px!important;
+}
+#headerBrandSlogan .brand-slogan-line{
+  display:block!important;
+  font-size:13px!important;
+  line-height:1.25!important;
+  font-weight:800!important;
+  color:#0f766e!important;
+}
+#headerPoweredBy{
+  font-size:12px!important;
+  opacity:.72!important;
+  margin-top:5px!important;
+}
+@media(max-width:768px){
+  #loginBrandTitle{font-size:30px!important;margin-bottom:9px!important;}
+  #loginBrandSlogan{max-width:300px!important;margin-bottom:22px!important;}
+  #loginBrandSlogan .login-brand-line{font-size:12.5px!important;white-space:normal!important;}
+  #loginBrandSlogan .login-slogan-line{font-size:12.5px!important;white-space:normal!important;}
+  .app-brand h1#headerBrandTitle{font-size:24px!important;}
+  #headerBrandSlogan .brand-industry-line{font-size:12px!important;}
+  #headerBrandSlogan .brand-slogan-line{font-size:12px!important;}
+}
+</style>
 </head>
 <body>
 <div class="print-actions"><button class="btn" onclick="window.print()">🖨️ In</button><button class="btn2" onclick="window.close()">Đóng</button></div>
@@ -10387,6 +10741,123 @@ function buildDailyImportReportPrintHtml(selected, list){
   .qr-settings-actions button{width:100%!important}
 }
 
+</style>
+
+<style id="tiem-thuy-5c-step1b-real-3line">
+/* =========================================================
+   TIỆM CỦA THÚY - 5C BƯỚC 1B
+   Bố cục thương hiệu 3 dòng thật sự: tên quán / lĩnh vực / slogan.
+   Chỉ chỉnh giao diện, không đụng logic Firebase, bán hàng, kho, in.
+   ========================================================= */
+#loginPage .brand-lockup{
+  margin-bottom:30px!important;
+}
+#loginBrandTitle{
+  margin-top:6px!important;
+  margin-bottom:10px!important;
+  font-size:36px!important;
+  line-height:1.08!important;
+  letter-spacing:.2px!important;
+}
+#loginBrandSlogan,
+#loginBrandSlogan.slogan,
+#loginBrandSlogan.cafe-brand-3line{
+  display:block!important;
+  width:100%!important;
+  max-width:360px!important;
+  margin:0 auto 26px!important;
+  padding:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  text-align:center!important;
+  color:#047857!important;
+}
+#loginBrandSlogan .login-brand-line{
+  display:block!important;
+  font-size:15px!important;
+  line-height:1.25!important;
+  font-weight:900!important;
+  letter-spacing:.45px!important;
+  text-transform:uppercase!important;
+  color:#047857!important;
+  white-space:nowrap!important;
+  margin:0 0 5px!important;
+}
+#loginBrandSlogan .login-slogan-line{
+  display:block!important;
+  font-size:14px!important;
+  line-height:1.28!important;
+  font-weight:800!important;
+  letter-spacing:.05px!important;
+  color:#0f766e!important;
+  white-space:nowrap!important;
+  margin:0!important;
+}
+#loginBrandSlogan:before{
+  content:"";
+  display:block;
+  width:96px;
+  height:2px;
+  margin:0 auto 8px;
+  border-radius:999px;
+  background:linear-gradient(90deg,transparent,#10b981,transparent);
+}
+#loginBrandSlogan:after{
+  content:"";
+  display:block;
+  width:96px;
+  height:2px;
+  margin:9px auto 0;
+  border-radius:999px;
+  background:linear-gradient(90deg,transparent,#10b981,transparent);
+}
+.app-brand h1#headerBrandTitle{
+  font-size:30px!important;
+  line-height:1.08!important;
+  margin-bottom:6px!important;
+}
+#headerBrandSlogan,
+#headerBrandSlogan.cafe-header-3line{
+  display:block!important;
+  margin:4px 0 0!important;
+  padding:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  color:#047857!important;
+  line-height:1.25!important;
+}
+#headerBrandSlogan .brand-industry-line{
+  display:block!important;
+  font-size:13.5px!important;
+  line-height:1.25!important;
+  font-weight:900!important;
+  letter-spacing:.35px!important;
+  text-transform:uppercase!important;
+  color:#047857!important;
+  margin-bottom:3px!important;
+}
+#headerBrandSlogan .brand-slogan-line{
+  display:block!important;
+  font-size:13px!important;
+  line-height:1.25!important;
+  font-weight:800!important;
+  color:#0f766e!important;
+}
+#headerPoweredBy{
+  font-size:12px!important;
+  opacity:.72!important;
+  margin-top:5px!important;
+}
+@media(max-width:768px){
+  #loginBrandTitle{font-size:30px!important;margin-bottom:9px!important;}
+  #loginBrandSlogan{max-width:300px!important;margin-bottom:22px!important;}
+  #loginBrandSlogan .login-brand-line{font-size:12.5px!important;white-space:normal!important;}
+  #loginBrandSlogan .login-slogan-line{font-size:12.5px!important;white-space:normal!important;}
+  .app-brand h1#headerBrandTitle{font-size:24px!important;}
+  #headerBrandSlogan .brand-industry-line{font-size:12px!important;}
+  #headerBrandSlogan .brand-slogan-line{font-size:12px!important;}
+}
 </style>
 </head>
 <body>
