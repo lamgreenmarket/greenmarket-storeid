@@ -2907,6 +2907,14 @@ body > .print-actions{display:none!important;}
   .receipt-title{font-size:15.2px!important}
   #receiptPrint .receipt-slogan{font-size:8.8px!important;margin-bottom:3px!important;white-space:nowrap!important}
 }
+
+/* TIỆM CỦA THÚY - LOGIN SLOGAN 2 DÒNG + TÀI KHOẢN RIÊNG */
+#loginBrandSlogan{
+  white-space:normal!important;
+  line-height:1.35!important;
+  text-align:center!important;
+}
+#loginBrandSlogan br{content:"";display:block}
 </style>
 
 </head>
@@ -2925,9 +2933,14 @@ body > .print-actions{display:none!important;}
       <div id="loginBrandSlogan" class="slogan">Cà phê nguyên chất – Gu Việt đậm đà</div>
     </div>
 
-    <label>Tên đăng nhập hoặc email Firebase</label><input id="loginUser" name="gm_login_user_manual_2026" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" inputmode="text" placeholder="" value="">
+    <label>Tên đăng nhập / email của Tiệm của Thúy</label><input id="loginUser" name="gm_login_user_manual_2026" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" inputmode="text" placeholder="Ví dụ: admin@tiemcuathuy.com" value="">
     <label>Mật khẩu</label><div class="pass-row"><input id="loginPass" name="gm_login_pass_manual_2026" type="password" autocomplete="new-password" autocorrect="off" autocapitalize="off" spellcheck="false" value=""><button class="eye" onclick="togglePass()">👁️</button></div>
-    <button id="loginBtn" class="btn-blue full" type="button" onclick="login()">Đăng nhập</button><p id="loginMsg" class="msg"></p>
+    <button id="loginBtn" class="btn-blue full" type="button" onclick="login()">Đăng nhập</button>
+    <div style="margin-top:10px;text-align:center;font-size:12px;color:#0f766e;font-weight:700;line-height:1.45">
+      Tài khoản quán: <b>admin@tiemcuathuy.com</b><br>
+      Thu ngân: <b>thungan1@tiemcuathuy.com</b> • <b>thungan2@tiemcuathuy.com</b>
+    </div>
+    <p id="loginMsg" class="msg"></p>
   </div>
 </section>
 
@@ -3955,7 +3968,13 @@ function renderStoreInfo(){
   const lTitle = document.getElementById('loginBrandTitle');
   if(lTitle) lTitle.textContent = shopName;
   const lSlogan = document.getElementById('loginBrandSlogan');
-  if(lSlogan) lSlogan.textContent = `${brandTitle} • ${slogan}`;
+  if(lSlogan){
+    lSlogan.innerHTML = `${escapeHTML(brandTitle)}<br>${escapeHTML(slogan).replace(/\s*[–-]\s*/,'<br>– ')}`;
+  }
+  const loginUserInput = document.getElementById('loginUser');
+  if(loginUserInput && !loginUserInput.value){
+    loginUserInput.placeholder = 'Ví dụ: admin@tiemcuathuy.com';
+  }
   const loginBrand = document.getElementById('loginBrand');
   if(loginBrand && !document.getElementById('loginPoweredBy')){
     const small = document.createElement('div');
@@ -14278,6 +14297,20 @@ async function getProfileByEmail(email){
   }
   if(mail === 'ketoan@greenmarket.com'){
     return {email:mail, name:'Kế Toán', user:'ketoan', role:'accountant', active:true, source:'fallback'};
+  }
+
+  // Tiệm của Thúy - bộ tài khoản cửa hàng riêng
+  if(mail === 'admin@tiemcuathuy.com'){
+    return {email:mail, name:'Chủ quán Thúy', user:'admin_tiemcuathuy', role:'admin', active:true, source:'tiemcuathuy-fallback'};
+  }
+  if(mail === 'thungan1@tiemcuathuy.com'){
+    return {email:mail, name:'Thu ngân 1', user:'thungan1_tiemcuathuy', role:'cashier', active:true, source:'tiemcuathuy-fallback'};
+  }
+  if(mail === 'thungan2@tiemcuathuy.com'){
+    return {email:mail, name:'Thu ngân 2', user:'thungan2_tiemcuathuy', role:'cashier', active:true, source:'tiemcuathuy-fallback'};
+  }
+  if(mail === 'ketoan@tiemcuathuy.com'){
+    return {email:mail, name:'Kế toán', user:'ketoan_tiemcuathuy', role:'accountant', active:true, source:'tiemcuathuy-fallback'};
   }
 
   return null;
