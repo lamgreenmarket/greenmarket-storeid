@@ -3491,6 +3491,215 @@ body > .print-actions{display:none!important;}
 }
 </style>
 
+
+<style id="tiem-thuy-4F-final-polish">
+/* =========================================================
+   4F - TINH CHỈNH CUỐI GIAO DIỆN TIỆM CỦA THÚY
+   Chỉ tinh chỉnh giao diện desktop: sidebar gọn hơn, header cân hơn,
+   card dashboard nổi hơn. Không đổi logic.
+   ========================================================= */
+@media (min-width:901px){
+  .app{
+    padding-left:286px!important;
+    padding-top:136px!important;
+    padding-right:18px!important;
+  }
+  #appPage::before{
+    left:268px!important;
+    height:136px!important;
+    background:linear-gradient(180deg,#eefcf7 0%,rgba(236,254,255,.96) 82%,rgba(236,254,255,.84) 100%)!important;
+  }
+  .header{
+    top:16px!important;
+    left:286px!important;
+    right:18px!important;
+    min-height:88px!important;
+    padding:14px 20px!important;
+    border-radius:24px!important;
+    background:linear-gradient(135deg,rgba(247,255,251,.96),rgba(236,254,255,.96))!important;
+    box-shadow:0 12px 28px rgba(15,118,110,.10)!important;
+    gap:12px!important;
+  }
+  .header > *{
+    position:relative;
+    z-index:1;
+  }
+  .header::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    border-radius:24px;
+    background:
+      radial-gradient(circle at 10% 12%, rgba(16,185,129,.10), transparent 18%),
+      radial-gradient(circle at 92% 12%, rgba(14,165,233,.08), transparent 18%);
+    pointer-events:none;
+  }
+
+  .menu{
+    top:16px!important;
+    left:16px!important;
+    bottom:16px!important;
+    width:238px!important;
+    padding:12px 10px 14px!important;
+    gap:6px!important;
+    border-radius:24px!important;
+    background:linear-gradient(180deg,#f7fffb 0%,#f0fdf4 52%,#ecfeff 100%)!important;
+    box-shadow:0 14px 34px rgba(15,118,110,.13)!important;
+  }
+  .menu::before{
+    content:"";
+    display:block;
+    white-space:normal!important;
+    padding:0!important;
+    margin:0!important;
+    border:0!important;
+    height:0!important;
+  }
+  .menu::after{
+    content:"";
+    display:block;
+    order:-999;
+    margin-bottom:4px;
+  }
+
+  /* Tạo khối thương hiệu gọn hơn trong sidebar */
+  .menu .sidebar-brand-card{
+    order:-998;
+    margin:0 2px 8px;
+    padding:14px 12px 12px;
+    border-radius:22px;
+    background:linear-gradient(180deg,#ffffff 0%,#f3fff8 100%);
+    border:1px solid rgba(5,150,105,.14);
+    box-shadow:0 10px 24px rgba(5,150,105,.10);
+    text-align:center;
+  }
+  .menu .sidebar-brand-card .cup{
+    width:46px;height:46px;
+    margin:0 auto 8px;
+    border-radius:15px;
+    display:grid;place-items:center;
+    background:linear-gradient(135deg,#10b981,#047857);
+    color:#fff;font-size:24px;
+    box-shadow:0 10px 22px rgba(5,150,105,.22);
+  }
+  .menu .sidebar-brand-card .name{
+    font-family:Montserrat,Poppins,Inter,Arial,sans-serif;
+    font-weight:900;
+    font-size:16px;
+    line-height:1.08;
+    color:#064e3b;
+    margin-bottom:4px;
+  }
+  .menu .sidebar-brand-card .sub{
+    font-size:11px;
+    line-height:1.2;
+    font-weight:800;
+    color:#047857;
+    letter-spacing:.2px;
+    margin-bottom:5px;
+  }
+  .menu .sidebar-brand-card .tiny{
+    font-size:10px;
+    color:#6b7280;
+    font-weight:700;
+  }
+
+  .menu button,
+  .menu-dropdown .menu-btn{
+    height:38px!important;
+    min-height:38px!important;
+    border-radius:13px!important;
+    padding:0 13px!important;
+    font-size:13.5px!important;
+    font-weight:800!important;
+    box-shadow:0 6px 16px rgba(5,150,105,.08)!important;
+  }
+  .menu button.menu-active{
+    background:linear-gradient(135deg,#10b981,#059669)!important;
+    box-shadow:0 10px 22px rgba(5,150,105,.18)!important;
+  }
+  .menu button.menu-active:after{
+    top:7px!important;
+    bottom:7px!important;
+  }
+
+  .menu-dropdown .menu-btn{
+    padding-right:14px!important;
+  }
+  .dropdown-content{
+    margin-top:5px!important;
+    padding:5px!important;
+    border-radius:14px!important;
+    background:rgba(255,255,255,.88)!important;
+  }
+  .dropdown-content button{
+    height:34px!important;
+    min-height:34px!important;
+    font-size:12.5px!important;
+    padding:0 10px!important;
+    white-space:normal!important;
+    line-height:1.15!important;
+  }
+
+  /* Dashboard đậm nhấn hơn chút */
+  .section,
+  .card{
+    border-radius:22px!important;
+  }
+  #homePage .card{
+    background:linear-gradient(180deg,#fbfffd 0%,#f5fffb 100%)!important;
+    border:1px solid rgba(5,150,105,.10)!important;
+    box-shadow:0 10px 24px rgba(15,118,110,.06)!important;
+  }
+  #homePage .card h3{
+    color:#0f4c5c!important;
+  }
+  #homePage .kpi-value,
+  #homePage .metric-value{
+    letter-spacing:.2px;
+  }
+  #homePage .refund-box{
+    box-shadow:none!important;
+  }
+}
+
+/* Mobile/tablet giữ nguyên menu ngang */
+</style>
+<script id="tiem-thuy-4F-brand-script">
+document.addEventListener('DOMContentLoaded', function(){
+  if (window.innerWidth < 901) return;
+  const menu = document.querySelector('.menu');
+  if (menu && !menu.querySelector('.sidebar-brand-card')) {
+    const brand = document.createElement('div');
+    brand.className = 'sidebar-brand-card';
+    brand.innerHTML = `
+      <div class="cup">🥤</div>
+      <div class="name">Tiệm của Thúy</div>
+      <div class="sub">CAFE – TRÀ SỮA – ĂN VẶT</div>
+      <div class="tiny">Cà phê nguyên chất – Gu Việt đậm đà</div>
+    `;
+    menu.prepend(brand);
+  }
+
+  // Tinh chỉnh vài nhãn dashboard cho chất quán hơn
+  const swapText = (selector, from, to) => {
+    document.querySelectorAll(selector).forEach(el => {
+      if (el.textContent && el.textContent.trim() === from) el.textContent = to;
+    });
+  };
+  swapText('#homePage h3, #homePage .card-title, #homePage .section-title', 'Món trong thực đơn', 'Món đang bán tại quầy');
+  swapText('#homePage h3, #homePage .card-title, #homePage .section-title', 'Tình trạng món còn lại', 'Tình trạng nguyên liệu / món');
+  swapText('#homePage h3, #homePage .card-title, #homePage .section-title', 'Tổng quan hoàn trả tháng này', 'Tổng quan hoàn / hủy món tháng này');
+
+  // Badge header gọn hơn nếu có
+  document.querySelectorAll('.header .badge, .header .status-badge').forEach(el=>{
+    el.style.fontSize='11px';
+    el.style.padding='5px 10px';
+    el.style.borderRadius='999px';
+  });
+});
+</script>
+
 </head>
 <body>
 <!-- =========================================================
