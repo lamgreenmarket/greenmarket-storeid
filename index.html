@@ -2829,7 +2829,7 @@ body > .print-actions{display:none!important;}
 <!-- =========================================================
      10. HTML HEADER + MENU
      ========================================================= -->
-  <div class="header"><div class="app-brand"><h1><span class="header-logo-mark">🛒</span> GREEN MARKET POS</h1><p>Quản lý đơn giản - Bán hàng hiệu quả</p></div><div>Xin chào: <b id="userName"></b> - Quyền: <b id="userRole"></b> <span id="firebaseSyncStatus" style="display:inline-block;margin-left:8px;padding:4px 10px;border-radius:999px;background:#eef7ff;color:#075985;font-weight:800;font-size:12px">☁️ Firebase</span> <button id="mainLogoutBtn" class="btn-gray" onclick="confirmLogout()">Đăng xuất</button></div></div>
+  <div class="header"><div class="app-brand"><h1><span class="header-logo-mark">🛒</span> GREEN MARKET POS</h1><p>Quản lý đơn giản - Bán hàng hiệu quả</p></div><div>Xin chào: <b id="userName"></b> - Quyền: <b id="userRole"></b> <span id="firebaseSyncStatus" style="display:inline-block;margin-left:8px;padding:4px 10px;border-radius:999px;background:#eef7ff;color:#075985;font-weight:800;font-size:12px">☁️ Firebase</span> <span id="currentStoreBadge" style="display:inline-block;margin-left:8px;padding:4px 10px;border-radius:999px;background:#f0fdf4;color:#047857;font-weight:900;font-size:12px">☕ Store A</span> <button id="mainLogoutBtn" class="btn-gray" onclick="confirmLogout()">Đăng xuất</button></div></div>
   <div class="menu">
     <button onclick="showPage('home')">🏠 Trang chủ</button>
     <button data-permission="shift" onclick="showPage('shift')">⏱ Ca làm việc</button>
@@ -2850,6 +2850,7 @@ body > .print-actions{display:none!important;}
         <button type="button" onclick="greenMarketBackupFirebaseNow();closeDataMenu()">☁️ Backup Firebase ngay</button>
         <button type="button" onclick="greenMarketRestoreFirebaseBackup();closeDataMenu()">♻️ Khôi phục backup Firebase</button>
         <button type="button" onclick="openQrSettings();closeDataMenu()">📱 QR thanh toán</button>
+        <button type="button" onclick="setupStoreACafe();closeDataMenu()">☕ Tạo Store A Cafe</button>
         <button type="button" onclick="exportData();closeDataMenu()">📤 Xuất dữ liệu</button>
         <button type="button" onclick="document.getElementById('importFile').click();closeDataMenu()">📥 Nhập dữ liệu</button>
         <button type="button" onclick="document.getElementById('restoreBackupFile').click();closeDataMenu()">♻️ Khôi phục backup</button>
@@ -2916,6 +2917,7 @@ body > .print-actions{display:none!important;}
   <section id="home" class="page">
     <div class="dashboard-title">
       <h2>📊 Tổng quan vận hành</h2>
+      <p id="storeIntroLine" class="muted" style="margin:8px 0 0;font-weight:800">☕ Store A: Green Market Cafe</p>
     </div>
     <div class="dashboard-pro-panel">
       <div class="dashboard-pro-card dashboard-pro-wide dashboard-pro-revenue">
@@ -3583,6 +3585,9 @@ const KBILLS = 'v2_bills';
 const KMONEY = 'v2_money';
 const KLOGS = 'v2_logs';
 const KSTORE_SETTINGS = 'greenmarket_store_settings';
+const KSTORES = 'v2_stores';
+const KCURRENT_STORE_ID = 'v2_current_store_id';
+const DEFAULT_STORE_ID = 'store_a_cafe';
 const KIMPORTS = 'v2_import_history';
 const KLOGIN_SECURITY = 'v2_login_security'; // Bảo mật: lưu số lần đăng nhập sai + thời gian khóa tạm
 const KDEVICE_ID = 'green_market_device_id_v1'; // Bảo mật phiên: nhận diện trình duyệt/thiết bị
@@ -3598,6 +3603,8 @@ let moneyList = JSON.parse(localStorage.getItem(KMONEY) || '[]');
 let logs = JSON.parse(localStorage.getItem(KLOGS) || '[]');
 let loginSecurity = JSON.parse(localStorage.getItem(KLOGIN_SECURITY) || '{}');
 let importHistory = JSON.parse(localStorage.getItem(KIMPORTS) || '[]');
+let stores = JSON.parse(localStorage.getItem(KSTORES) || '[]');
+let currentStoreId = localStorage.getItem(KCURRENT_STORE_ID) || DEFAULT_STORE_ID;
 let importDraft = [];
 let importEditingIndex = -1;
 let currentImportReceipt = null;
@@ -3678,6 +3685,100 @@ function getStoreSettings(){
 function saveStoreSettings(settings){
   localStorage.setItem(KSTORE_SETTINGS, JSON.stringify(settings || {}));
 }
+
+function getCafeSampleProducts(){
+  return [
+    ['Cà phê đen đá','CF001',60,7000,15000,8,'ly','Cà phê'],
+    ['Cà phê sữa đá','CF002',60,9000,18000,8,'ly','Cà phê'],
+    ['Bạc xỉu','CF003',50,10000,22000,8,'ly','Cà phê'],
+    ['Americano','CF004',40,11000,25000,6,'ly','Cà phê'],
+    ['Latte','CF005',40,14000,32000,6,'ly','Cà phê'],
+    ['Cappuccino','CF006',40,14000,32000,6,'ly','Cà phê'],
+    ['Espresso','CF007',35,9000,20000,5,'ly','Cà phê'],
+    ['Trà đào cam sả','TEA001',45,12000,30000,6,'ly','Trà'],
+    ['Trà tắc','TEA002',50,6000,15000,8,'ly','Trà'],
+    ['Trà chanh','TEA003',50,6000,15000,8,'ly','Trà'],
+    ['Trà sữa truyền thống','TEA004',45,13000,28000,6,'ly','Trà'],
+    ['Matcha latte','TEA005',35,15000,35000,5,'ly','Trà'],
+    ['Chocolate đá xay','ICE001',30,16000,38000,5,'ly','Đá xay'],
+    ['Matcha đá xay','ICE002',30,17000,39000,5,'ly','Đá xay'],
+    ['Cookie đá xay','ICE003',30,18000,42000,5,'ly','Đá xay'],
+    ['Sinh tố xoài','SM001',30,14000,32000,5,'ly','Sinh tố'],
+    ['Sinh tố dâu','SM002',30,15000,35000,5,'ly','Sinh tố'],
+    ['Nước suối','DR001',40,4000,7000,8,'chai','Nước đóng chai'],
+    ['Pepsi','DR002',35,8000,12000,6,'lon','Nước đóng chai'],
+    ['7Up','DR003',35,8000,12000,6,'lon','Nước đóng chai'],
+    ['Croissant','CAKE001',25,12000,25000,5,'phần','Bánh ngọt'],
+    ['Tiramisu','CAKE002',20,18000,39000,4,'phần','Bánh ngọt'],
+    ['Bánh flan','CAKE003',25,7000,15000,5,'phần','Bánh ngọt'],
+    ['Bánh mousse chocolate','CAKE004',18,20000,45000,4,'phần','Bánh ngọt']
+  ].map((x, idx) => ({
+    id: idx + 1,
+    name: x[0],
+    barcode: x[1],
+    qty: x[2],
+    importPrice: x[3],
+    sellPrice: x[4],
+    lowLimit: x[5],
+    saleUnit: x[6],
+    category: x[7],
+    storeId: DEFAULT_STORE_ID
+  }));
+}
+
+function ensureStoreA(){
+  if(!Array.isArray(stores)) stores = [];
+  const existed = stores.find(s => s.id === DEFAULT_STORE_ID);
+  if(!existed){
+    stores.unshift({
+      id: DEFAULT_STORE_ID,
+      code: 'A',
+      name: 'Green Market Cafe',
+      type: 'Quán cafe',
+      note: 'Store A chạy trong Green Market POS V02',
+      createdAt: now()
+    });
+  }
+  currentStoreId = DEFAULT_STORE_ID;
+  localStorage.setItem(KSTORES, JSON.stringify(stores));
+  localStorage.setItem(KCURRENT_STORE_ID, currentStoreId);
+}
+
+function getCurrentStore(){
+  ensureStoreA();
+  return stores.find(s => s.id === currentStoreId) || stores[0];
+}
+
+function renderStoreInfo(){
+  const store = getCurrentStore();
+  const badge = document.getElementById('currentStoreBadge');
+  if(badge) badge.textContent = `☕ Store ${store.code || 'A'}: ${store.name || 'Green Market Cafe'}`;
+  const line = document.getElementById('storeIntroLine');
+  if(line) line.textContent = `☕ Store ${store.code || 'A'}: ${store.name || 'Green Market Cafe'} — mô hình quán cafe trong Green Market POS`;
+}
+
+function setupStoreACafe(){
+  if(current && !['admin','manager'].includes(normalizeRole(current.role))){
+    alert('Chỉ Admin hoặc Quản lý được tạo Store A Cafe.');
+    return;
+  }
+  ensureStoreA();
+  const ok = confirm('Tạo dữ liệu mẫu cho Store A - Green Market Cafe?\n\nHệ thống sẽ sao lưu danh sách sản phẩm hiện tại vào localStorage trước, rồi thay bằng menu quán cafe mẫu. Hóa đơn cũ không bị xóa.');
+  if(!ok) return;
+
+  try{
+    localStorage.setItem('v2_products_backup_before_store_a_cafe_' + Date.now(), JSON.stringify(products || []));
+  }catch(e){}
+
+  products = getCafeSampleProducts();
+  cart = [];
+  stockFilter = 'all';
+  save();
+  try{ addLog('Tạo Store A Cafe', 'Nạp menu mẫu quán cafe cho Store A - Green Market Cafe'); }catch(e){}
+  renderAll();
+  alert('Đã tạo Store A - Green Market Cafe với menu mẫu. Bây giờ có thể vào Bán hàng để thử.');
+}
+
 
 function getPaymentQrData(){
   return getStoreSettings().paymentQr || '';
@@ -3920,6 +4021,8 @@ function save(){
   try{ localStorage.removeItem(KUSERS); }catch(e){} // Tài khoản dùng Firebase Auth, không lưu mật khẩu localStorage
   localStorage.setItem(KLOGS, JSON.stringify(logs));
   localStorage.setItem(KIMPORTS, JSON.stringify(importHistory));
+  localStorage.setItem(KSTORES, JSON.stringify(stores || []));
+  localStorage.setItem(KCURRENT_STORE_ID, currentStoreId || DEFAULT_STORE_ID);
 
   // Auto backup nhẹ: mỗi ngày 1 bản, trong ngày ghi đè.
   try{ autoBackupDaily(false); }catch(e){}
@@ -3939,6 +4042,8 @@ function reloadDataFromLocalStorage(){
     moneyList = JSON.parse(localStorage.getItem(KMONEY) || '[]');
     logs = JSON.parse(localStorage.getItem(KLOGS) || '[]');
     importHistory = JSON.parse(localStorage.getItem(KIMPORTS) || '[]');
+    stores = JSON.parse(localStorage.getItem(KSTORES) || '[]');
+    currentStoreId = localStorage.getItem(KCURRENT_STORE_ID) || DEFAULT_STORE_ID;
     if(typeof KSHIFTS !== 'undefined'){
       shifts = JSON.parse(localStorage.getItem(KSHIFTS) || '[]');
     }
@@ -4175,31 +4280,13 @@ const list =
    18. KHỞI TẠO + SỬA DỮ LIỆU CŨ
    ========================================================= */
 function init(){
+  ensureStoreA();
   // Tài khoản đăng nhập dùng Firebase Auth, không tạo admin/admin trong localStorage nữa.
   users = [];
   try{ localStorage.removeItem(KUSERS); }catch(e){}
 
   if(products.length === 0){
-    products = [
-      {
-        id: 1,
-        name: 'Nước suối',
-        barcode: '893001',
-        qty: 30,
-        importPrice: 4000,
-        sellPrice: 7000,
-        lowLimit: 5
-      },
-      {
-        id: 2,
-        name: 'Mì gói',
-        barcode: '893002',
-        qty: 50,
-        importPrice: 3500,
-        sellPrice: 5000,
-        lowLimit: 5
-      }
-    ];
+    products = getCafeSampleProducts();
   }
 
   migrateProducts();
@@ -4216,7 +4303,9 @@ function migrateProducts(){
     importPrice: Number(p.importPrice) || 0,
     sellPrice: Number(p.sellPrice) || 0,
     lowLimit: Number(p.lowLimit ?? 5),
-    saleUnit: p.saleUnit || p.unit || 'cái'
+    saleUnit: p.saleUnit || p.unit || 'cái',
+    category: p.category || p.group || '',
+    storeId: p.storeId || DEFAULT_STORE_ID
   }));
 
   // Dọn dữ liệu cũ: mỗi sản phẩm 1 mã riêng, bắt đầu từ 893001.
@@ -12470,6 +12559,7 @@ function renderDashboardPro(){
    ========================================================= */
 function renderAll(){
   if(!current) return;
+  renderStoreInfo();
 
   const visibleBills = ['admin','manager','accountant'].includes(normalizeRole(current.role))
     ? bills
