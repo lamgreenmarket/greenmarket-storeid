@@ -17162,6 +17162,311 @@ setSyncStatus("ℹ️ Đăng nhập để đồng bộ Firebase", true);
 }
 </style>
 
+
+
+<style id="tiem-thuy-4G-final-lock">
+/* =========================================================
+   4G - CHỐT GIAO DIỆN TIỆM CỦA THÚY
+   - Xóa khối thương hiệu bị lặp trong sidebar
+   - Thu gọn sidebar thêm một nấc
+   - Cân header trên cùng thành status bar gọn
+   - Tinh nhẹ dashboard, không đổi logic
+   ========================================================= */
+@media (min-width:901px){
+  .app{
+    padding-left:336px!important;
+    padding-top:104px!important;
+    padding-right:24px!important;
+    padding-bottom:30px!important;
+  }
+  #appPage::before{
+    left:316px!important;
+    height:104px!important;
+    background:linear-gradient(180deg,#eafff7 0%,rgba(236,254,255,.96) 72%,rgba(236,254,255,.70) 100%)!important;
+  }
+
+  /* Sidebar chốt */
+  .menu{
+    top:16px!important;
+    left:16px!important;
+    bottom:16px!important;
+    width:292px!important;
+    padding:14px 14px 16px!important;
+    gap:8px!important;
+    border-radius:28px!important;
+    background:linear-gradient(180deg,#ffffff 0%,#f4fff8 48%,#ecfeff 100%)!important;
+    box-shadow:0 18px 42px rgba(15,118,110,.15)!important;
+    border:1px solid rgba(5,150,105,.16)!important;
+    overflow-y:auto!important;
+    overflow-x:hidden!important;
+    scrollbar-width:thin!important;
+  }
+
+  /* Xóa khối thương hiệu cũ bị lặp */
+  .menu .sidebar-brand-card,
+  .menu::before,
+  .menu::after{
+    display:none!important;
+    content:none!important;
+    height:0!important;
+    margin:0!important;
+    padding:0!important;
+    border:0!important;
+  }
+
+  /* Chỉ giữ 1 khối thương hiệu chính */
+  .sidebar-brand{
+    display:flex!important;
+    flex-direction:column!important;
+    align-items:center!important;
+    justify-content:center!important;
+    text-align:center!important;
+    padding:16px 12px 14px!important;
+    margin:0 0 12px!important;
+    border-radius:24px!important;
+    background:
+      radial-gradient(circle at top right, rgba(16,185,129,.15), transparent 34%),
+      linear-gradient(180deg,#ffffff 0%,#f0fdf4 100%)!important;
+    border:1px solid rgba(5,150,105,.17)!important;
+    box-shadow:0 12px 26px rgba(5,150,105,.11)!important;
+    color:#064e3b!important;
+  }
+  .sidebar-brand .sb-icon{
+    width:50px!important;
+    height:50px!important;
+    border-radius:17px!important;
+    font-size:27px!important;
+    margin:0 0 9px!important;
+  }
+  .sidebar-brand .sb-title{
+    font-family:Montserrat,Poppins,Inter,Arial,sans-serif!important;
+    font-size:21px!important;
+    line-height:1.08!important;
+    font-weight:900!important;
+    margin:0 0 6px!important;
+  }
+  .sidebar-brand .sb-industry{
+    font-size:12.2px!important;
+    line-height:1.18!important;
+    font-weight:900!important;
+    color:#047857!important;
+    letter-spacing:.25px!important;
+    margin:0 0 4px!important;
+  }
+  .sidebar-brand .sb-slogan{
+    font-size:11.7px!important;
+    line-height:1.22!important;
+    font-weight:800!important;
+    color:#0f766e!important;
+    max-width:230px!important;
+    margin:0!important;
+  }
+  .sidebar-brand .sb-powered{
+    font-size:9.8px!important;
+    line-height:1.2!important;
+    color:#64748b!important;
+    opacity:.72!important;
+    margin-top:6px!important;
+  }
+
+  /* Menu nút thanh hơn, đỡ nặng */
+  .menu button,
+  .menu-dropdown .menu-btn{
+    width:100%!important;
+    height:44px!important;
+    min-height:44px!important;
+    padding:0 15px!important;
+    border-radius:15px!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:flex-start!important;
+    text-align:left!important;
+    font-size:13.8px!important;
+    font-weight:850!important;
+    line-height:1.15!important;
+    white-space:normal!important;
+    overflow:hidden!important;
+    box-shadow:0 8px 18px rgba(5,150,105,.12)!important;
+  }
+  .menu button.menu-active{
+    background:linear-gradient(135deg,#10b981,#047857)!important;
+    box-shadow:0 10px 22px rgba(5,150,105,.18)!important;
+    padding-left:18px!important;
+  }
+  .menu button.menu-active:after{
+    content:""!important;
+    position:absolute!important;
+    left:7px!important;
+    right:auto!important;
+    top:10px!important;
+    bottom:10px!important;
+    width:4px!important;
+    height:auto!important;
+    border-radius:999px!important;
+    background:#fff!important;
+  }
+
+  /* Chia cụm menu vừa đủ, không thưa quá */
+  .menu > button:nth-of-type(4),
+  .menu > button:nth-of-type(8),
+  .menu-dropdown{
+    margin-top:8px!important;
+    padding-top:8px!important;
+    border-top:1px solid rgba(5,150,105,.13)!important;
+  }
+
+  /* Dropdown Dữ liệu: hiện đầy đủ chữ, gọn trong sidebar */
+  .menu-dropdown{
+    width:100%!important;
+    display:block!important;
+    position:relative!important;
+  }
+  .menu-dropdown .menu-btn{
+    margin:0!important;
+  }
+  .dropdown-content{
+    position:static!important;
+    display:none;
+    width:100%!important;
+    min-width:0!important;
+    max-width:100%!important;
+    margin:7px 0 0!important;
+    padding:4px 0 0!important;
+    border:0!important;
+    background:transparent!important;
+    box-shadow:none!important;
+    overflow:visible!important;
+  }
+  .menu-dropdown:hover .dropdown-content,
+  .menu-dropdown.show .dropdown-content{
+    display:block!important;
+  }
+  .dropdown-content button{
+    width:100%!important;
+    min-height:39px!important;
+    height:auto!important;
+    padding:9px 12px!important;
+    margin:5px 0 0!important;
+    border-radius:13px!important;
+    background:linear-gradient(135deg,#10b981,#047857)!important;
+    color:#fff!important;
+    text-align:left!important;
+    font-size:12.8px!important;
+    line-height:1.24!important;
+    white-space:normal!important;
+    overflow-wrap:anywhere!important;
+    word-break:normal!important;
+    box-shadow:0 7px 16px rgba(5,150,105,.14)!important;
+  }
+
+  /* Header thành status bar gọn */
+  .header{
+    left:336px!important;
+    right:24px!important;
+    top:16px!important;
+    min-height:58px!important;
+    padding:10px 18px!important;
+    border-radius:22px!important;
+    justify-content:flex-end!important;
+    align-items:center!important;
+    background:linear-gradient(135deg,rgba(255,255,255,.94),rgba(236,254,255,.94))!important;
+    box-shadow:0 10px 26px rgba(15,76,129,.09)!important;
+  }
+  .header .app-brand{
+    display:none!important;
+    visibility:hidden!important;
+    width:0!important;
+    height:0!important;
+    overflow:hidden!important;
+  }
+  .header > div:last-child{
+    display:flex!important;
+    align-items:center!important;
+    justify-content:flex-end!important;
+    gap:9px!important;
+    width:100%!important;
+    flex-wrap:wrap!important;
+    text-align:right!important;
+    font-size:13.5px!important;
+  }
+  .header span,
+  .header b{
+    line-height:1.2!important;
+  }
+  #mainLogoutBtn{
+    height:38px!important;
+    min-height:38px!important;
+    min-width:92px!important;
+    padding:0 13px!important;
+    border-radius:14px!important;
+    box-shadow:0 8px 18px rgba(15,76,129,.12)!important;
+  }
+
+  /* Nội dung chính */
+  .page{
+    scroll-margin-top:118px!important;
+  }
+  .dashboard-title{
+    margin-top:0!important;
+    padding:16px 18px!important;
+    border-radius:22px!important;
+  }
+  .dashboard-title h2{
+    font-size:28px!important;
+    letter-spacing:-.3px!important;
+  }
+
+  /* Dashboard: nhấn khối nhẹ, dễ đọc */
+  .stat{
+    border-radius:21px!important;
+    background:linear-gradient(135deg,#ffffff 0%,#f6fffb 100%)!important;
+  }
+  .stat h3{
+    font-size:15.5px!important;
+    margin-bottom:10px!important;
+  }
+  .stat p{
+    font-size:26px!important;
+  }
+  .dashboard-pro-card,
+  .misa-card,
+  .chart-row .card{
+    border-radius:22px!important;
+  }
+  #statLow,
+  #statTopReturns{
+    line-height:1.55!important;
+  }
+}
+</style>
+
+<script id="tiem-thuy-4G-clean-duplicate-brand">
+(function(){
+  function cleanSidebarBrandDup(){
+    try{
+      document.querySelectorAll('.sidebar-brand-card').forEach(function(el){ el.remove(); });
+      const menu = document.querySelector('#appPage .menu');
+      if(!menu) return;
+      const brands = menu.querySelectorAll('.sidebar-brand');
+      if(brands.length > 1){
+        brands.forEach(function(el, idx){ if(idx > 0) el.remove(); });
+      }
+    }catch(e){}
+  }
+  document.addEventListener('DOMContentLoaded', cleanSidebarBrandDup);
+  setTimeout(cleanSidebarBrandDup, 300);
+  setTimeout(cleanSidebarBrandDup, 1000);
+  if(typeof renderAll === 'function'){
+    const old4GRenderAll = renderAll;
+    renderAll = function(){
+      const r = old4GRenderAll.apply(this, arguments);
+      cleanSidebarBrandDup();
+      return r;
+    };
+  }
+})();
+</script>
+
 </body>
 </html>
 <!-- GREEN MARKET CLEAN LOGS PATCH: bỏ chú thích nhật ký, tự động lọc, sửa ngày nhóm -->
