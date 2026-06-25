@@ -2850,6 +2850,7 @@ body > .print-actions{display:none!important;}
         <button type="button" onclick="greenMarketBackupFirebaseNow();closeDataMenu()">☁️ Backup Firebase ngay</button>
         <button type="button" onclick="greenMarketRestoreFirebaseBackup();closeDataMenu()">♻️ Khôi phục backup Firebase</button>
         <button type="button" onclick="openQrSettings();closeDataMenu()">📱 QR thanh toán</button>
+        <button type="button" onclick="openStoreProfileModal();closeDataMenu()">🏪 Hồ sơ cửa hàng</button>
         <button type="button" onclick="setupStoreACafe();closeDataMenu()">☕ Tạo Store A Cafe</button>
         <button type="button" onclick="exportData();closeDataMenu()">📤 Xuất dữ liệu</button>
         <button type="button" onclick="document.getElementById('importFile').click();closeDataMenu()">📥 Nhập dữ liệu</button>
@@ -2858,6 +2859,54 @@ body > .print-actions{display:none!important;}
     </div>
     <input type="file" id="restoreBackupFile" accept=".json" class="hidden" onchange="restoreBackupFile(event)">
     <input type="file" id="importFile" accept=".json" class="hidden" onchange="importData(event)">
+  </div>
+
+
+  <div id="storeProfileModal" class="qr-settings-modal hidden">
+    <div class="qr-settings-card">
+      <div class="qr-settings-head">
+        <h3>🏪 Hồ sơ cửa hàng Store A Cafe</h3>
+        <button type="button" class="btn-gray" onclick="closeStoreProfileModal()">Đóng</button>
+      </div>
+      <div class="qr-settings-grid">
+        <div>
+          <label>Tên cửa hàng</label>
+          <input id="storeProfileName" placeholder="Ví dụ: Tiệm của Thủy">
+        </div>
+        <div>
+          <label>Tên thương hiệu lớn (in hoa)</label>
+          <input id="storeProfileBrandTitle" placeholder="Ví dụ: TIỆM CỦA THỦY">
+        </div>
+        <div>
+          <label>Slogan</label>
+          <input id="storeProfileSlogan" placeholder="Ví dụ: Cà phê nguyên chất – Gu Việt đậm đà">
+        </div>
+        <div>
+          <label>Biểu tượng / logo emoji</label>
+          <input id="storeProfileLogoEmoji" placeholder="☕">
+        </div>
+        <div>
+          <label>Số điện thoại</label>
+          <input id="storeProfilePhone" placeholder="Ví dụ: 0911000318">
+        </div>
+        <div>
+          <label>Địa chỉ</label>
+          <input id="storeProfileAddress" placeholder="Ví dụ: Nha Trang, Khánh Hòa">
+        </div>
+        <div>
+          <label>Ghi chú hóa đơn</label>
+          <input id="storeProfileReceiptFooter" placeholder="Ví dụ: Cảm ơn bạn đã ủng hộ Tiệm của Thủy!">
+        </div>
+        <div>
+          <label>Dòng Powered by</label>
+          <input id="storeProfilePoweredBy" placeholder="Green Market POS">
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:14px">
+        <button type="button" class="btn-gray" onclick="closeStoreProfileModal()">Đóng</button>
+        <button type="button" class="btn-green" onclick="saveStoreProfile()">💾 Lưu hồ sơ cửa hàng</button>
+      </div>
+    </div>
   </div>
 
   <div id="qrSettingsModal" class="qr-settings-modal hidden">
@@ -3742,6 +3791,9 @@ function ensureStoreA(){
       poweredBy: 'Green Market POS',
       type: 'Quán cafe',
       note: 'Store A chạy trong Green Market POS V02',
+      phone: '',
+      address: '',
+      receiptFooter: 'Cảm ơn quý khách! Hẹn gặp lại!',
       createdAt: now()
     });
   }
@@ -3753,6 +3805,19 @@ function ensureStoreA(){
 function getCurrentStore(){
   ensureStoreA();
   return stores.find(s => s.id === currentStoreId) || stores[0];
+}
+
+function getStoreReceiptInfo(){
+  const store = getCurrentStore();
+  return {
+    logo: store.logoEmoji || '☕',
+    brandTitle: store.brandTitle || (store.name || 'Green Market Cafe').toUpperCase(),
+    slogan: store.slogan || 'Cafe sạch mỗi ngày – Bán hàng gọn nhẹ',
+    phone: store.phone || '',
+    address: store.address || '',
+    receiptFooter: store.receiptFooter || 'Cảm ơn quý khách! Hẹn gặp lại!',
+    poweredBy: store.poweredBy || 'Green Market POS'
+  };
 }
 
 function renderStoreInfo(){
@@ -3779,6 +3844,41 @@ function renderStoreInfo(){
   if(lSlogan) lSlogan.textContent = slogan;
 }
 
+
+
+function openStoreProfileModal(){
+  const store = getCurrentStore();
+  document.getElementById('storeProfileName').value = store.name || '';
+  document.getElementById('storeProfileBrandTitle').value = store.brandTitle || '';
+  document.getElementById('storeProfileSlogan').value = store.slogan || '';
+  document.getElementById('storeProfileLogoEmoji').value = store.logoEmoji || '☕';
+  document.getElementById('storeProfilePhone').value = store.phone || '';
+  document.getElementById('storeProfileAddress').value = store.address || '';
+  document.getElementById('storeProfileReceiptFooter').value = store.receiptFooter || '';
+  document.getElementById('storeProfilePoweredBy').value = store.poweredBy || 'Green Market POS';
+  document.getElementById('storeProfileModal').classList.remove('hidden');
+}
+
+function closeStoreProfileModal(){
+  document.getElementById('storeProfileModal')?.classList.add('hidden');
+}
+
+function saveStoreProfile(){
+  const store = getCurrentStore();
+  store.name = (document.getElementById('storeProfileName').value || '').trim() || store.name || 'Green Market Cafe';
+  store.brandTitle = (document.getElementById('storeProfileBrandTitle').value || '').trim() || store.name.toUpperCase();
+  store.slogan = (document.getElementById('storeProfileSlogan').value || '').trim() || 'Cafe sạch mỗi ngày – Bán hàng gọn nhẹ';
+  store.logoEmoji = (document.getElementById('storeProfileLogoEmoji').value || '').trim() || '☕';
+  store.phone = (document.getElementById('storeProfilePhone').value || '').trim();
+  store.address = (document.getElementById('storeProfileAddress').value || '').trim();
+  store.receiptFooter = (document.getElementById('storeProfileReceiptFooter').value || '').trim() || 'Cảm ơn quý khách! Hẹn gặp lại!';
+  store.poweredBy = (document.getElementById('storeProfilePoweredBy').value || '').trim() || 'Green Market POS';
+  localStorage.setItem(KSTORES, JSON.stringify(stores));
+  renderStoreInfo();
+  try{ renderAll(); }catch(e){}
+  closeStoreProfileModal();
+  alert('Đã lưu hồ sơ cửa hàng cho Store A Cafe.');
+}
 
 function setupStoreACafe(){
   if(current && !['admin','manager'].includes(normalizeRole(current.role))){
@@ -7045,6 +7145,7 @@ document.addEventListener('DOMContentLoaded', () => { initReceiptCopiesSetting()
 function printReceipt(total, paymentText = 'Tiền mặt'){
   const staffName = escapeHTML(String(current?.name || 'Admin').replace(/Thu Ngân/g,'Thu Ngân'));
   const printedAt = splitReceiptDateTime(now());
+  const storeInfo = getStoreReceiptInfo();
   const copies = getReceiptCopiesSetting();
   const itemHtml = cart.map(c => `
     <div class="receipt-item">• ${escapeHTML(c.name)}:</div>
@@ -7055,8 +7156,10 @@ function printReceipt(total, paymentText = 'Tiền mặt'){
 
   function buildSaleReceipt(copyLabel = ''){
     return `
-      <div class="receipt-title">🛒 GREEN MARKET POS</div>
-      <div class="receipt-slogan">Quản lý đơn giản - Bán hàng hiệu quả</div>
+      <div class="receipt-title">${storeInfo.logo} ${escapeHTML(storeInfo.brandTitle)}</div>
+      <div class="receipt-slogan">${escapeHTML(storeInfo.slogan)}</div>
+      ${storeInfo.phone ? `<div style="text-align:center;font-size:12px">☎ ${escapeHTML(storeInfo.phone)}</div>` : ''}
+      ${storeInfo.address ? `<div style="text-align:center;font-size:12px">${escapeHTML(storeInfo.address)}</div>` : ''}
       ${copyLabel ? `<div class="receipt-reprint-stamp">${copyLabel}</div>` : ''}
       <div class="receipt-line"></div>
 
@@ -7077,8 +7180,7 @@ function printReceipt(total, paymentText = 'Tiền mặt'){
       ${buildReceiptQrBlock()}
 
       <div style="text-align:center; margin-top:6px; font-size:14px; font-style:italic; font-weight:500;">
-        Cảm ơn quý khách!<br>
-        Hẹn gặp lại!
+        ${escapeHTML(storeInfo.receiptFooter).replace(/\n/g,'<br>')}
       </div>
 
       <div class="receipt-spacer"></div>
@@ -12029,9 +12131,12 @@ function printReturnReceiptByIndex(index){
   renderAll();
 
   receiptPrint.classList.remove('hidden');
+  const storeInfo = getStoreReceiptInfo();
   receiptPrint.innerHTML = `
-    <div class="receipt-title">🛒 GREEN MARKET POS</div>
-      <div class="receipt-slogan">Quản lý đơn giản - Bán hàng hiệu quả</div>
+    <div class="receipt-title">${storeInfo.logo} ${escapeHTML(storeInfo.brandTitle)}</div>
+      <div class="receipt-slogan">${escapeHTML(storeInfo.slogan)}</div>
+      ${storeInfo.phone ? `<div style="text-align:center;font-size:12px">☎ ${escapeHTML(storeInfo.phone)}</div>` : ''}
+      ${storeInfo.address ? `<div style="text-align:center;font-size:12px">${escapeHTML(storeInfo.address)}</div>` : ''}
     <div class="receipt-return-stamp">PHIẾU TRẢ HÀNG</div>
     <div class="receipt-line"></div>
 
@@ -12165,9 +12270,12 @@ if(admin){
   const reprintPrintedAt = splitReceiptDateTime(now());
 
   receiptPrint.classList.remove('hidden');
+  const storeInfo = getStoreReceiptInfo();
   receiptPrint.innerHTML = `
-    <div class="receipt-title">🛒 GREEN MARKET POS</div>
-      <div class="receipt-slogan">Quản lý đơn giản - Bán hàng hiệu quả</div>
+    <div class="receipt-title">${storeInfo.logo} ${escapeHTML(storeInfo.brandTitle)}</div>
+      <div class="receipt-slogan">${escapeHTML(storeInfo.slogan)}</div>
+      ${storeInfo.phone ? `<div style="text-align:center;font-size:12px">☎ ${escapeHTML(storeInfo.phone)}</div>` : ''}
+      ${storeInfo.address ? `<div style="text-align:center;font-size:12px">${escapeHTML(storeInfo.address)}</div>` : ''}
     <div class="receipt-reprint-stamp">BẢN IN LẠI</div>
     <div class="receipt-reprint-note">Lần in lại: ${nextCount}</div>
     <div class="receipt-line"></div>
@@ -12195,8 +12303,7 @@ if(admin){
     ${buildReceiptQrBlock()}
 
     <div style="text-align:center; margin-top:6px; font-size:14px; font-style:italic; font-weight:500;">
-      Cảm ơn quý khách!<br>
-      Hẹn gặp lại!
+      ${escapeHTML(storeInfo.receiptFooter).replace(/\n/g,'<br>')}
     </div>
 
     <div class="receipt-spacer"></div>
