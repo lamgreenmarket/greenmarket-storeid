@@ -4672,6 +4672,76 @@ body{
 }
 </style>
 
+
+<style id="tiem-thuy-4p1b-fix-login-sidebar">
+/* =========================================================
+   4P.1B - FIX SIDEBAR KHÔNG HIỆN Ở MÀN ĐĂNG NHẬP
+   + chỉnh chữ sidebar gọn hơn, không xuống dòng xấu
+   ========================================================= */
+
+/* Khi app chưa đăng nhập, tuyệt đối không cho sidebar/menu của app nổi lên */
+#appPage.hidden .menu,
+#appPage[style*="display: none"] .menu,
+#appPage[style*="display:none"] .menu{
+  display:none!important;
+  visibility:hidden!important;
+  opacity:0!important;
+  pointer-events:none!important;
+}
+
+/* Nếu menu bị nằm ngoài appPage trong một số bản code, chỉ hiện menu khi body/app đang mở app */
+body:not(.app-ready) #appPage.hidden ~ .menu,
+body:not(.app-ready) .menu.app-only-hidden{
+  display:none!important;
+}
+
+@media (min-width:901px){
+  /* Chỉ áp layout sidebar khi appPage không bị hidden */
+  #appPage.hidden{
+    padding-left:0!important;
+    padding-top:0!important;
+  }
+
+  #appPage.hidden .menu{
+    position:static!important;
+    display:none!important;
+  }
+
+  /* Chữ thương hiệu trên sidebar: nhỏ hơn và gọn hơn để không bể dòng xấu */
+  #appPage:not(.hidden) .menu::before{
+    font-size:15px!important;
+    line-height:1.18!important;
+    padding:13px 8px 14px!important;
+    margin-bottom:10px!important;
+    word-break:normal!important;
+    overflow-wrap:normal!important;
+  }
+
+  /* Nút sidebar: chữ không bị xuống dòng tùm lum */
+  #appPage:not(.hidden) .menu > button,
+  #appPage:not(.hidden) .menu > .menu-dropdown > .menu-btn{
+    font-size:13.4px!important;
+    min-height:42px!important;
+    padding:10px 12px!important;
+    white-space:nowrap!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+  }
+
+  /* Các nút dài được phép nhỏ hơn chút */
+  #appPage:not(.hidden) .menu > button:nth-of-type(6),
+  #appPage:not(.hidden) .menu > button:nth-of-type(7){
+    font-size:12.5px!important;
+  }
+
+  #appPage:not(.hidden) .menu > .menu-dropdown .dropdown-content button{
+    white-space:normal!important;
+    overflow-wrap:anywhere!important;
+    font-size:12.1px!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <!-- =========================================================
@@ -18871,6 +18941,20 @@ setSyncStatus("ℹ️ Đăng nhập để đồng bộ Firebase", true);
       return r;
     };
   }
+})();
+</script>
+
+
+<script id="tiem-thuy-4p1b-app-ready-helper">
+(function(){
+  function syncAppReady(){
+    var app=document.getElementById('appPage');
+    if(!app) return;
+    var hidden = app.classList.contains('hidden') || getComputedStyle(app).display === 'none';
+    document.body.classList.toggle('app-ready', !hidden);
+  }
+  document.addEventListener('DOMContentLoaded', syncAppReady);
+  setInterval(syncAppReady, 500);
 })();
 </script>
 
