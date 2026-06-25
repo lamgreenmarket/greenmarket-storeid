@@ -16210,6 +16210,107 @@ setSyncStatus("ℹ️ Đăng nhập để đồng bộ Firebase", true);
   #headerBrandSlogan .brand-industry-line{font-size:12.4px!important;white-space:normal!important;}
   #headerBrandSlogan .brand-slogan-line{font-size:12.2px!important;white-space:normal!important;}
 }
+
+
+/* =========================================================
+   5C BƯỚC 4D - TRANG TỔNG QUAN VẬN HÀNH THEO BỐ CỤC DỌC
+   - Hàng đầu: Doanh thu + Lợi nhuận + Món trong thực đơn
+   - Các khối còn lại xếp dọc, full ngang, dễ đọc cho Tiệm của Thúy
+   - Chỉ chỉnh bố cục dashboard, không đụng logic/Firebase/in hóa đơn
+   ========================================================= */
+#home .dashboard-pro-panel{
+  display:grid!important;
+  grid-template-columns:repeat(12,minmax(0,1fr))!important;
+  gap:16px!important;
+  align-items:stretch!important;
+  margin-top:16px!important;
+}
+#home .dashboard-pro-card{
+  min-height:138px!important;
+  height:auto!important;
+  padding:20px!important;
+}
+#home .dashboard-pro-revenue{
+  grid-column:span 6!important;
+  order:1!important;
+}
+#home .dashboard-pro-profit{
+  grid-column:span 3!important;
+  order:2!important;
+}
+#home .dashboard-pro-stock-card{
+  grid-column:span 3!important;
+  order:3!important;
+}
+#home .dashboard-pro-top-card{
+  grid-column:1 / -1!important;
+  order:4!important;
+  min-height:150px!important;
+}
+#home .dashboard-pro-staff-card{
+  grid-column:1 / -1!important;
+  order:5!important;
+  min-height:140px!important;
+}
+#home .dashboard-pro-warning{
+  grid-column:1 / -1!important;
+  order:6!important;
+  min-height:135px!important;
+}
+#home .dashboard-pro-return-card{
+  grid-column:1 / -1!important;
+  order:7!important;
+}
+#home .dashboard-pro-top-return-card{
+  grid-column:1 / -1!important;
+  order:8!important;
+  min-height:150px!important;
+}
+#home .dashboard-pro-list{
+  columns:1!important;
+  max-width:100%!important;
+  line-height:1.75!important;
+  font-size:16px!important;
+}
+#home .dashboard-mini-metrics{
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+}
+#home .dashboard-pro-card h3{
+  font-size:16px!important;
+}
+#home .dashboard-pro-card strong{
+  font-size:26px!important;
+}
+@media(max-width:1100px){
+  #home .dashboard-pro-revenue,
+  #home .dashboard-pro-profit,
+  #home .dashboard-pro-stock-card{
+    grid-column:1 / -1!important;
+  }
+}
+@media(max-width:768px){
+  #home .dashboard-pro-panel{
+    grid-template-columns:1fr!important;
+    gap:10px!important;
+  }
+  #home .dashboard-pro-revenue,
+  #home .dashboard-pro-profit,
+  #home .dashboard-pro-stock-card,
+  #home .dashboard-pro-top-card,
+  #home .dashboard-pro-staff-card,
+  #home .dashboard-pro-warning,
+  #home .dashboard-pro-return-card,
+  #home .dashboard-pro-top-return-card{
+    grid-column:1 / -1!important;
+  }
+  #home .dashboard-mini-metrics{
+    grid-template-columns:1fr!important;
+  }
+  #home .dashboard-pro-list{
+    font-size:14px!important;
+  }
+}
+
 </style>
 
 </body>
