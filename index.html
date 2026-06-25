@@ -4074,11 +4074,18 @@ function getStoreReceiptInfo(){
 function renderStoreInfo(){
   const store = getCurrentStore();
   const logo = store.logoEmoji || '🧋';
-  const shopName = store.name || 'Tiệm của Thúy';
+  let shopName = store.name || 'Tiệm của Thúy';
   const brandTitle = store.brandTitle || 'TIỆM CỦA THÚY';
-  const industry = store.industry || 'CAFE – TRÀ SỮA – ĂN VẶT';
-  const slogan = store.slogan || 'Cà phê nguyên chất – Gu Việt đậm đà';
+  let industry = store.industry || 'CAFE – TRÀ SỮA – ĂN VẶT';
+  let slogan = store.slogan || 'Cà phê nguyên chất – Gu Việt đậm đà';
   const poweredBy = store.poweredBy || 'Green Market POS';
+
+  // 5C Bước 1C: khóa nhận diện Tiệm của Thúy theo 3 dòng chuẩn
+  if(String(shopName).toLowerCase().includes('thúy') || String(shopName).toLowerCase().includes('thuy')){
+    shopName = 'Tiệm của Thúy';
+    industry = 'CAFE – TRÀ SỮA – ĂN VẶT';
+    slogan = 'Cà phê nguyên chất – Gu Việt đậm đà';
+  }
 
   document.title = `${shopName} – Cafe • Trà sữa • Ăn vặt`;
   const badge = document.getElementById('currentStoreBadge');
@@ -15699,6 +15706,110 @@ document.addEventListener('DOMContentLoaded', () => {
 
 setSyncStatus("ℹ️ Đăng nhập để đồng bộ Firebase", true);
 </script>
+
+
+
+<style id="tiem-thuy-gd5c-step1c-header-final">
+/* =========================================================
+   TIỆM CỦA THÚY - 5C BƯỚC 1C
+   Đồng bộ header trong app theo bố cục 3 dòng thật sự.
+   Chỉ chỉnh nhận diện thương hiệu, không đổi logic bán hàng/Firebase/in.
+   ========================================================= */
+.header .app-brand{
+  display:grid!important;
+  grid-template-columns:auto 1fr!important;
+  grid-template-areas:
+    "icon title"
+    "icon industry"
+    "icon slogan"
+    "icon powered"!important;
+  column-gap:12px!important;
+  row-gap:2px!important;
+  align-items:center!important;
+  max-width:560px!important;
+}
+.header .app-brand .header-logo-mark{
+  grid-area:icon!important;
+  width:46px!important;
+  height:46px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  border-radius:14px!important;
+  background:linear-gradient(135deg,#10b981,#047857)!important;
+  color:#fff!important;
+  box-shadow:0 10px 22px rgba(5,150,105,.22)!important;
+  font-size:22px!important;
+  margin:0!important;
+}
+.header .app-brand h1#headerBrandTitle{
+  grid-area:title!important;
+  margin:0!important;
+  padding:0!important;
+  font-size:28px!important;
+  line-height:1.05!important;
+  letter-spacing:.1px!important;
+  color:#064e3b!important;
+  text-transform:none!important;
+  white-space:nowrap!important;
+}
+#headerBrandSlogan,
+#headerBrandSlogan.cafe-header-3line{
+  display:contents!important;
+  margin:0!important;
+  padding:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+#headerBrandSlogan .brand-industry-line{
+  grid-area:industry!important;
+  display:block!important;
+  margin:0!important;
+  padding:0!important;
+  font-size:13.8px!important;
+  line-height:1.15!important;
+  font-weight:900!important;
+  letter-spacing:.45px!important;
+  color:#047857!important;
+  text-transform:uppercase!important;
+  white-space:nowrap!important;
+}
+#headerBrandSlogan .brand-slogan-line{
+  grid-area:slogan!important;
+  display:block!important;
+  margin:0!important;
+  padding:0!important;
+  font-size:13px!important;
+  line-height:1.18!important;
+  font-weight:800!important;
+  color:#0f766e!important;
+  white-space:nowrap!important;
+}
+#headerPoweredBy{
+  grid-area:powered!important;
+  display:block!important;
+  margin:1px 0 0!important;
+  padding:0!important;
+  font-size:11px!important;
+  line-height:1.15!important;
+  color:#64748b!important;
+  font-weight:700!important;
+  opacity:.72!important;
+}
+@media(max-width:900px){
+  .header .app-brand{
+    grid-template-columns:1fr!important;
+    grid-template-areas:"icon" "title" "industry" "slogan" "powered"!important;
+    justify-items:center!important;
+    text-align:center!important;
+    row-gap:4px!important;
+    max-width:100%!important;
+  }
+  .header .app-brand h1#headerBrandTitle{font-size:24px!important;white-space:normal!important;}
+  #headerBrandSlogan .brand-industry-line{font-size:12.4px!important;white-space:normal!important;}
+  #headerBrandSlogan .brand-slogan-line{font-size:12.2px!important;white-space:normal!important;}
+}
+</style>
 
 </body>
 </html>
