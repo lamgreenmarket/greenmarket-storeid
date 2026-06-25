@@ -3955,20 +3955,21 @@ function renderStoreInfo(){
   const store = getCurrentStore();
   const logo = store.logoEmoji || '🧋';
   const shopName = store.name || 'Tiệm của Thúy';
-  const brandTitle = store.brandTitle || 'COFFEE & MILK TEA';
+  const brandTitle = store.brandTitle || 'TIỆM CỦA THÚY';
+  const industry = store.industry || 'CAFE – TRÀ SỮA – ĂN VẶT';
   const slogan = store.slogan || 'Cà phê nguyên chất – Gu Việt đậm đà';
   const poweredBy = store.poweredBy || 'Green Market POS';
 
-  document.title = `${shopName} - ${brandTitle}`;
+  document.title = `${shopName} – Cafe • Trà sữa • Ăn vặt`;
   const badge = document.getElementById('currentStoreBadge');
   if(badge) badge.textContent = `${logo} ${shopName}`;
   const line = document.getElementById('storeIntroLine');
-  if(line) line.textContent = `${logo} ${shopName} • ${brandTitle} — ${slogan}`;
+  if(line) line.textContent = `${logo} ${shopName} • ${industry} • ${slogan}`;
 
   const hTitle = document.getElementById('headerBrandTitle');
   if(hTitle) hTitle.innerHTML = `<span class="header-logo-mark">${logo}</span> ${escapeHTML(shopName)}`;
   const hSlogan = document.getElementById('headerBrandSlogan');
-  if(hSlogan) hSlogan.textContent = `${brandTitle} • ${slogan}`;
+  if(hSlogan) hSlogan.innerHTML = `<span class="brand-industry-line">${escapeHTML(industry)}</span><span class="brand-slogan-line">${escapeHTML(slogan)}</span>`;
   const powered = document.getElementById('headerPoweredBy');
   if(powered) powered.textContent = `Powered by ${poweredBy}`;
 
@@ -3976,7 +3977,7 @@ function renderStoreInfo(){
   if(lTitle) lTitle.textContent = shopName;
   const lSlogan = document.getElementById('loginBrandSlogan');
   if(lSlogan){
-    lSlogan.innerHTML = `<span class="login-brand-line">${escapeHTML(brandTitle)}</span><span class="login-slogan-line">${escapeHTML(slogan)}</span>`;
+    lSlogan.innerHTML = `<span class="login-brand-line">${escapeHTML(industry)}</span><span class="login-slogan-line">${escapeHTML(slogan)}</span>`;
   }
   const loginUserInput = document.getElementById('loginUser');
   if(loginUserInput && !loginUserInput.value){
@@ -3999,6 +4000,7 @@ function openStoreProfileModal(){
   const store = getCurrentStore();
   document.getElementById('storeProfileName').value = store.name || '';
   document.getElementById('storeProfileBrandTitle').value = store.brandTitle || '';
+  document.getElementById('storeProfileIndustry').value = store.industry || 'CAFE – TRÀ SỮA – ĂN VẶT';
   document.getElementById('storeProfileSlogan').value = store.slogan || '';
   document.getElementById('storeProfileLogoEmoji').value = store.logoEmoji || '☕';
   document.getElementById('storeProfilePhone').value = store.phone || '';
@@ -9360,7 +9362,7 @@ function buildImportReceiptPrintHtml(data){
 <div class="print-actions"><button class="btn" onclick="window.print()">🖨️ In</button><button class="btn2" onclick="window.close()">Đóng</button></div>
 <div class="sheet">
   <div class="top">
-    <div class="brand"><h1>${storeInfo.logo} ${escapeHTML(storeInfo.name)}</h1><p>${escapeHTML(storeInfo.subTitleLine || storeInfo.brandTitle)} • ${escapeHTML(storeInfo.slogan)}</p><p>${storeInfo.phone ? "☎ " + escapeHTML(storeInfo.phone) + " • " : ""}${escapeHTML(storeInfo.address || "")}</p><p class="muted">Powered by ${escapeHTML(storeInfo.poweredBy)}</p></div>
+    <div class="brand"><h1>${storeInfo.logo} ${escapeHTML(storeInfo.name)}</h1><p>${escapeHTML(storeInfo.industry || storeInfo.subTitleLine || storeInfo.brandTitle)}</p><p>${escapeHTML(storeInfo.slogan)}</p><p>${storeInfo.phone ? "☎ " + escapeHTML(storeInfo.phone) + " • " : ""}${escapeHTML(storeInfo.address || "")}</p><p class="muted">Powered by ${escapeHTML(storeInfo.poweredBy)}</p></div>
     <div class="code">Mã phiếu nhập<div class="box">${escapeHTML(data.receiptCode || '-')}</div></div>
   </div>
   <h2>PHIẾU NHẬP KHO</h2>
@@ -15200,6 +15202,7 @@ function ensureClientStoreAProfile(){
     const oldNames = ['Green Market Cafe','GREEN MARKET CAFE','Tiệm của Thủy','TIỆM CỦA THỦY'];
     if(!store.name || oldNames.includes(store.name)) store.name = 'Tiệm của Thúy';
     if(!store.brandTitle || oldNames.includes(store.brandTitle)) store.brandTitle = 'COFFEE & MILK TEA';
+    if(!store.industry || /COFFEE & MILK TEA|Cafe sạch|Bán hàng gọn nhẹ/i.test(store.industry||'')) store.industry = 'CAFE – TRÀ SỮA – ĂN VẶT';
     if(!store.slogan || /Cafe sạch|Bán hàng gọn nhẹ/i.test(store.slogan)) store.slogan = 'Cà phê nguyên chất – Gu Việt đậm đà';
     if(!store.logoEmoji || store.logoEmoji === '☕') store.logoEmoji = '🧋';
     if(!store.phone) store.phone = '0989756103';
