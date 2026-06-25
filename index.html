@@ -16726,6 +16726,233 @@ setSyncStatus("ℹ️ Đăng nhập để đồng bộ Firebase", true);
 .menu button.menu-active{padding-left:18px!important;}
 </style>
 
+
+
+<style id="gd5c-sidebar-4E-final-polish">
+/* =========================================================
+   5C - 4E: HOÀN THIỆN SIDEBAR + HEADER TIỆM CỦA THÚY
+   - Sidebar rộng hơn, thương hiệu thoáng hơn
+   - Header phải gọn lại, không trống quá nhiều
+   - Nội dung căn lại, không bị khuất tiêu đề
+   - Dropdown Dữ liệu đọc đủ chữ, không tràn/che
+   ========================================================= */
+@media (min-width:901px){
+  body{
+    background:
+      radial-gradient(circle at top left, rgba(16,185,129,.13), transparent 26%),
+      linear-gradient(180deg,#eafff7 0%,#eef8ff 52%,#f8fbff 100%)!important;
+  }
+
+  .app{
+    padding-left:360px!important;
+    padding-top:118px!important;
+    padding-right:28px!important;
+    padding-bottom:34px!important;
+  }
+  #appPage::before{
+    left:335px!important;
+    height:118px!important;
+    background:linear-gradient(180deg,var(--bg) 0%,rgba(233,251,255,.98) 70%,rgba(233,251,255,.72) 100%)!important;
+  }
+
+  /* HEADER: chỉ là thanh trạng thái người dùng, gọn và cân */
+  .header{
+    left:360px!important;
+    right:28px!important;
+    top:18px!important;
+    min-height:66px!important;
+    padding:12px 20px!important;
+    border-radius:22px!important;
+    justify-content:flex-end!important;
+    align-items:center!important;
+    background:linear-gradient(135deg,rgba(255,255,255,.92),rgba(236,254,255,.92))!important;
+    box-shadow:0 12px 30px rgba(15,76,129,.10)!important;
+  }
+  .header .app-brand{
+    display:none!important;
+    visibility:hidden!important;
+    width:0!important;
+    height:0!important;
+    overflow:hidden!important;
+  }
+  .header > div:last-child{
+    display:flex!important;
+    align-items:center!important;
+    justify-content:flex-end!important;
+    gap:10px!important;
+    width:100%!important;
+    flex-wrap:wrap!important;
+    text-align:right!important;
+    font-size:14px!important;
+  }
+  #mainLogoutBtn{
+    min-width:96px!important;
+    height:40px!important;
+    padding:0 14px!important;
+    border-radius:14px!important;
+  }
+
+  /* SIDEBAR: rộng hơn, chia cụm rõ hơn */
+  .menu{
+    top:18px!important;
+    left:18px!important;
+    bottom:18px!important;
+    width:310px!important;
+    padding:14px 16px 18px!important;
+    gap:10px!important;
+    border-radius:30px!important;
+    background:linear-gradient(180deg,#ffffff 0%,#f4fff8 45%,#ecfeff 100%)!important;
+    box-shadow:0 22px 52px rgba(15,118,110,.17)!important;
+    border:1px solid rgba(5,150,105,.16)!important;
+    scrollbar-width:thin!important;
+  }
+
+  /* Thẻ thương hiệu đầu sidebar */
+  .sidebar-brand{
+    padding:20px 14px 18px!important;
+    margin:0 0 14px!important;
+    border-radius:26px!important;
+    background:
+      radial-gradient(circle at top right, rgba(16,185,129,.16), transparent 34%),
+      linear-gradient(180deg,#ffffff 0%,#f0fdf4 100%)!important;
+    border:1px solid rgba(5,150,105,.18)!important;
+    box-shadow:0 14px 30px rgba(5,150,105,.12)!important;
+  }
+  .sidebar-brand .sb-icon{
+    width:56px!important;
+    height:56px!important;
+    border-radius:18px!important;
+    font-size:30px!important;
+    margin-bottom:10px!important;
+  }
+  .sidebar-brand .sb-title{
+    font-size:23px!important;
+    line-height:1.08!important;
+    margin-bottom:7px!important;
+  }
+  .sidebar-brand .sb-industry{
+    font-size:13px!important;
+    line-height:1.18!important;
+    margin-bottom:5px!important;
+    letter-spacing:.25px!important;
+  }
+  .sidebar-brand .sb-slogan{
+    font-size:12.4px!important;
+    line-height:1.25!important;
+    max-width:250px!important;
+  }
+  .sidebar-brand .sb-powered{
+    font-size:10.5px!important;
+    margin-top:7px!important;
+  }
+
+  .menu button,
+  .menu-dropdown .menu-btn{
+    width:100%!important;
+    min-width:0!important;
+    min-height:48px!important;
+    height:48px!important;
+    padding:0 16px!important;
+    border-radius:16px!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:flex-start!important;
+    text-align:left!important;
+    font-size:14.2px!important;
+    line-height:1.2!important;
+    white-space:normal!important;
+    overflow:hidden!important;
+    text-overflow:clip!important;
+  }
+
+  /* Cụm menu: Tổng quan / Nghiệp vụ / Quản trị */
+  .menu > button:nth-of-type(4),
+  .menu > button:nth-of-type(8),
+  .menu-dropdown{
+    margin-top:14px!important;
+    padding-top:14px!important;
+    border-top:1px solid rgba(5,150,105,.16)!important;
+  }
+
+  .menu button.menu-active{
+    background:linear-gradient(135deg,#0ea5e9,#059669)!important;
+    color:#fff!important;
+    padding-left:20px!important;
+    box-shadow:0 12px 24px rgba(5,150,105,.22)!important;
+    transform:none!important;
+  }
+  .menu button.menu-active:after{
+    content:""!important;
+    position:absolute!important;
+    left:7px!important;
+    top:12px!important;
+    bottom:12px!important;
+    width:4px!important;
+    height:auto!important;
+    border-radius:999px!important;
+    background:#ffffff!important;
+  }
+
+  /* Dropdown Dữ liệu: đủ chữ, không bị che */
+  .menu-dropdown{
+    width:100%!important;
+    display:block!important;
+    position:relative!important;
+  }
+  .menu-dropdown .menu-btn{
+    margin:0!important;
+  }
+  .dropdown-content{
+    position:static!important;
+    top:auto!important;
+    left:auto!important;
+    right:auto!important;
+    bottom:auto!important;
+    width:100%!important;
+    max-width:100%!important;
+    min-width:0!important;
+    margin:9px 0 0!important;
+    padding:7px 0 0!important;
+    background:transparent!important;
+    border:none!important;
+    box-shadow:none!important;
+    overflow:visible!important;
+  }
+  .dropdown-content button{
+    width:100%!important;
+    height:auto!important;
+    min-height:44px!important;
+    padding:10px 13px!important;
+    margin:7px 0 0!important;
+    border-radius:15px!important;
+    background:linear-gradient(135deg,#10b981,#047857)!important;
+    color:#fff!important;
+    text-align:left!important;
+    white-space:normal!important;
+    overflow-wrap:anywhere!important;
+    word-break:normal!important;
+    line-height:1.24!important;
+    font-size:13.2px!important;
+    box-shadow:0 9px 18px rgba(5,150,105,.15)!important;
+  }
+  .dropdown-content button:hover{
+    background:linear-gradient(135deg,#0ea5e9,#059669)!important;
+    color:#fff!important;
+    transform:none!important;
+  }
+
+  /* Nội dung chính: thoáng hơn */
+  .page{scroll-margin-top:130px!important;}
+  .dashboard-title,
+  .page.card > h2:first-child{
+    margin-top:0!important;
+  }
+  .card{
+    border-radius:24px!important;
+  }
+}
+</style>
+
 </body>
 </html>
 <!-- GREEN MARKET CLEAN LOGS PATCH: bỏ chú thích nhật ký, tự động lọc, sửa ngày nhóm -->
