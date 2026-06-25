@@ -4742,6 +4742,45 @@ body:not(.app-ready) .menu.app-only-hidden{
 }
 </style>
 
+
+<style id="tiem-thuy-4p1c-fix-slogan-da">
+/* =========================================================
+   4P.1C - FIX CHỮ "ĐÀ" BỊ XUỐNG DÒNG TRONG SIDEBAR
+   Chỉ chỉnh phần thương hiệu sidebar, không đụng logic.
+   ========================================================= */
+@media (min-width:901px){
+
+  /* Làm khối thương hiệu sidebar rộng chữ hơn, gọn dòng hơn */
+  #appPage:not(.hidden) .menu::before{
+    content:"🥤\A Tiệm của Thúy\A CAFE – TRÀ SỮA – ĂN VẶT\A Cà phê nguyên chất – Gu Việt đậm đà\A Powered by Green Market POS"!important;
+    font-size:14.2px!important;
+    line-height:1.16!important;
+    padding:13px 6px 14px!important;
+    margin:0 0 10px!important;
+    letter-spacing:-0.15px!important;
+    word-break:keep-all!important;
+    overflow-wrap:normal!important;
+    white-space:pre-line!important;
+  }
+
+  /* Tăng nhẹ chiều ngang sidebar để slogan không gãy chữ */
+  #appPage:not(.hidden) .menu{
+    width:252px!important;
+  }
+
+  #appPage.app:not(.hidden){
+    padding-left:286px!important;
+  }
+
+  /* Nút menu cân lại sau khi sidebar rộng hơn */
+  #appPage:not(.hidden) .menu > button,
+  #appPage:not(.hidden) .menu > .menu-dropdown > .menu-btn{
+    font-size:13.2px!important;
+    white-space:nowrap!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <!-- =========================================================
