@@ -2815,8 +2815,8 @@ body > .print-actions{display:none!important;}
         <span class="gm-cart">🛒</span>
         <span class="gm-leaf">●</span>
       </div>
-      <div class="logo gm-logo-text">GREEN MARKET POS</div>
-      <div class="slogan">Quản lý đơn giản - Bán hàng hiệu quả</div>
+      <div id="loginBrandTitle" class="logo gm-logo-text">GREEN MARKET CAFE</div>
+      <div id="loginBrandSlogan" class="slogan">Cafe sạch mỗi ngày – Bán hàng gọn nhẹ</div>
     </div>
 
     <label>Tên đăng nhập hoặc email Firebase</label><input id="loginUser" name="gm_login_user_manual_2026" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" inputmode="text" placeholder="" value="">
@@ -2829,7 +2829,7 @@ body > .print-actions{display:none!important;}
 <!-- =========================================================
      10. HTML HEADER + MENU
      ========================================================= -->
-  <div class="header"><div class="app-brand"><h1><span class="header-logo-mark">🛒</span> GREEN MARKET POS</h1><p>Quản lý đơn giản - Bán hàng hiệu quả</p></div><div>Xin chào: <b id="userName"></b> - Quyền: <b id="userRole"></b> <span id="firebaseSyncStatus" style="display:inline-block;margin-left:8px;padding:4px 10px;border-radius:999px;background:#eef7ff;color:#075985;font-weight:800;font-size:12px">☁️ Firebase</span> <span id="currentStoreBadge" style="display:inline-block;margin-left:8px;padding:4px 10px;border-radius:999px;background:#f0fdf4;color:#047857;font-weight:900;font-size:12px">☕ Store A</span> <button id="mainLogoutBtn" class="btn-gray" onclick="confirmLogout()">Đăng xuất</button></div></div>
+  <div class="header"><div class="app-brand"><h1 id="headerBrandTitle"><span class="header-logo-mark">☕</span> GREEN MARKET CAFE</h1><p id="headerBrandSlogan">Cafe sạch mỗi ngày – Bán hàng gọn nhẹ</p><small id="headerPoweredBy" style="display:block;margin-top:4px;color:#64748b;font-weight:700">Powered by Green Market POS</small></div><div>Xin chào: <b id="userName"></b> - Quyền: <b id="userRole"></b> <span id="firebaseSyncStatus" style="display:inline-block;margin-left:8px;padding:4px 10px;border-radius:999px;background:#eef7ff;color:#075985;font-weight:800;font-size:12px">☁️ Firebase</span> <span id="currentStoreBadge" style="display:inline-block;margin-left:8px;padding:4px 10px;border-radius:999px;background:#f0fdf4;color:#047857;font-weight:900;font-size:12px">☕ Store A</span> <button id="mainLogoutBtn" class="btn-gray" onclick="confirmLogout()">Đăng xuất</button></div></div>
   <div class="menu">
     <button onclick="showPage('home')">🏠 Trang chủ</button>
     <button data-permission="shift" onclick="showPage('shift')">⏱ Ca làm việc</button>
@@ -3736,6 +3736,10 @@ function ensureStoreA(){
       id: DEFAULT_STORE_ID,
       code: 'A',
       name: 'Green Market Cafe',
+      brandTitle: 'GREEN MARKET CAFE',
+      slogan: 'Cafe sạch mỗi ngày – Bán hàng gọn nhẹ',
+      logoEmoji: '☕',
+      poweredBy: 'Green Market POS',
       type: 'Quán cafe',
       note: 'Store A chạy trong Green Market POS V02',
       createdAt: now()
@@ -3754,10 +3758,27 @@ function getCurrentStore(){
 function renderStoreInfo(){
   const store = getCurrentStore();
   const badge = document.getElementById('currentStoreBadge');
-  if(badge) badge.textContent = `☕ Store ${store.code || 'A'}: ${store.name || 'Green Market Cafe'}`;
+  if(badge) badge.textContent = `${store.logoEmoji || '☕'} ${store.name || 'Green Market Cafe'}`;
   const line = document.getElementById('storeIntroLine');
-  if(line) line.textContent = `☕ Store ${store.code || 'A'}: ${store.name || 'Green Market Cafe'} — mô hình quán cafe trong Green Market POS`;
+  if(line) line.textContent = `${store.logoEmoji || '☕'} ${store.name || 'Green Market Cafe'} — mô hình quán cafe trong ${store.poweredBy || 'Green Market POS'}`;
+
+  const brandTitle = store.brandTitle || (store.name || 'Green Market Cafe').toUpperCase();
+  const slogan = store.slogan || 'Cafe sạch mỗi ngày – Bán hàng gọn nhẹ';
+  const logo = store.logoEmoji || '☕';
+
+  const hTitle = document.getElementById('headerBrandTitle');
+  if(hTitle) hTitle.innerHTML = `<span class="header-logo-mark">${logo}</span> ${brandTitle}`;
+  const hSlogan = document.getElementById('headerBrandSlogan');
+  if(hSlogan) hSlogan.textContent = slogan;
+  const powered = document.getElementById('headerPoweredBy');
+  if(powered) powered.textContent = `Powered by ${store.poweredBy || 'Green Market POS'}`;
+
+  const lTitle = document.getElementById('loginBrandTitle');
+  if(lTitle) lTitle.textContent = brandTitle;
+  const lSlogan = document.getElementById('loginBrandSlogan');
+  if(lSlogan) lSlogan.textContent = slogan;
 }
+
 
 function setupStoreACafe(){
   if(current && !['admin','manager'].includes(normalizeRole(current.role))){
