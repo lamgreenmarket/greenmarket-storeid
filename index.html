@@ -690,7 +690,7 @@ tr:nth-child(even) td{
 
 /* =========================================================
    07B. PHIẾU NHẬP KHO KHOA HỌC - TEST RIÊNG
-   Chỉ phục vụ mục Hàng mới nhập, không đụng POS bán hàng.
+   Chỉ phục vụ mục Nhập nguyên liệu, không đụng POS bán hàng.
    ========================================================= */
 .import-science-box{
   border:1px solid #d7e7f5;
@@ -3255,8 +3255,8 @@ body > .print-actions{display:none!important;}
     <button data-permission="shift" onclick="showPage('shift')">⏱ Ca làm việc</button>
     <button data-permission="sell" onclick="showPage('sell')">🛒 Bán hàng</button>
     <button data-permission="shiftReport" onclick="showPage('shiftReport')">📊 Báo cáo ca</button>
-    <button data-permission="stock" onclick="showStockAll()">📦 Kho món</button>
-    <button data-permission="imports" onclick="showPage('imports')">📥 Nhập món / nguyên liệu</button>
+    <button data-permission="stock" onclick="showStockAll()">📋 Thực đơn</button>
+    <button data-permission="imports" onclick="showPage('imports')">📥 Nhập nguyên liệu</button>
     <button data-permission="barcodeA4" onclick="showBarcodePage()">🏷️ In tem mã vạch A4</button>
     <button onclick="showPage('bills')">🧾 Hóa đơn</button>
     <button data-permission="money" onclick="showPage('money')">💵 Thu chi</button>
@@ -3598,14 +3598,14 @@ body > .print-actions{display:none!important;}
      Gộp tất cả kho + cảnh báo vào 1 mục duy nhất.
      ========================================================= -->
   <section id="stock" class="page hidden card">
-    <h2>📦 Kho món</h2>
-    <p class="muted" style="font-weight:800">☕ Store A Cafe: quản lý món uống, bánh ngọt và tồn kho theo ly / chai / phần.</p>
+    <h2>📋 Thực đơn & tồn món</h2>
+    <p class="muted" style="font-weight:800">☕ Quản lý món uống, trà sữa, bánh ngọt và số lượng còn tại Tiệm của Thúy.</p>
   
-    <div class="alert-grid"><div class="alert-box"><h3 class="status-low">⚠️ Hàng sắp hết</h3><ul id="lowStockList"></ul></div><div class="alert-box"><h3 class="status-out">❌ Hàng đã hết</h3><ul id="outStockList"></ul></div></div>
+    <div class="alert-grid"><div class="alert-box"><h3 class="status-low">⚠️ Món sắp hết</h3><ul id="lowStockList"></ul></div><div class="alert-box"><h3 class="status-out">❌ Món đã hết</h3><ul id="outStockList"></ul></div></div>
     <hr>
     
-    <div class="stock-tabs"><button class="btn-green active" id="btnStockAll" onclick="showStockAll()">✔️ Tất cả kho</button><button class="btn-orange" id="btnStockLow" onclick="showLowStock()">⚠️ Sắp hết</button><button class="btn-red" id="btnStockOut" onclick="showOutStock()">❌ Đã hết</button></div>
-    <div class="table-wrap"><table><thead><tr><th>STT</th><th>Tên</th><th>Mã vạch</th><th>Tồn</th><th>Giá nhập</th><th>Giá bán</th><th>Mức cảnh báo</th><th>Trạng thái</th><th>Thao tác</th></tr></thead><tbody id="stockBody"></tbody></table></div>
+    <div class="stock-tabs"><button class="btn-green active" id="btnStockAll" onclick="showStockAll()">✔️ Tất cả món</button><button class="btn-orange" id="btnStockLow" onclick="showLowStock()">⚠️ Sắp hết</button><button class="btn-red" id="btnStockOut" onclick="showOutStock()">❌ Đã hết</button></div>
+    <div class="table-wrap"><table><thead><tr><th>STT</th><th>Tên món</th><th>Mã món</th><th>Còn</th><th>Giá nhập</th><th>Giá bán</th><th>Mức báo hết</th><th>Trạng thái</th><th>Thao tác</th></tr></thead><tbody id="stockBody"></tbody></table></div>
   </section>
 
 <section id="barcodeA4" class="page hidden card">
@@ -3669,8 +3669,8 @@ body > .print-actions{display:none!important;}
      15. HTML HÓA ĐƠN / THU CHI / NHÂN VIÊN / NHẬT KÝ
      ========================================================= -->
   <section id="imports" class="page hidden card">
-    <h2>📥 Nhập món / nguyên liệu / Phiếu nhập kho</h2>
-    <p class="muted" style="font-weight:800">☕ Dùng để nhập thêm món, nước đóng chai, bánh hoặc nguyên liệu đơn giản cho quán cafe.</p>
+    <h2>📥 Nhập nguyên liệu & bổ sung món</h2>
+    <p class="muted" style="font-weight:800">☕ Dùng để nhập nguyên liệu, nước, bánh và bổ sung món cho Tiệm của Thúy.</p>
 
     <div class="import-science-box">
       <h3>🧾 Thông tin phiếu nhập</h3>
@@ -3680,7 +3680,7 @@ body > .print-actions{display:none!important;}
           <input id="importReceiptCode" readonly>
         </div>
         <div>
-          <label>Ngày giờ nhập kho</label>
+          <label>Ngày giờ nhập</label>
           <input id="importReceiptTime" readonly>
         </div>
         <div>
@@ -3688,34 +3688,34 @@ body > .print-actions{display:none!important;}
           <input id="importStaff" readonly>
         </div>
         <div>
-          <label>Nhà cung cấp / Công ty</label>
+          <label>Nhà cung cấp</label>
           <input id="importSupplier" list="supplierList" placeholder="VD: Công ty ABC, đại lý Minh Tâm...">
           <datalist id="supplierList"></datalist>
         </div>
         <div>
-          <label>Số phiếu nhà cung cấp</label>
+          <label>Số phiếu NCC</label>
           <input id="importSupplierInvoice" placeholder="VD: HD00123 / PN NCC...">
         </div>
         <div>
-          <label>Ghi chú phiếu</label>
+          <label>Ghi chú nhập</label>
           <input id="importNote" placeholder="VD: nhập hàng sáng nay, hàng cận date, đổi trả...">
         </div>
       </div>
     </div>
 
     <div class="import-science-box">
-      <h3>📦 Quét mã / nhập dòng hàng</h3>
+      <h3>📦 Nhập món / nguyên liệu vào phiếu</h3>
       <div class="import-grid">
         <div>
-          <label>Mã hàng / mã vạch</label>
-          <input id="importBarcode" placeholder="Quét mã hoặc gõ mã hàng" oninput="importBarcodeAutoLookup()" onkeydown="importScanEnter(event)" autocomplete="off">
+          <label>Mã món / mã vạch</label>
+          <input id="importBarcode" placeholder="Quét mã hoặc gõ mã món" oninput="importBarcodeAutoLookup()" onkeydown="importScanEnter(event)" autocomplete="off">
         </div>
         <div>
-          <label>Tên hàng</label>
-          <input id="importName" placeholder="Nhập tên hàng">
+          <label>Tên món / nguyên liệu</label>
+          <input id="importName" placeholder="Nhập tên món hoặc nguyên liệu">
         </div>
         <div>
-          <label>Đơn vị bán</label>
+          <label>Đơn vị bán ra</label>
           <input id="importSaleUnit" placeholder="chai/lon/gói/cái">
         </div>
         <div>
@@ -3751,14 +3751,14 @@ body > .print-actions{display:none!important;}
           </select>
         </div>
         <div>
-          <label>Giá lô tự động</label>
+          <label>Giá lô</label>
           <input id="importLotPrice" type="text" readonly placeholder="Tự tính = tồn tăng × giá nhập/đv">
         </div>
       </div>
 
       <div class="import-mini-grid" style="margin-top:10px">
         <div>
-          <label>Tồn tăng tự động</label>
+          <label>Số lượng tăng</label>
           <input id="importUnitQty" readonly>
         </div>
         <div>
@@ -3766,7 +3766,7 @@ body > .print-actions{display:none!important;}
           <input id="importUnitPrice" type="number" min="0" placeholder="VD: 3500" oninput="calcImportLine()">
         </div>
         <div>
-          <label>Giá bán 1 đơn vị</label>
+          <label>Giá bán dự kiến</label>
           <input id="importSellPrice" type="number" min="0" placeholder="Để trống để giữ giá cũ">
         </div>
         <div>
@@ -3776,17 +3776,17 @@ body > .print-actions{display:none!important;}
       </div>
 
       <div class="actions">
-        <button id="importAddLineBtn" class="btn-blue" onclick="addImportDraftLine()">➕ Thêm dòng vào phiếu</button>
+        <button id="importAddLineBtn" class="btn-blue" onclick="addImportDraftLine()">➕ Thêm vào phiếu nhập</button>
         <button class="btn-gray" onclick="clearImportLine()">🧹 Xóa dòng đang nhập</button>
-        <button class="btn-red" onclick="clearImportDraft()">🗑 Xóa phiếu đang lập</button>
-        <button class="btn-orange" onclick="newImportReceipt()">🧾 Tạo phiếu mới</button>
+        <button class="btn-red" onclick="clearImportDraft()">🗑 Xóa phiếu nhập</button>
+        <button class="btn-orange" onclick="newImportReceipt()">🧾 Tạo phiếu nhập mới</button>
       </div>
     </div>
 
     <div class="import-science-box">
-      <h3>🧾 Phiếu nhập đang lập</h3>
+      <h3>🧾 Phiếu nhập nguyên liệu đang lập</h3>
       <div class="import-summary">
-        <div class="sum-card"><b>Số dòng hàng</b><strong id="importDraftCount">0</strong></div>
+        <div class="sum-card"><b>Số dòng nhập</b><strong id="importDraftCount">0</strong></div>
         <div class="sum-card"><b>Tổng tiền phiếu</b><strong id="importDraftTotal">0 VNĐ</strong></div>
         <div class="sum-card"><b>Trạng thái</b><span id="importDraftStatus" class="status-low">Chưa lưu vào kho</span></div>
       </div>
@@ -3796,8 +3796,8 @@ body > .print-actions{display:none!important;}
           <thead>
             <tr>
               <th>STT</th>
-              <th>Mã hàng</th>
-              <th>Tên hàng</th>
+              <th>Mã món</th>
+              <th>Tên món</th>
               <th>Nhập theo</th>
               <th>SL nhập</th>
               <th>Quy đổi</th>
@@ -3822,7 +3822,7 @@ body > .print-actions{display:none!important;}
     <div class="import-science-box">
       <div class="import-mini-grid">
         <div>
-          <label>Tìm theo mã phiếu / số phiếu NCC / nhà cung cấp / mã hàng</label>
+          <label>Tìm theo mã phiếu / số phiếu NCC / nhà cung cấp / mã món</label>
           <input id="importTraceSearch" placeholder="VD: PN2026..., HD001/VPN, Công ty ABC, 893001" oninput="renderImportTrace()" onkeydown="if(event.key==='Enter'){event.preventDefault();renderImportTrace(true);}">
           <button class="btn-blue full" type="button" onclick="renderImportTrace(true)">🔎 Truy vết</button>
         </div>
@@ -3831,10 +3831,10 @@ body > .print-actions{display:none!important;}
           <input id="importTraceSummary" readonly placeholder="Nhập từ khóa để tìm phiếu">
         </div>
       </div>
-      <div id="importTraceResult" class="alert-box" style="margin-top:12px">Nhập mã phiếu, số phiếu NCC, tên công ty, tên hàng hoặc mã vạch để truy vết.</div>
+      <div id="importTraceResult" class="alert-box" style="margin-top:12px">Nhập mã phiếu, số phiếu NCC, tên công ty, tên món hoặc mã vạch để truy vết.</div>
     </div>
 
-    <h3>📚 Lịch sử hàng mới nhập</h3>
+    <h3>📚 Lịch sử nhập nguyên liệu / món</h3>
     <div class="table-wrap">
       <table>
         <thead>
@@ -5301,7 +5301,7 @@ if(id === 'sell'){
 function setActiveMainMenu(id){
   const map = {
     home:'Trang chủ', shift:'Ca làm việc', sell:'Bán hàng', shiftReport:'Báo cáo ca',
-    stock:'Kho hàng', imports:'Hàng mới nhập', barcodeA4:'In tem mã vạch A4',
+    stock:'Thực đơn', imports:'Nhập nguyên liệu', barcodeA4:'In tem mã vạch A4',
     bills:'Hóa đơn', money:'Thu chi', staff:'Nhân viên', logs:'Nhật ký'
   };
   const label = map[id] || '';
@@ -6978,8 +6978,8 @@ function editProductPrice(id){
   // QUY TẮC KHO AN TOÀN:
   // - Sửa món chỉ được sửa thông tin mô tả / giá bán / cảnh báo.
   // - KHÔNG cho sửa trực tiếp số lượng tồn và giá nhập lịch sử.
-  // - Muốn tăng/giảm tồn phải dùng nút "Điều chỉnh kho" để có lý do + nhật ký riêng.
-  alert(`Sửa thông tin món\n\nTồn hiện tại: ${Number(p.qty || 0)}\nGiá nhập hiện tại: ${money(p.importPrice)}\n\nLưu ý: Không được sửa trực tiếp tồn kho hoặc giá nhập lịch sử. Muốn đổi tồn kho hãy dùng nút "Điều chỉnh kho".`);
+  // - Muốn tăng/giảm số lượng phải dùng nút "Điều chỉnh số lượng" để có lý do + nhật ký riêng.
+  alert(`Sửa thông tin món\n\nTồn hiện tại: ${Number(p.qty || 0)}\nGiá nhập hiện tại: ${money(p.importPrice)}\n\nLưu ý: Không được sửa trực tiếp tồn kho hoặc giá nhập lịch sử. Muốn đổi số lượng hãy dùng nút "Điều chỉnh số lượng".`);
 
   const newName = prompt('Tên món:', p.name);
   if(newName === null) return;
@@ -7190,12 +7190,12 @@ function stockActionButtons(p){
   const buttons = [];
 
   if(r === 'admin' || r === 'manager'){
-    buttons.push(`<button class="btn-orange" onclick="editProductPrice(${p.id})">Sửa thông tin</button>`);
-    buttons.push(`<button class="btn-green" onclick="adjustStockProduct(${p.id})">📦 Điều chỉnh kho</button>`);
+    buttons.push(`<button class="btn-orange" onclick="editProductPrice(${p.id})">Sửa món</button>`);
+    buttons.push(`<button class="btn-green" onclick="adjustStockProduct(${p.id})">📦 Điều chỉnh số lượng</button>`);
     buttons.push(``);
   }
   if(r === 'admin'){
-    buttons.push(`<button class="btn-red" onclick="delProduct(${p.id})">Xóa</button>`);
+    buttons.push(`<button class="btn-red" onclick="delProduct(${p.id})">Xóa món</button>`);
   }
   if(!buttons.length){
     return '<span class="muted"><b>Chỉ xem</b></span>';
@@ -7218,7 +7218,7 @@ function renderStock(){
         ${p.name}: còn ${p.qty}, mức báo ${getLowLimit(p)}
       </li>
     `).join('')
-    : '<li class="status-ok">Không có hàng sắp hết</li>';
+    : '<li class="status-ok">Không có món sắp hết</li>';
 
   outStockList.innerHTML = out.length
     ? out.map(p => `
@@ -7226,7 +7226,7 @@ function renderStock(){
         ${p.name}: đã hết hàng
       </li>
     `).join('')
-    : '<li class="status-ok">Không có hàng đã hết</li>';
+    : '<li class="status-ok">Không có món đã hết</li>';
 
   stockBody.innerHTML = list.length
     ? list.map((p, i) => `
@@ -8888,7 +8888,7 @@ function clearImportLine(){
 
   const btn = document.getElementById('importAddLineBtn');
   if(btn){
-    btn.textContent = '➕ Thêm dòng vào phiếu';
+    btn.textContent = '➕ Thêm vào phiếu nhập';
     btn.classList.remove('btn-orange');
     btn.classList.add('btn-blue');
   }
@@ -9304,7 +9304,7 @@ function renderImportHistory(){
         <td>
           <div class="import-print-toolbar">
             <span class="status-ok" style="display:inline-block;padding:6px 10px;border-radius:999px;background:#dcfce7;color:#166534;font-weight:900">🔒 Đã khóa</span>
-            <button class="btn-orange" type="button" onclick="adjustImportStockFromHistory(${index})">Điều chỉnh kho</button>
+            <button class="btn-orange" type="button" onclick="adjustImportStockFromHistory(${index})">Điều chỉnh số lượng</button>
             <button class="btn-blue" type="button" onclick="printImportReceipt('${escapeHTML(item.receiptCode || '')}')">In phiếu</button>
           </div>
         </td>
@@ -9375,7 +9375,7 @@ function renderImportTrace(force = false){
 
   if(!q && !qc){
     summary.value = '';
-    result.innerHTML = 'Nhập mã phiếu, số phiếu NCC, tên công ty, tên hàng hoặc mã vạch để truy vết.';
+    result.innerHTML = 'Nhập mã phiếu, số phiếu NCC, tên công ty, tên món hoặc mã vạch để truy vết.';
     return;
   }
 
@@ -12205,7 +12205,7 @@ function exportAccountingExcel(){
   const wsReturn = makeMisaSheet('CHI TIẾT HÀNG TRẢ','Xuất lúc: ' + exportedAt,returnHeaders,returnRows,[6,22,20,20,18,18,28,28,10,16,18],'Hang tra');
   XLSX.utils.book_append_sheet(wb, wsReturn, 'Hang tra');
 
-  const stockHeaders = ['STT','Tên hàng','Mã vạch','Tồn','Giá nhập','Giá bán','Mức cảnh báo','Trạng thái'];
+  const stockHeaders = ['STT','Tên món','Mã món','Còn','Giá nhập','Giá bán','Mức báo hết','Trạng thái'];
   const stockRows = products.map((p,i) => {
     const qty = Number(p.qty || 0);
     const lowLimit = Number(p.lowLimit || 0);
@@ -12447,7 +12447,7 @@ function editImportHistory(index){
   }
 
   if(isImportItemLocked(item)){
-    alert('Phiếu nhập này đã xác nhận nên đã được khóa. Không sửa trực tiếp số lượng, giá nhập, giá bán hoặc xóa lịch sử. Nếu nhập sai, hãy dùng nút “Điều chỉnh kho” và nhập lý do.');
+    alert('Phiếu nhập này đã xác nhận nên đã được khóa. Không sửa trực tiếp số lượng, giá nhập, giá bán hoặc xóa lịch sử. Nếu nhập sai, hãy dùng nút “Điều chỉnh số lượng” và nhập lý do.');
     return;
   }
 
@@ -13101,7 +13101,7 @@ function viewBillDetail(index){
     </div>
     <div class="table-wrap">
       <table>
-        <thead><tr><th>STT</th><th>Tên hàng</th><th>SL bán</th><th>Đã trả</th><th>Còn được trả</th><th>Đơn giá</th><th>Thành tiền gốc</th><th>SL trả lần này</th></tr></thead>
+        <thead><tr><th>STT</th><th>Tên món</th><th>SL bán</th><th>Đã trả</th><th>Còn được trả</th><th>Đơn giá</th><th>Thành tiền gốc</th><th>SL trả lần này</th></tr></thead>
         <tbody>${rows || '<tr><td colspan="8" style="text-align:center">Hóa đơn cũ chưa có dữ liệu chi tiết món</td></tr>'}</tbody>
       </table>
     </div>
@@ -13781,7 +13781,7 @@ function renderAll(){
 
   staffBody.innerHTML = users.map((u, i) => {
     const staffAction = normalizeRole(current?.role) === 'admin'
-      ? `<button class="btn-red" onclick="delStaff('${u.user}')">Xóa</button>`
+      ? `<button class="btn-red" onclick="delStaff('${u.user}')">Xóa món</button>`
       : '<span class="muted"><b>Chỉ xem</b></span>';
     return `
       <tr>
