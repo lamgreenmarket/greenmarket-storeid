@@ -3196,7 +3196,7 @@ body > .print-actions{display:none!important;}
         <button type="button" onclick="downloadBackupToday();closeDataMenu()">💾 Tải backup hôm nay</button>
         <button type="button" onclick="greenMarketBackupFirebaseNow();closeDataMenu()">☁️ Backup Firebase ngay</button>
         <button type="button" onclick="greenMarketRestoreFirebaseBackup();closeDataMenu()">♻️ Khôi phục backup Firebase</button>
-        <button type="button" onclick="openQrSettings();closeDataMenu()">📱 QR thanh toán</button>
+        <button type="button" onclick="openQrSettings();closeDataMenu()">📱 Chuyển khoản QR thanh toán</button>
         <button type="button" onclick="openStoreProfileModal();closeDataMenu()">🏪 Hồ sơ cửa hàng</button>
         <button type="button" onclick="setupStoreACafe();closeDataMenu()">☕ Tạo Store A Cafe</button>
         <button type="button" onclick="exportData();closeDataMenu()">📤 Xuất dữ liệu</button>
@@ -3259,7 +3259,7 @@ body > .print-actions{display:none!important;}
   <div id="qrSettingsModal" class="qr-settings-modal hidden">
     <div class="qr-settings-card">
       <div class="qr-settings-head">
-        <h3>📱 QR thanh toán</h3>
+        <h3>📱 Chuyển khoản QR thanh toán</h3>
         <button type="button" class="btn-gray" onclick="closeQrSettings()">Đóng</button>
       </div>
       <div class="qr-settings-grid">
@@ -3452,9 +3452,9 @@ body > .print-actions{display:none!important;}
     <h2>☕ Quầy order & thanh toán</h2>
     <div class="pos-shell">
       <div class="pos-panel">
-        <div class="pos-title"><h3>☕ Menu / gọi món</h3><span class="muted">Tiệm của Thúy</span></div>
+        <div class="pos-title"><h3>☕ Thực đơn tại quầy</h3><span class="muted">Menu Tiệm của Thúy</span></div>
         <div class="pos-search">
-          <input id="posSearch" placeholder="Quét mã món hoặc gõ tên đồ uống, trà sữa, topping..." autocomplete="off" oninput="handleScannerInput(event)" onkeydown="posSearchEnter(event)" autofocus>
+          <input id="posSearch" placeholder="Tìm nhanh cà phê, trà sữa, nước ép, topping..." autocomplete="off" oninput="handleScannerInput(event)" onkeydown="posSearchEnter(event)" autofocus>
         </div>
         <div id="posProductGrid" class="pos-products"></div>
       </div>
@@ -3477,40 +3477,40 @@ body > .print-actions{display:none!important;}
       </div>
 
       <div class="pos-panel">
-        <div class="pos-title"><h3>💳 Thanh toán</h3><span class="muted">quầy thu ngân Tiệm của Thúy</span></div>
+        <div class="pos-title"><h3>💳 Quầy thu ngân</h3><span class="muted">Thanh toán hóa đơn Tiệm của Thúy</span></div>
         <div class="pos-total-box">
-          <div class="label">Tổng tiền khách cần thanh toán</div>
+          <div class="label">Tổng tiền khách cần thanh toán tại quầy</div>
           <div id="posGrandTotal" class="total">0 VNĐ</div>
         </div>
-        <label>Hình thức thanh toán</label>
+        <label>Khách thanh toán bằng</label>
         <div class="pos-methods">
-          <button id="payCashBtn" class="active-pay" onclick="setPaymentMethod('cash')">💵 Tiền mặt</button>
-          <button id="payQrBtn" onclick="setPaymentMethod('qr')">📱 QR</button>
-          <button id="payCardBtn" onclick="setPaymentMethod('card')">💳 Thẻ/Ví</button>
+          <button id="payCashBtn" class="active-pay" onclick="setPaymentMethod('cash')">💵 Khách trả tiền mặt</button>
+          <button id="payQrBtn" onclick="setPaymentMethod('qr')">📱 Chuyển khoản QR</button>
+          <button id="payCardBtn" onclick="setPaymentMethod('card')">💳 Thẻ / Ví điện tử</button>
         </div>
         <div class="receipt-copy-row">
-          <label>Số liên</label>
+          <label>Phiếu in</label>
           <select id="receiptCopies" onchange="localStorage.setItem('greenmarket_receipt_copies', this.value)">
             <option value="1" selected>In 1 liên</option>
             <option value="2">In 2 liên - cắt giấy rồi in tiếp</option>
           </select>
         </div>
         <div id="cashBox" class="pos-cash-box">
-          <label>Khách đưa tiền / xác nhận chuyển khoản</label>
-          <input id="customerCash" type="number" placeholder="Nhập số tiền khách đưa nếu thanh toán tiền mặt" oninput="updatePaymentBox()" onkeydown="if(event.key==='Enter'){event.preventDefault(); checkout();}">
+          <label>Khách đưa tiền / xác nhận đã chuyển khoản</label>
+          <input id="customerCash" type="number" placeholder="Nhập số tiền khách đưa nếu khách trả tiền mặt" oninput="updatePaymentBox()" onkeydown="if(event.key==='Enter'){event.preventDefault(); checkout();}">
         </div>
-        <div id="paymentStatus" class="pos-status">💵 Đang chọn thanh toán tiền mặt. Hệ thống sẽ tính tiền thối lại.</div>
+        <div id="paymentStatus" class="pos-status">💵 Đang chọn thanh toán tiền mặt tại quầy. Hệ thống sẽ tự tính tiền thối lại cho khách.</div>
         <div id="paymentQrPanel" class="payment-qr-panel">
           <div id="paymentQrImageBox"></div>
-          <div id="paymentQrEmpty" class="muted">Chưa cài QR thanh toán. Vào Dữ liệu → QR thanh toán để cài ảnh QR của cửa hàng.</div>
+          <div id="paymentQrEmpty" class="muted">Chưa cài mã QR nhận tiền cho Tiệm của Thúy. Vào Dữ liệu → QR thanh toán để thêm mã QR của quán.</div>
         </div>
-        <div class="mobile-print-note">📵 Điện thoại chỉ dùng để xem/quản lý. In hóa đơn vui lòng thực hiện tại quầy thu ngân của Tiệm của Thúy.</div>
-        <div class="pos-pay-row"><span>Tổng hóa đơn</span><span id="posPayTotal">0 VNĐ</span></div>
-        <div class="pos-pay-row" id="cashTextRow"><span>Tiền khách đưa</span><span id="posCashText">0 VNĐ</span></div>
+        <div class="mobile-print-note">📵 Điện thoại chỉ dùng để xem và quản lý. Khi cần in hóa đơn, vui lòng thao tác tại máy POS ở quầy thu ngân Tiệm của Thúy.</div>
+        <div class="pos-pay-row"><span>Tổng hóa đơn khách gọi</span><span id="posPayTotal">0 VNĐ</span></div>
+        <div class="pos-pay-row" id="cashTextRow"><span>Khách đưa / đã chuyển</span><span id="posCashText">0 VNĐ</span></div>
         <div class="pos-pay-row"><span id="changeLabel">Tiền thối lại</span><span id="posChange" class="pos-change">0 VNĐ</span></div>
         <div class="actions">
-          <button class="btn-green full print-desktop-only" onclick="checkout()">✅ Hoàn tất thanh toán / In hóa đơn</button>
-          <button class="btn-red full" onclick="clearCart();updatePaymentBox()">🗑 Xóa giỏ hàng</button>
+          <button class="btn-green full print-desktop-only" onclick="checkout()">✅ Xác nhận thanh toán & in hóa đơn</button>
+          <button class="btn-red full" onclick="clearCart();updatePaymentBox()">🗑 Hủy hóa đơn đang phục vụ</button>
         </div>
       </div>
     </div>
@@ -7328,7 +7328,7 @@ function setPaymentMethod(method){
     if(cashTextRow) cashTextRow.style.display = 'flex';
     if(paymentStatus){
       paymentStatus.classList.remove('pos-success');
-      paymentStatus.innerHTML = '💵 Đang chọn thanh toán tiền mặt. Hệ thống sẽ tính tiền thối lại.';
+      paymentStatus.innerHTML = '💵 Đang chọn thanh toán tiền mặt tại quầy. Hệ thống sẽ tự tính tiền thối lại cho khách.';
     }
   }else{
     if(cashBox) cashBox.style.display = 'none';
