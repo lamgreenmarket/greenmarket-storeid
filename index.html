@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Green Market POS - Quản lý đơn giản - Bán hàng hiệu quả</title>
+<title>Tiệm của Thúy - Coffee & Milk Tea</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%2064%2064%27%3E%3Crect%20width%3D%2764%27%20height%3D%2764%27%20rx%3D%2716%27%20fill%3D%27%2523059669%27/%3E%3Ctext%20x%3D%2732%27%20y%3D%2742%27%20text-anchor%3D%27middle%27%20font-size%3D%2734%27%3E%F0%9F%9B%92%3C/text%3E%3C/svg%3E">
 <!-- Bản phân quyền an toàn: Kế toán chỉ xem, Quản lý sửa có nhật ký, Admin toàn quyền -->
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@600;700;800&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
@@ -2543,6 +2543,56 @@ body, input, select, button, table, th, td, label, .menu, .card, .page{
 }
 
 
+
+/* =========================================================
+   STORE A CAFE 5B - ĐỒNG BỘ THƯƠNG HIỆU TIỆM CỦA THÚY
+   ========================================================= */
+.receipt-shop-name{
+  text-align:center;
+  font-size:11.2px;
+  font-weight:900;
+  line-height:1.18;
+  margin:0 0 2px;
+  letter-spacing:.1px;
+}
+.receipt-address-line{
+  text-align:center;
+  font-size:11.2px;
+  font-weight:800;
+  line-height:1.18;
+}
+.header-logo-mark{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:34px;
+  height:34px;
+  border-radius:999px;
+  background:#ecfdf5;
+  margin-right:8px;
+  box-shadow:0 4px 12px rgba(5,150,105,.15);
+}
+@media print{
+  #receiptPrint .receipt{
+    padding-top:2.4mm!important;
+  }
+  #receiptPrint .receipt-title{
+    line-height:1.34!important;
+    padding-top:1.2mm!important;
+    padding-bottom:.7mm!important;
+    overflow:visible!important;
+  }
+  #receiptPrint .receipt-shop-name{
+    font-size:10.7px!important;
+    line-height:1.25!important;
+    margin-bottom:1mm!important;
+  }
+  #receiptPrint .receipt-slogan{
+    line-height:1.22!important;
+    margin-bottom:1mm!important;
+  }
+}
+
 /* =========================================================
    FIX PHIẾU TRẢ HÀNG - THÊM GẠCH/DẤU CHẤM DẪN DÒNG
    Áp dụng cho: TỔNG GỐC, HOÀN LẦN NÀY, ĐÃ HOÀN, DOANH THU SAU TRẢ.
@@ -2871,8 +2921,8 @@ body > .print-actions{display:none!important;}
         <span class="gm-cart">🛒</span>
         <span class="gm-leaf">●</span>
       </div>
-      <div id="loginBrandTitle" class="logo gm-logo-text">GREEN MARKET CAFE</div>
-      <div id="loginBrandSlogan" class="slogan">Cafe sạch mỗi ngày – Bán hàng gọn nhẹ</div>
+      <div id="loginBrandTitle" class="logo gm-logo-text">TIỆM CỦA THÚY</div>
+      <div id="loginBrandSlogan" class="slogan">Cà phê nguyên chất – Gu Việt đậm đà</div>
     </div>
 
     <label>Tên đăng nhập hoặc email Firebase</label><input id="loginUser" name="gm_login_user_manual_2026" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" inputmode="text" placeholder="" value="">
@@ -2885,7 +2935,7 @@ body > .print-actions{display:none!important;}
 <!-- =========================================================
      10. HTML HEADER + MENU
      ========================================================= -->
-  <div class="header"><div class="app-brand"><h1 id="headerBrandTitle"><span class="header-logo-mark">☕</span> GREEN MARKET CAFE</h1><p id="headerBrandSlogan">Cafe sạch mỗi ngày – Bán hàng gọn nhẹ</p><small id="headerPoweredBy" style="display:block;margin-top:4px;color:#64748b;font-weight:700">Powered by Green Market POS</small></div><div>Xin chào: <b id="userName"></b> - Quyền: <b id="userRole"></b> <span id="firebaseSyncStatus" style="display:inline-block;margin-left:8px;padding:4px 10px;border-radius:999px;background:#eef7ff;color:#075985;font-weight:800;font-size:12px">☁️ Firebase</span> <span id="currentStoreBadge" style="display:inline-block;margin-left:8px;padding:4px 10px;border-radius:999px;background:#f0fdf4;color:#047857;font-weight:900;font-size:12px">☕ Store A</span> <button id="mainLogoutBtn" class="btn-gray" onclick="confirmLogout()">Đăng xuất</button></div></div>
+  <div class="header"><div class="app-brand"><h1 id="headerBrandTitle"><span class="header-logo-mark">☕</span> TIỆM CỦA THÚY</h1><p id="headerBrandSlogan">Cà phê nguyên chất – Gu Việt đậm đà</p><small id="headerPoweredBy" style="display:block;margin-top:4px;color:#64748b;font-weight:700">Powered by Green Market POS</small></div><div>Xin chào: <b id="userName"></b> - Quyền: <b id="userRole"></b> <span id="firebaseSyncStatus" style="display:inline-block;margin-left:8px;padding:4px 10px;border-radius:999px;background:#eef7ff;color:#075985;font-weight:800;font-size:12px">☁️ Firebase</span> <span id="currentStoreBadge" style="display:inline-block;margin-left:8px;padding:4px 10px;border-radius:999px;background:#f0fdf4;color:#047857;font-weight:900;font-size:12px">☕ Store A</span> <button id="mainLogoutBtn" class="btn-gray" onclick="confirmLogout()">Đăng xuất</button></div></div>
   <div class="menu">
     <button onclick="showPage('home')">🏠 Trang chủ</button>
     <button data-permission="shift" onclick="showPage('shift')">⏱ Ca làm việc</button>
@@ -2931,7 +2981,7 @@ body > .print-actions{display:none!important;}
         </div>
         <div>
           <label>Tên thương hiệu lớn (in hoa)</label>
-          <input id="storeProfileBrandTitle" placeholder="Ví dụ: TIỆM CỦA THÚY">
+          <input id="storeProfileBrandTitle" placeholder="Ví dụ: COFFEE & MILK TEA">
         </div>
         <div>
           <label>Slogan</label>
@@ -2943,7 +2993,7 @@ body > .print-actions{display:none!important;}
         </div>
         <div>
           <label>Số điện thoại</label>
-          <input id="storeProfilePhone" placeholder="Ví dụ: 0911000318">
+          <input id="storeProfilePhone" placeholder="Ví dụ: 0989756103">
         </div>
         <div>
           <label>Địa chỉ</label>
@@ -2951,7 +3001,7 @@ body > .print-actions{display:none!important;}
         </div>
         <div>
           <label>Ghi chú hóa đơn</label>
-          <input id="storeProfileReceiptFooter" placeholder="Ví dụ: Cảm ơn bạn đã ủng hộ Tiệm của Thúy!">
+          <input id="storeProfileReceiptFooter" placeholder="Ví dụ: Tiệm của Thúy xin cảm ơn!">
         </div>
         <div>
           <label>Dòng Powered by</label>
@@ -3022,7 +3072,7 @@ body > .print-actions{display:none!important;}
   <section id="home" class="page">
     <div class="dashboard-title">
       <h2>📊 Tổng quan vận hành</h2>
-      <p id="storeIntroLine" class="muted" style="margin:8px 0 0;font-weight:800">☕ Store A: Green Market Cafe – mô hình quán cafe chạy trong Green Market POS</p>
+      <p id="storeIntroLine" class="muted" style="margin:8px 0 0;font-weight:800">☕ Store A: Tiệm của Thúy – mô hình quán cafe chạy trong Green Market POS</p>
     </div>
     <div class="dashboard-pro-panel">
       <div class="dashboard-pro-card dashboard-pro-wide dashboard-pro-revenue">
@@ -3840,16 +3890,16 @@ function ensureStoreA(){
     stores.unshift({
       id: DEFAULT_STORE_ID,
       code: 'A',
-      name: 'Green Market Cafe',
-      brandTitle: 'GREEN MARKET CAFE',
-      slogan: 'Cafe sạch mỗi ngày – Bán hàng gọn nhẹ',
-      logoEmoji: '☕',
+      name: 'Tiệm của Thúy',
+      brandTitle: 'COFFEE & MILK TEA',
+      slogan: 'Cà phê nguyên chất – Gu Việt đậm đà',
+      logoEmoji: '🧋',
       poweredBy: 'Green Market POS',
       type: 'Quán cafe',
       note: 'Store A chạy trong Green Market POS V02',
-      phone: '',
-      address: '',
-      receiptFooter: 'Cảm ơn quý khách! Hẹn gặp lại!',
+      phone: '0989756103',
+      address: 'Nha Trang, Khánh Hòa',
+      receiptFooter: 'Tiệm của Thúy xin cảm ơn!',
       createdAt: now()
     });
   }
@@ -3865,42 +3915,59 @@ function getCurrentStore(){
 
 function getStoreReceiptInfo(){
   const store = getCurrentStore();
+  const shopName = store.name || 'Tiệm của Thúy';
+  const brandTitle = store.brandTitle || 'COFFEE & MILK TEA';
   return {
-    logo: store.logoEmoji || '☕',
-    brandTitle: store.brandTitle || (store.name || 'Green Market Cafe').toUpperCase(),
-    slogan: store.slogan || 'Cafe sạch mỗi ngày – Bán hàng gọn nhẹ',
-    phone: store.phone || '',
-    address: store.address || '',
-    receiptFooter: store.receiptFooter || 'Cảm ơn quý khách! Hẹn gặp lại!',
+    logo: store.logoEmoji || '🧋',
+    name: shopName,
+    brandTitle,
+    titleLine: shopName,
+    subTitleLine: brandTitle,
+    slogan: store.slogan || 'Cà phê nguyên chất – Gu Việt đậm đà',
+    phone: store.phone || '0989756103',
+    address: store.address || 'Nha Trang, Khánh Hòa',
+    receiptFooter: store.receiptFooter || 'Tiệm của Thúy xin cảm ơn!',
     poweredBy: store.poweredBy || 'Green Market POS'
   };
 }
 
 function renderStoreInfo(){
   const store = getCurrentStore();
-  const badge = document.getElementById('currentStoreBadge');
-  if(badge) badge.textContent = `${store.logoEmoji || '☕'} ${store.name || 'Green Market Cafe'}`;
-  const line = document.getElementById('storeIntroLine');
-  if(line) line.textContent = `${store.logoEmoji || '☕'} ${store.name || 'Green Market Cafe'} — mô hình quán cafe trong ${store.poweredBy || 'Green Market POS'}`;
+  const logo = store.logoEmoji || '🧋';
+  const shopName = store.name || 'Tiệm của Thúy';
+  const brandTitle = store.brandTitle || 'COFFEE & MILK TEA';
+  const slogan = store.slogan || 'Cà phê nguyên chất – Gu Việt đậm đà';
+  const poweredBy = store.poweredBy || 'Green Market POS';
 
-  const brandTitle = store.brandTitle || (store.name || 'Green Market Cafe').toUpperCase();
-  const slogan = store.slogan || 'Cafe sạch mỗi ngày – Bán hàng gọn nhẹ';
-  const logo = store.logoEmoji || '☕';
+  document.title = `${shopName} - ${brandTitle}`;
+  const badge = document.getElementById('currentStoreBadge');
+  if(badge) badge.textContent = `${logo} ${shopName}`;
+  const line = document.getElementById('storeIntroLine');
+  if(line) line.textContent = `${logo} ${shopName} • ${brandTitle} — ${slogan}`;
 
   const hTitle = document.getElementById('headerBrandTitle');
-  if(hTitle) hTitle.innerHTML = `<span class="header-logo-mark">${logo}</span> ${brandTitle}`;
+  if(hTitle) hTitle.innerHTML = `<span class="header-logo-mark">${logo}</span> ${escapeHTML(shopName)}`;
   const hSlogan = document.getElementById('headerBrandSlogan');
-  if(hSlogan) hSlogan.textContent = slogan;
+  if(hSlogan) hSlogan.textContent = `${brandTitle} • ${slogan}`;
   const powered = document.getElementById('headerPoweredBy');
-  if(powered) powered.textContent = `Powered by ${store.poweredBy || 'Green Market POS'}`;
+  if(powered) powered.textContent = `Powered by ${poweredBy}`;
 
   const lTitle = document.getElementById('loginBrandTitle');
-  if(lTitle) lTitle.textContent = brandTitle;
+  if(lTitle) lTitle.textContent = shopName;
   const lSlogan = document.getElementById('loginBrandSlogan');
-  if(lSlogan) lSlogan.textContent = slogan;
+  if(lSlogan) lSlogan.textContent = `${brandTitle} • ${slogan}`;
+  const loginBrand = document.getElementById('loginBrand');
+  if(loginBrand && !document.getElementById('loginPoweredBy')){
+    const small = document.createElement('div');
+    small.id = 'loginPoweredBy';
+    small.style.cssText = 'text-align:center;color:#64748b;font-weight:800;margin-top:-14px;margin-bottom:18px;font-size:13px';
+    small.textContent = `Powered by ${poweredBy}`;
+    loginBrand.appendChild(small);
+  }else{
+    const small = document.getElementById('loginPoweredBy');
+    if(small) small.textContent = `Powered by ${poweredBy}`;
+  }
 }
-
-
 
 function openStoreProfileModal(){
   const store = getCurrentStore();
@@ -3921,19 +3988,19 @@ function closeStoreProfileModal(){
 
 function saveStoreProfile(){
   const store = getCurrentStore();
-  store.name = (document.getElementById('storeProfileName').value || '').trim() || store.name || 'Green Market Cafe';
-  store.brandTitle = (document.getElementById('storeProfileBrandTitle').value || '').trim() || store.name.toUpperCase();
-  store.slogan = (document.getElementById('storeProfileSlogan').value || '').trim() || 'Cafe sạch mỗi ngày – Bán hàng gọn nhẹ';
+  store.name = (document.getElementById('storeProfileName').value || '').trim() || store.name || 'Tiệm của Thúy';
+  store.brandTitle = (document.getElementById('storeProfileBrandTitle').value || '').trim() || store.brandTitle || 'COFFEE & MILK TEA';
+  store.slogan = (document.getElementById('storeProfileSlogan').value || '').trim() || 'Cà phê nguyên chất – Gu Việt đậm đà';
   store.logoEmoji = (document.getElementById('storeProfileLogoEmoji').value || '').trim() || '☕';
   store.phone = (document.getElementById('storeProfilePhone').value || '').trim();
   store.address = (document.getElementById('storeProfileAddress').value || '').trim();
-  store.receiptFooter = (document.getElementById('storeProfileReceiptFooter').value || '').trim() || 'Cảm ơn quý khách! Hẹn gặp lại!';
+  store.receiptFooter = (document.getElementById('storeProfileReceiptFooter').value || '').trim() || 'Tiệm của Thúy xin cảm ơn!';
   store.poweredBy = (document.getElementById('storeProfilePoweredBy').value || '').trim() || 'Green Market POS';
   localStorage.setItem(KSTORES, JSON.stringify(stores));
   renderStoreInfo();
   try{ renderAll(); }catch(e){}
   closeStoreProfileModal();
-  alert('Đã lưu hồ sơ cửa hàng cho Store A Cafe.');
+  alert('Đã lưu hồ sơ cửa hàng cho Tiệm của Thúy.');
 }
 
 function setupStoreACafe(){
@@ -3942,7 +4009,7 @@ function setupStoreACafe(){
     return;
   }
   ensureStoreA();
-  const ok = confirm('Tạo dữ liệu mẫu cho Store A - Green Market Cafe?\n\nHệ thống sẽ sao lưu danh sách món / hàng hiện tại vào localStorage trước, rồi thay bằng menu quán cafe mẫu. Hóa đơn cũ không bị xóa.');
+  const ok = confirm('Tạo dữ liệu mẫu cho Store A - Tiệm của Thúy?\n\nHệ thống sẽ sao lưu danh sách món / hàng hiện tại vào localStorage trước, rồi thay bằng menu quán cafe mẫu. Hóa đơn cũ không bị xóa.');
   if(!ok) return;
 
   try{
@@ -3953,9 +4020,9 @@ function setupStoreACafe(){
   cart = [];
   stockFilter = 'all';
   save();
-  try{ addLog('Tạo Store A Cafe', 'Nạp menu mẫu quán cafe cho Store A - Green Market Cafe'); }catch(e){}
+  try{ addLog('Tạo Store A Cafe', 'Nạp menu mẫu quán cafe cho Store A - Tiệm của Thúy'); }catch(e){}
   renderAll();
-  alert('Đã tạo Store A - Green Market Cafe với menu mẫu. Bây giờ có thể vào Bán hàng để thử.');
+  alert('Đã tạo Store A - Tiệm của Thúy với menu mẫu. Bây giờ có thể vào Bán hàng để thử.');
 }
 
 
@@ -7212,7 +7279,8 @@ function printReceipt(total, paymentText = 'Tiền mặt'){
 
   function buildSaleReceipt(copyLabel = ''){
     return `
-      <div class="receipt-title">${storeInfo.logo} ${escapeHTML(storeInfo.brandTitle)}</div>
+      <div class="receipt-title">${storeInfo.logo} ${escapeHTML(storeInfo.titleLine || storeInfo.name || storeInfo.brandTitle)}</div>
+      <div class="receipt-shop-name">${escapeHTML(storeInfo.subTitleLine || storeInfo.brandTitle || "")}</div>
       <div class="receipt-slogan">${escapeHTML(storeInfo.slogan)}</div>
       ${storeInfo.phone ? `<div style="text-align:center;font-size:12px">☎ ${escapeHTML(storeInfo.phone)}</div>` : ''}
       ${storeInfo.address ? `<div style="text-align:center;font-size:12px">${escapeHTML(storeInfo.address)}</div>` : ''}
@@ -8870,6 +8938,7 @@ function getCurrentDraftPrintData(){
 }
 
 function buildImportReceiptPrintHtml(data){
+  const storeInfo = getStoreReceiptInfo();
   const lines = data.lines || [];
   const total = lines.reduce((s,x) => s + Number(x.lotPrice ?? (Number(x.qty || 0) * Number(x.importPrice || 0))), 0);
   const totalQty = lines.reduce((s,x) => s + Number(x.unitQty ?? x.qty ?? 0), 0);
@@ -9265,7 +9334,7 @@ function buildImportReceiptPrintHtml(data){
 <div class="print-actions"><button class="btn" onclick="window.print()">🖨️ In</button><button class="btn2" onclick="window.close()">Đóng</button></div>
 <div class="sheet">
   <div class="top">
-    <div class="brand"><h1>🛒 GREEN MARKET POS</h1><p>Phiếu dùng để đối chiếu nhập kho, giao hàng và vận tải</p></div>
+    <div class="brand"><h1>${storeInfo.logo} ${escapeHTML(storeInfo.name)}</h1><p>${escapeHTML(storeInfo.subTitleLine || storeInfo.brandTitle)} • ${escapeHTML(storeInfo.slogan)}</p><p>${storeInfo.phone ? "☎ " + escapeHTML(storeInfo.phone) + " • " : ""}${escapeHTML(storeInfo.address || "")}</p><p class="muted">Powered by ${escapeHTML(storeInfo.poweredBy)}</p></div>
     <div class="code">Mã phiếu nhập<div class="box">${escapeHTML(data.receiptCode || '-')}</div></div>
   </div>
   <h2>PHIẾU NHẬP KHO</h2>
@@ -12189,7 +12258,8 @@ function printReturnReceiptByIndex(index){
   receiptPrint.classList.remove('hidden');
   const storeInfo = getStoreReceiptInfo();
   receiptPrint.innerHTML = `
-    <div class="receipt-title">${storeInfo.logo} ${escapeHTML(storeInfo.brandTitle)}</div>
+    <div class="receipt-title">${storeInfo.logo} ${escapeHTML(storeInfo.titleLine || storeInfo.name || storeInfo.brandTitle)}</div>
+      <div class="receipt-shop-name">${escapeHTML(storeInfo.subTitleLine || storeInfo.brandTitle || "")}</div>
       <div class="receipt-slogan">${escapeHTML(storeInfo.slogan)}</div>
       ${storeInfo.phone ? `<div style="text-align:center;font-size:12px">☎ ${escapeHTML(storeInfo.phone)}</div>` : ''}
       ${storeInfo.address ? `<div style="text-align:center;font-size:12px">${escapeHTML(storeInfo.address)}</div>` : ''}
@@ -12328,7 +12398,8 @@ if(admin){
   receiptPrint.classList.remove('hidden');
   const storeInfo = getStoreReceiptInfo();
   receiptPrint.innerHTML = `
-    <div class="receipt-title">${storeInfo.logo} ${escapeHTML(storeInfo.brandTitle)}</div>
+    <div class="receipt-title">${storeInfo.logo} ${escapeHTML(storeInfo.titleLine || storeInfo.name || storeInfo.brandTitle)}</div>
+      <div class="receipt-shop-name">${escapeHTML(storeInfo.subTitleLine || storeInfo.brandTitle || "")}</div>
       <div class="receipt-slogan">${escapeHTML(storeInfo.slogan)}</div>
       ${storeInfo.phone ? `<div style="text-align:center;font-size:12px">☎ ${escapeHTML(storeInfo.phone)}</div>` : ''}
       ${storeInfo.address ? `<div style="text-align:center;font-size:12px">${escapeHTML(storeInfo.address)}</div>` : ''}
@@ -15077,6 +15148,39 @@ onAuthStateChanged(auth, async (firebaseUser) => {
     console.error('Firebase Auth cleanup error:', err);
     showLogin();
   }
+});
+
+
+/* STORE A CAFE 5B - hồ sơ mặc định Tiệm của Thúy cho khách dùng */
+function ensureClientStoreAProfile(){
+  try{
+    ensureStoreA();
+    const store = getCurrentStore();
+    if(!store) return;
+    const oldNames = ['Green Market Cafe','GREEN MARKET CAFE','Tiệm của Thủy','TIỆM CỦA THỦY'];
+    if(!store.name || oldNames.includes(store.name)) store.name = 'Tiệm của Thúy';
+    if(!store.brandTitle || oldNames.includes(store.brandTitle)) store.brandTitle = 'COFFEE & MILK TEA';
+    if(!store.slogan || /Cafe sạch|Bán hàng gọn nhẹ/i.test(store.slogan)) store.slogan = 'Cà phê nguyên chất – Gu Việt đậm đà';
+    if(!store.logoEmoji || store.logoEmoji === '☕') store.logoEmoji = '🧋';
+    if(!store.phone) store.phone = '0989756103';
+    if(!store.address) store.address = 'Nha Trang, Khánh Hòa';
+    if(!store.receiptFooter || /Cảm ơn quý khách|Hẹn gặp lại|Thủy/i.test(store.receiptFooter)) store.receiptFooter = 'Tiệm của Thúy xin cảm ơn!';
+    if(!store.poweredBy) store.poweredBy = 'Green Market POS';
+    localStorage.setItem(KSTORES, JSON.stringify(stores));
+  }catch(e){}
+}
+const __gmRenderAllBeforeClientBrand = typeof renderAll === 'function' ? renderAll : null;
+if(__gmRenderAllBeforeClientBrand){
+  renderAll = function(){
+    ensureClientStoreAProfile();
+    const r = __gmRenderAllBeforeClientBrand.apply(this, arguments);
+    try{ renderStoreInfo(); }catch(e){}
+    return r;
+  };
+}
+document.addEventListener('DOMContentLoaded', () => {
+  ensureClientStoreAProfile();
+  try{ renderStoreInfo(); }catch(e){}
 });
 
 setSyncStatus("ℹ️ Đăng nhập để đồng bộ Firebase", true);
