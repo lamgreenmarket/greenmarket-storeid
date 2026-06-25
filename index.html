@@ -16484,6 +16484,242 @@ setSyncStatus("ℹ️ Đăng nhập để đồng bộ Firebase", true);
 }
 </style>
 
+
+
+<style id="gd5c-sidebar-v3-polish">
+/* =========================================================
+   5C - 4D SIDEBAR V3
+   - Sidebar trái thoáng hơn, có thẻ thương hiệu riêng
+   - Header bên phải bỏ thương hiệu trùng, chỉ giữ thông tin người dùng
+   - Dropdown Dữ liệu không bị khuất chữ
+   - Nội dung bên phải hạ xuống vừa đủ, không che tiêu đề
+   ========================================================= */
+@media (min-width:901px){
+  .app{
+    padding-left:330px!important;
+    padding-top:138px!important;
+    padding-right:24px!important;
+    padding-bottom:32px!important;
+  }
+  #appPage::before{
+    left:310px!important;
+    height:138px!important;
+    background:linear-gradient(180deg,var(--bg) 0%,rgba(233,251,255,.98) 74%,rgba(233,251,255,.82) 100%)!important;
+  }
+
+  .header{
+    left:330px!important;
+    right:24px!important;
+    top:20px!important;
+    min-height:82px!important;
+    padding:16px 24px!important;
+    justify-content:flex-end!important;
+    align-items:center!important;
+    gap:12px!important;
+    border-radius:24px!important;
+  }
+  .header .app-brand{
+    display:none!important;
+    visibility:hidden!important;
+    width:0!important;
+    height:0!important;
+    overflow:hidden!important;
+    opacity:0!important;
+  }
+  .header > div:last-child{
+    display:flex!important;
+    align-items:center!important;
+    justify-content:flex-end!important;
+    gap:8px!important;
+    flex-wrap:wrap!important;
+    width:100%!important;
+    text-align:right!important;
+  }
+
+  .menu{
+    top:20px!important;
+    left:20px!important;
+    bottom:20px!important;
+    width:285px!important;
+    padding:14px 14px 18px!important;
+    gap:8px!important;
+    overflow-y:auto!important;
+    overflow-x:hidden!important;
+    border-radius:28px!important;
+    align-items:stretch!important;
+    background:linear-gradient(180deg,#ffffff 0%,#f4fff8 48%,#ecfeff 100%)!important;
+    scrollbar-width:thin!important;
+  }
+  .menu:before{content:none!important;display:none!important;}
+
+  .sidebar-brand{
+    flex:0 0 auto!important;
+    display:flex!important;
+    flex-direction:column!important;
+    align-items:center!important;
+    justify-content:center!important;
+    text-align:center!important;
+    padding:16px 10px 14px!important;
+    margin:0 0 12px!important;
+    border-radius:22px!important;
+    background:linear-gradient(180deg,#ffffff,#f0fdf4)!important;
+    border:1px solid rgba(5,150,105,.16)!important;
+    box-shadow:0 12px 26px rgba(5,150,105,.10)!important;
+    color:#064e3b!important;
+  }
+  .sidebar-brand .sb-icon{
+    width:46px!important;
+    height:46px!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    border-radius:15px!important;
+    background:linear-gradient(135deg,#10b981,#047857)!important;
+    color:white!important;
+    font-size:24px!important;
+    box-shadow:0 10px 22px rgba(5,150,105,.22)!important;
+    margin-bottom:9px!important;
+  }
+  .sidebar-brand .sb-title{
+    font-family:Poppins,Inter,Arial,sans-serif!important;
+    font-size:20px!important;
+    line-height:1.05!important;
+    font-weight:900!important;
+    letter-spacing:.1px!important;
+    margin-bottom:5px!important;
+    white-space:normal!important;
+  }
+  .sidebar-brand .sb-industry{
+    font-size:12.3px!important;
+    line-height:1.18!important;
+    font-weight:900!important;
+    letter-spacing:.35px!important;
+    color:#047857!important;
+    text-transform:uppercase!important;
+    margin-bottom:4px!important;
+    white-space:normal!important;
+  }
+  .sidebar-brand .sb-slogan{
+    font-size:12px!important;
+    line-height:1.18!important;
+    font-weight:800!important;
+    color:#0f766e!important;
+    max-width:220px!important;
+    white-space:normal!important;
+  }
+  .sidebar-brand .sb-powered{
+    margin-top:5px!important;
+    font-size:10px!important;
+    font-weight:700!important;
+    color:#64748b!important;
+    opacity:.72!important;
+  }
+
+  .menu button,
+  .menu-dropdown .menu-btn{
+    width:100%!important;
+    height:46px!important;
+    min-height:46px!important;
+    padding:0 14px!important;
+    border-radius:15px!important;
+    font-size:14px!important;
+    justify-content:flex-start!important;
+    text-align:left!important;
+    white-space:normal!important;
+    line-height:1.15!important;
+  }
+  .menu > button:nth-of-type(4),
+  .menu > button:nth-of-type(8),
+  .menu-dropdown{
+    margin-top:10px!important;
+    padding-top:10px!important;
+    border-top:1px solid rgba(5,150,105,.14)!important;
+  }
+  .menu > button:nth-of-type(4),
+  .menu > button:nth-of-type(8){height:52px!important;min-height:52px!important;}
+  .menu button.menu-active:after{
+    left:16px!important;
+    right:auto!important;
+    width:54px!important;
+    bottom:5px!important;
+  }
+
+  .menu-dropdown{
+    width:100%!important;
+    display:block!important;
+    position:relative!important;
+  }
+  .menu-dropdown .menu-btn{
+    margin:0!important;
+  }
+  .dropdown-content{
+    position:static!important;
+    top:auto!important;
+    right:auto!important;
+    left:auto!important;
+    bottom:auto!important;
+    min-width:0!important;
+    width:100%!important;
+    max-width:100%!important;
+    margin:8px 0 0!important;
+    padding:6px 0 0!important;
+    border:none!important;
+    background:transparent!important;
+    box-shadow:none!important;
+    overflow:visible!important;
+  }
+  .dropdown-content button{
+    width:100%!important;
+    height:auto!important;
+    min-height:42px!important;
+    padding:10px 12px!important;
+    border-radius:14px!important;
+    margin:6px 0 0!important;
+    background:linear-gradient(135deg,#10b981,#047857)!important;
+    color:#fff!important;
+    text-align:left!important;
+    white-space:normal!important;
+    overflow-wrap:anywhere!important;
+    word-break:normal!important;
+    line-height:1.22!important;
+    font-size:13.2px!important;
+    box-shadow:0 8px 18px rgba(5,150,105,.16)!important;
+  }
+  .dropdown-content button:hover{
+    background:linear-gradient(135deg,#0ea5e9,#059669)!important;
+    color:#fff!important;
+  }
+
+  .page{scroll-margin-top:150px!important;}
+  .dashboard-title{margin-top:0!important;}
+}
+</style>
+
+<script id="gd5c-sidebar-v3-brand-js">
+(function(){
+  function ensureSidebarBrand(){
+    try{
+      const menu = document.querySelector('#appPage .menu');
+      if(!menu || menu.querySelector('.sidebar-brand')) return;
+      const brand = document.createElement('div');
+      brand.className = 'sidebar-brand';
+      brand.innerHTML = '<div class="sb-icon">🧋</div><div class="sb-title">Tiệm của Thúy</div><div class="sb-industry">CAFE – TRÀ SỮA – ĂN VẶT</div><div class="sb-slogan">Cà phê nguyên chất – Gu Việt đậm đà</div><div class="sb-powered">Powered by Green Market POS</div>';
+      menu.insertBefore(brand, menu.firstChild);
+    }catch(e){}
+  }
+  document.addEventListener('DOMContentLoaded', ensureSidebarBrand);
+  const oldRenderAll = typeof renderAll === 'function' ? renderAll : null;
+  if(oldRenderAll){
+    renderAll = function(){
+      const r = oldRenderAll.apply(this, arguments);
+      ensureSidebarBrand();
+      return r;
+    };
+  }
+  window.gmEnsureSidebarBrand = ensureSidebarBrand;
+})();
+</script>
+
 </body>
 </html>
 <!-- GREEN MARKET CLEAN LOGS PATCH: bỏ chú thích nhật ký, tự động lọc, sửa ngày nhóm -->
