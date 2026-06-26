@@ -20514,6 +20514,190 @@ setSyncStatus("ℹ️ Đăng nhập để đồng bộ Firebase", true);
 })();
 </script>
 
+
+
+<style id="gm-topbar-pro-fix-hinh2-v2">
+/* FIX V2: header giống hình 2, có logo + 3 chỉ số, tổng quan vẫn ở dưới */
+@media (min-width:901px){
+  #appPage.app{
+    padding-top:176px!important;
+    padding-left:20px!important;
+    padding-right:20px!important;
+  }
+
+  .gm-topbar-pro.header{
+    position:fixed!important;
+    top:0!important;
+    left:0!important;
+    right:0!important;
+    height:94px!important;
+    min-height:94px!important;
+    padding:12px 28px!important;
+    border-radius:0 0 14px 14px!important;
+    display:grid!important;
+    grid-template-columns:285px minmax(500px,1fr) 600px!important;
+    column-gap:22px!important;
+    align-items:center!important;
+    overflow:hidden!important;
+    background:linear-gradient(90deg,#003729 0%,#006343 52%,#003b2d 100%)!important;
+    box-shadow:0 10px 30px rgba(2,44,34,.28)!important;
+    z-index:30000!important;
+  }
+
+  .gm-topbar-pro.header .gm-topbar-brand.app-brand{
+    display:flex!important;
+    align-items:center!important;
+    gap:12px!important;
+    min-width:0!important;
+    max-width:none!important;
+  }
+  .gm-topbar-pro.header #headerBrandTitle,
+  .gm-topbar-pro.header #headerBrandSlogan,
+  .gm-topbar-pro.header #headerPoweredBy{
+    display:block!important;
+  }
+  .gm-topbar-pro.header #headerBrandTitle{
+    margin:0!important;
+    font-size:24px!important;
+    line-height:1.05!important;
+    white-space:nowrap!important;
+    color:#fff!important;
+  }
+  .gm-topbar-pro.header #headerBrandSlogan{
+    margin:4px 0 0!important;
+    font-size:12px!important;
+    line-height:1.2!important;
+    font-weight:900!important;
+    color:#fff!important;
+  }
+  .gm-topbar-pro.header #headerPoweredBy{
+    margin-top:3px!important;
+    font-size:10px!important;
+    color:rgba(255,255,255,.72)!important;
+  }
+  .gm-topbar-pro.header .gm-brand-icon{
+    display:flex!important;
+    width:56px!important;
+    height:56px!important;
+    flex:0 0 56px!important;
+    border-radius:50%!important;
+    align-items:center!important;
+    justify-content:center!important;
+    background:linear-gradient(135deg,#10b981,#059669)!important;
+    font-size:28px!important;
+  }
+  .gm-topbar-pro.header .header-logo-mark{display:none!important;}
+
+  .gm-topbar-pro.header .gm-topbar-metrics{
+    display:grid!important;
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+    align-items:center!important;
+    min-width:0!important;
+  }
+  .gm-topbar-pro.header .gm-topbar-metric{
+    padding:0 18px!important;
+    border-left:1px solid rgba(255,255,255,.18)!important;
+    min-width:0!important;
+  }
+  .gm-topbar-pro.header .gm-topbar-metric span{
+    display:block!important;
+    font-size:14px!important;
+    margin-bottom:5px!important;
+    white-space:nowrap!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+  }
+  .gm-topbar-pro.header .gm-topbar-metric b{
+    display:block!important;
+    font-size:19px!important;
+    line-height:1.15!important;
+    white-space:nowrap!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+  }
+
+  .gm-topbar-pro.header .gm-topbar-user{
+    display:flex!important;
+    justify-content:flex-end!important;
+    align-items:center!important;
+    gap:14px!important;
+    min-width:0!important;
+  }
+  .gm-topbar-pro.header .gm-user-line{
+    display:flex!important;
+    gap:7px!important;
+    white-space:nowrap!important;
+    font-size:14px!important;
+  }
+  .gm-topbar-pro.header .gm-user-actions{
+    display:flex!important;
+    align-items:center!important;
+    gap:10px!important;
+    flex-wrap:nowrap!important;
+  }
+
+  /* Menu trái nằm dưới header, không che tổng quan */
+  .menu{
+    position:fixed!important;
+    top:94px!important;
+    left:0!important;
+    bottom:0!important;
+    width:250px!important;
+    right:auto!important;
+    padding:16px 14px!important;
+    border-radius:0!important;
+    display:flex!important;
+    flex-direction:column!important;
+    align-items:stretch!important;
+    gap:10px!important;
+    overflow-y:auto!important;
+    overflow-x:hidden!important;
+  }
+  .menu button, .menu-dropdown .menu-btn{
+    width:100%!important;
+    text-align:left!important;
+    justify-content:flex-start!important;
+  }
+  .menu-dropdown{width:100%!important;}
+
+  #home{margin-left:260px!important;}
+  .page:not(#home){margin-left:260px!important;}
+  .dashboard-title{margin-top:0!important;}
+}
+
+@media (min-width:901px) and (max-width:1500px){
+  .gm-topbar-pro.header{
+    grid-template-columns:260px minmax(430px,1fr) 520px!important;
+    column-gap:14px!important;
+    padding-left:20px!important;
+    padding-right:20px!important;
+  }
+  .gm-topbar-pro.header #headerBrandTitle{font-size:21px!important;}
+  .gm-topbar-pro.header .gm-topbar-metric{padding:0 12px!important;}
+  .gm-topbar-pro.header .gm-topbar-metric span{font-size:12.5px!important;}
+  .gm-topbar-pro.header .gm-topbar-metric b{font-size:16.5px!important;}
+}
+</style>
+
+<script id="gm-topbar-pro-fix-products-v2">
+(function(){
+  function cleanProductsText(txt){
+    txt = (txt || '').replace(/\s+/g,' ').trim();
+    var m = txt.match(/(\d+)\s*món/i);
+    return m ? (m[1] + ' món') : (txt || '0 món');
+  }
+  function fixTopbarProducts(){
+    var src = document.getElementById('statProducts');
+    var dst = document.getElementById('topbarProducts');
+    if(src && dst) dst.textContent = cleanProductsText(src.textContent);
+  }
+  document.addEventListener('DOMContentLoaded', function(){
+    fixTopbarProducts();
+    setInterval(fixTopbarProducts, 700);
+  });
+})();
+</script>
+
 </body>
 </html>
 <!-- GREEN MARKET CLEAN LOGS PATCH: bỏ chú thích nhật ký, tự động lọc, sửa ngày nhóm -->
