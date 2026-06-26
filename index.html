@@ -20504,7 +20504,7 @@ setSyncStatus("ℹ️ Đăng nhập để đồng bộ Firebase", true);
   function syncTopbarMetrics(){
     setText('topbarRevenue', textOf('proTodayRevenue','0 VNĐ'));
     setText('topbarProfit', textOf('proTodayProfit','0 VNĐ'));
-    setText('topbarProducts', textOf('statProducts','0 món'));
+    setText('topbarProducts', (function(t){var m=(t||'').replace(/\s+/g,' ').trim().match(/(\d+)\s*món/i); return m ? (m[1]+' món') : ((t||'0 món').replace(/\s+/g,' ').trim());})(textOf('statProducts','0 món')));
   }
   document.addEventListener('DOMContentLoaded', function(){
     syncTopbarMetrics();
@@ -20693,7 +20693,7 @@ setSyncStatus("ℹ️ Đăng nhập để đồng bộ Firebase", true);
   }
   document.addEventListener('DOMContentLoaded', function(){
     fixTopbarProducts();
-    setInterval(fixTopbarProducts, 700);
+    setInterval(fixTopbarProducts, 120);
   });
 })();
 </script>
@@ -20703,3 +20703,178 @@ setSyncStatus("ℹ️ Đăng nhập để đồng bộ Firebase", true);
 <!-- GREEN MARKET CLEAN LOGS PATCH: bỏ chú thích nhật ký, tự động lọc, sửa ngày nhóm -->
 
 <!-- 5C Step 4C: Rà soát và đồng bộ ngôn ngữ quán cafe / trà sữa cho Tiệm của Thúy. -->
+
+
+<style id="gm-topbar-final-clean-v3">
+/* FINAL V3: header giống hình 2, bỏ nhấp nháy 24 món, không đẩy Tổng quan lên header */
+@media (min-width:901px){
+  #appPage.app{
+    padding-top:165px!important;
+    padding-left:20px!important;
+    padding-right:20px!important;
+  }
+
+  .gm-topbar-pro.header{
+    top:0!important;
+    left:0!important;
+    right:0!important;
+    height:94px!important;
+    min-height:94px!important;
+    padding:12px 28px!important;
+    border-radius:0 0 16px 16px!important;
+    display:grid!important;
+    grid-template-columns:250px minmax(520px,1fr) 560px!important;
+    gap:18px!important;
+    align-items:center!important;
+    background:linear-gradient(90deg,#003729 0%,#006343 52%,#003b2d 100%)!important;
+    box-shadow:0 12px 34px rgba(2,44,34,.30)!important;
+    overflow:hidden!important;
+    z-index:30000!important;
+  }
+
+  /* Ở desktop đã có logo ở sidebar, nên header chỉ giữ thống kê + tài khoản như hình 2 */
+  .gm-topbar-pro.header .gm-topbar-brand{
+    display:none!important;
+  }
+
+  .gm-topbar-pro.header .gm-topbar-metrics{
+    grid-column:1 / 3!important;
+    display:grid!important;
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+    align-items:center!important;
+    min-width:0!important;
+    width:100%!important;
+  }
+
+  .gm-topbar-pro.header .gm-topbar-metric{
+    min-width:0!important;
+    padding:0 20px!important;
+    border-left:1px solid rgba(255,255,255,.18)!important;
+  }
+  .gm-topbar-pro.header .gm-topbar-metric:first-child{border-left:0!important;}
+
+  .gm-topbar-pro.header .gm-topbar-metric span{
+    display:block!important;
+    font-size:14px!important;
+    font-weight:800!important;
+    color:rgba(255,255,255,.92)!important;
+    margin-bottom:5px!important;
+    white-space:nowrap!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+  }
+
+  .gm-topbar-pro.header .gm-topbar-metric b{
+    display:block!important;
+    font-size:21px!important;
+    line-height:1.15!important;
+    font-weight:900!important;
+    color:#fff!important;
+    white-space:nowrap!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+    max-width:100%!important;
+  }
+
+  .gm-topbar-pro.header #topbarProducts{
+    max-width:150px!important;
+  }
+
+  .gm-topbar-pro.header .gm-topbar-user{
+    grid-column:3 / 4!important;
+    display:flex!important;
+    justify-content:flex-end!important;
+    align-items:center!important;
+    gap:12px!important;
+    min-width:0!important;
+    width:100%!important;
+  }
+  .gm-topbar-pro.header .gm-user-line{
+    display:flex!important;
+    gap:7px!important;
+    align-items:center!important;
+    white-space:nowrap!important;
+    color:#fff!important;
+    font-size:14px!important;
+    font-weight:800!important;
+  }
+  .gm-topbar-pro.header .gm-user-actions{
+    display:flex!important;
+    align-items:center!important;
+    gap:10px!important;
+    flex-wrap:nowrap!important;
+    min-width:0!important;
+  }
+  .gm-topbar-pro.header #firebaseSyncStatus,
+  .gm-topbar-pro.header #currentStoreBadge{
+    white-space:nowrap!important;
+    border-radius:999px!important;
+    padding:8px 16px!important;
+    color:#fff!important;
+    background:rgba(255,255,255,.14)!important;
+    border:1px solid rgba(255,255,255,.22)!important;
+    font-weight:900!important;
+  }
+  .gm-topbar-pro.header #mainLogoutBtn{
+    min-width:112px!important;
+    height:54px!important;
+    border-radius:16px!important;
+    background:#fff!important;
+    color:#003729!important;
+    font-weight:900!important;
+    box-shadow:0 8px 18px rgba(0,0,0,.16)!important;
+  }
+
+  .menu{
+    top:94px!important;
+  }
+
+  #home, .page:not(#home){
+    margin-left:260px!important;
+  }
+
+  .dashboard-title{
+    margin-top:0!important;
+  }
+}
+
+@media (min-width:901px) and (max-width:1500px){
+  .gm-topbar-pro.header{
+    grid-template-columns:220px minmax(480px,1fr) 500px!important;
+    padding-left:22px!important;
+    padding-right:22px!important;
+  }
+  .gm-topbar-pro.header .gm-topbar-metric{padding:0 14px!important;}
+  .gm-topbar-pro.header .gm-topbar-metric span{font-size:12.5px!important;}
+  .gm-topbar-pro.header .gm-topbar-metric b{font-size:18px!important;}
+  .gm-topbar-pro.header .gm-user-line{font-size:12.5px!important;}
+  .gm-topbar-pro.header #firebaseSyncStatus,
+  .gm-topbar-pro.header #currentStoreBadge{padding:6px 11px!important;font-size:11px!important;}
+  .gm-topbar-pro.header #mainLogoutBtn{min-width:100px!important;height:46px!important;}
+}
+</style>
+
+<script id="gm-topbar-products-final-v3">
+(function(){
+  function cleanProductsText(txt){
+    txt = (txt || '').replace(/\s+/g,' ').trim();
+    var m = txt.match(/(\d+)\s*món/i);
+    return m ? (m[1] + ' món') : (txt || '0 món');
+  }
+  function fixTopbar(){
+    var revSrc=document.getElementById('proTodayRevenue');
+    var proSrc=document.getElementById('proTodayProfit');
+    var prodSrc=document.getElementById('statProducts');
+    var rev=document.getElementById('topbarRevenue');
+    var pro=document.getElementById('topbarProfit');
+    var prod=document.getElementById('topbarProducts');
+    if(rev && revSrc) rev.textContent=(revSrc.textContent||'0 VNĐ').replace(/\s+/g,' ').trim();
+    if(pro && proSrc) pro.textContent=(proSrc.textContent||'0 VNĐ').replace(/\s+/g,' ').trim();
+    if(prod && prodSrc) prod.textContent=cleanProductsText(prodSrc.textContent);
+  }
+  document.addEventListener('DOMContentLoaded', function(){
+    fixTopbar();
+    setInterval(fixTopbar, 100);
+  });
+})();
+</script>
