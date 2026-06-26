@@ -5751,15 +5751,11 @@ body:has(#loginPage:not(.hidden)) .menu{
 </style>
 
 
-
-
-
-
-
-
-<style id="tiem-thuy-4q7J-final-role-css">
-.q7j-hide{display:none!important;visibility:hidden!important;pointer-events:none!important}
-.q7j-readonly{opacity:.45!important;pointer-events:none!important;filter:grayscale(.25)}
+<style id="tiem-thuy-4q7K-core-permission-css">
+.menu [data-permission].hidden,
+.menu-dropdown.hidden{
+  display:none!important;
+}
 </style>
 
 </head>
@@ -5798,10 +5794,10 @@ body:has(#loginPage:not(.hidden)) .menu{
     <button data-permission="shift" onclick="showPage('shift')">⏱ Ca làm việc</button>
     <button data-permission="sell" onclick="showPage('sell')">🛒 Bán hàng</button>
     <button data-permission="shiftReport" onclick="showPage('shiftReport')">📊 Báo cáo ca</button>
-    <button data-permission="stock" onclick="showStockAll()">📋 Thực đơn</button>
+    <button data-permission="stock" onclick="showStockAll()">📦 Kho hàng</button>
     <button data-permission="imports" onclick="showPage('imports')">📥 Nhập nguyên liệu</button>
     <button data-permission="barcodeA4" onclick="showBarcodePage()">🏷️ In tem mã vạch A4</button>
-    <button onclick="showPage('bills')">🧾 Hóa đơn</button>
+    <button data-permission="bills" onclick="showPage('bills')">🧾 Hóa đơn</button>
     <button data-permission="money" onclick="showPage('money')">💵 Thu chi</button>
     <button data-permission="staff" onclick="showPage('staff')">👥 Nhân viên</button>
     
@@ -7703,7 +7699,9 @@ function roleCan(page){
   const map = {
     admin: ['home','shift','sell','shiftReport','stock','imports','barcodeA4','bills','money','staff','logs','data'],
     manager: ['home','shift','sell','shiftReport','stock','imports','barcodeA4','bills','money','staff','logs'],
+    // Kế toán: Trang chủ, Báo cáo ca, Kho hàng, Hóa đơn, Thu chi.
     accountant: ['home','shiftReport','stock','bills','money'],
+    // Thu ngân: Trang chủ, Ca làm việc, Bán hàng, Hóa đơn.
     cashier: ['home','shift','sell','bills']
   };
   return (map[r] || map.cashier).includes(page);
@@ -7725,7 +7723,7 @@ function roleCanAction(action=''){
   // Kế toán: chỉ xem/xuất/in báo cáo; không sửa kho, không nhập hàng, không xóa.
   if(r === 'accountant'){
     const allowView = [
-      'xem kho','xem cảnh báo','xem hàng hết','mục stock','mục money','mục bills','mục shiftreport',
+      'xem kho','xem thực đơn','xem cảnh báo','xem hàng hết','mục stock','mục money','mục bills','mục shiftreport',
       'xuất excel kế toán','in báo cáo','báo cáo ca','xem hóa đơn','xem thu chi'
     ];
     return allowView.some(k => a.includes(k));
@@ -7773,24 +7771,25 @@ function requireAdmin(action = 'chức năng quản trị'){
 }
 
 function clearSensitiveAdminViews(){
-  const blockedText = '<tr><td colspan="20">Tài khoản thu ngân không có quyền xem dữ liệu này</td></tr>';
+  const blockedText = '<tr><td colspan="20">Tài khoản này không có quyền xem dữ liệu này</td></tr>';
+  const r = normalizeRole(current?.role);
 
-  [
-    'stockBody',
-    'moneyBody',
-    'staffBody',
-    'logBody',
-    'shiftReportBody',
-    'importReportBody',
-    'dailyImportBody',
-    'importTraceBody',
-    'priceIncreaseBody'
-  ].forEach(id => {
+  const ids = r === 'accountant'
+    // Kế toán vẫn được xem: Báo cáo ca, Kho hàng, Hóa đơn, Thu chi.
+    ? ['staffBody','logBody','importReportBody','dailyImportBody','importTraceBody','priceIncreaseBody']
+    // Thu ngân chỉ xem phần cá nhân / ca / bán hàng / hóa đơn.
+    : ['stockBody','moneyBody','staffBody','logBody','shiftReportBody','importReportBody','dailyImportBody','importTraceBody','priceIncreaseBody'];
+
+  ids.forEach(id => {
     const el = document.getElementById(id);
     if(el) el.innerHTML = blockedText;
   });
 
-  ['lowStockList', 'outStockList', 'supplierList', 'barcodeProductSelect', 'barcodePrintArea'].forEach(id => {
+  const clearIds = r === 'accountant'
+    ? ['supplierList','barcodeProductSelect','barcodePrintArea']
+    : ['lowStockList','outStockList','supplierList','barcodeProductSelect','barcodePrintArea'];
+
+  clearIds.forEach(id => {
     const el = document.getElementById(id);
     if(el) el.innerHTML = '';
   });
@@ -20204,184 +20203,18 @@ setSyncStatus("ℹ️ Đăng nhập để đồng bộ Firebase", true);
 </script>
 
 
-
-
-
-
-
-
-<script id="tiem-thuy-4q7J-final-role">
+<script id="tiem-thuy-4q7K-core-permission-refresh">
 (function(){
-  function role(){
+  function refreshPermission(){
     try{
-      if(window.current && window.current.role) return String(window.current.role).toLowerCase();
-      const t = document.body.innerText || '';
-      if(/Quyền:\s*Thu\s*Ngân/i.test(t)) return 'cashier';
-      if(/Quyền:\s*Kế\s*Toán/i.test(t)) return 'accountant';
-      if(/Quyền:\s*Admin/i.test(t)) return 'admin';
+      if(typeof applyPermission === 'function') applyPermission();
     }catch(e){}
-    return '';
   }
-
-  function txt(el){
-    return String((el && el.textContent) || '').replace(/\s+/g,' ').trim().toLowerCase();
-  }
-
-  function isSideBtn(btn){
-    if(!btn || btn.tagName !== 'BUTTON' || !btn.getBoundingClientRect) return false;
-    const r = btn.getBoundingClientRect();
-    return r.left < 230 && r.width < 260 && r.height > 24;
-  }
-
-  function allowMenu(r,t){
-    if(r === 'cashier'){
-      return t.includes('trang chủ') || t.includes('ca làm việc') || t.includes('bán hàng') || t.includes('hóa đơn');
-    }
-    if(r === 'accountant'){
-      return t.includes('trang chủ') || t.includes('báo cáo ca') || t.includes('thực đơn') || t.includes('kho hàng') || t.includes('hóa đơn') || t.includes('thu chi');
-    }
-    return true;
-  }
-
-  function show(el){
-    el.classList.remove('q7j-hide');
-    el.style.removeProperty('display');
-    el.style.removeProperty('visibility');
-    el.style.removeProperty('pointer-events');
-    el.removeAttribute('aria-hidden');
-  }
-
-  function hide(el){
-    el.classList.add('q7j-hide');
-    el.style.setProperty('display','none','important');
-    el.style.setProperty('visibility','hidden','important');
-    el.style.setProperty('pointer-events','none','important');
-    el.setAttribute('aria-hidden','true');
-  }
-
-  function applyMenu(){
-    const r = role();
-    if(r !== 'cashier' && r !== 'accountant') return;
-
-    document.querySelectorAll('button').forEach(btn=>{
-      if(!isSideBtn(btn)) return;
-      let t = txt(btn);
-
-      if(r === 'accountant' && t.includes('thực đơn')){
-        btn.innerHTML = btn.innerHTML.replace(/Thực đơn/g, 'Kho hàng');
-        t = txt(btn);
-      }
-
-      if(allowMenu(r,t)) show(btn);
-      else hide(btn);
-    });
-  }
-
-  function blocked(r,p){
-    p = String(p||'').toLowerCase();
-    if(p.includes('dashboard') || p.includes('home')) return false;
-
-    if(r === 'cashier'){
-      // Thu ngân được: ca/shift, bán hàng/pos/sale, hóa đơn/bill/invoice.
-      return ['report','money','staff','employee','log','backup','data','barcode','product','menu','import','stock','setting','expense','ingredient'].some(x=>p.includes(x));
-    }
-
-    if(r === 'accountant'){
-      // Kế toán được: báo cáo/report, kho product/menu/stock/inventory, hóa đơn bill/invoice, thu chi money.
-      return ['pos','sale','staff','employee','log','backup','data','barcode','import','setting','ingredient'].some(x=>p.includes(x));
-    }
-
-    return false;
-  }
-
-  function patchNav(){
-    ['showPage','openPage','goPage','showSection','scrollToPage','navigate','showModule','openModule'].forEach(fn=>{
-      if(typeof window[fn] !== 'function' || window[fn].__q7j) return;
-      const old = window[fn];
-      window[fn] = function(){
-        const r = role();
-        let p = '';
-        for(let i=0;i<arguments.length;i++){
-          if(typeof arguments[i] === 'string'){ p = arguments[i]; break; }
-        }
-        if(blocked(r,p)){
-          try{return old.call(this,'dashboard');}catch(e){return false;}
-        }
-        return old.apply(this,arguments);
-      };
-      window[fn].__q7j = true;
-    });
-  }
-
-  function suppressOldAlerts(){
-    if(window.__q7jAlertPatched) return;
-    const oldAlert = window.alert;
-    window.alert = function(msg){
-      const m = String(msg || '').toLowerCase();
-      if((role()==='accountant' || role()==='cashier') && m.includes('không có quyền') && m.includes('thực đơn')){
-        return;
-      }
-      return oldAlert.apply(window, arguments);
-    };
-    window.__q7jAlertPatched = true;
-  }
-
-  function unlockAllowedButtons(){
-    const r = role();
-    if(r !== 'cashier' && r !== 'accountant') return;
-    document.querySelectorAll('button').forEach(btn=>{
-      if(!isSideBtn(btn)) return;
-      if(allowMenu(r, txt(btn))){
-        btn.disabled = false;
-        btn.classList.remove('q7j-readonly');
-        show(btn);
-      }
-    });
-  }
-
-  function lockDanger(){
-    const r = role();
-    if(r !== 'cashier' && r !== 'accountant') return;
-    document.querySelectorAll('button').forEach(btn=>{
-      if(isSideBtn(btn)) return;
-      const t = txt(btn);
-      const danger = /(xóa|sửa|khôi phục|backup|nhập dữ liệu|xuất dữ liệu|thêm nhân viên|xóa nhân viên|điều chỉnh|tạo phiếu nhập|xóa phiếu nhập|lưu)/i.test(t);
-      if(danger){
-        btn.disabled = true;
-        btn.classList.add('q7j-readonly');
-      }
-    });
-  }
-
-  function apply(){
-    suppressOldAlerts();
-    patchNav();
-    applyMenu();
-    unlockAllowedButtons();
-    lockDanger();
-  }
-
-  document.addEventListener('click', function(e){
-    const r = role();
-    if(r !== 'cashier' && r !== 'accountant') return;
-    const b = e.target.closest('button');
-    if(!b || !isSideBtn(b)) return;
-    if(!allowMenu(r, txt(b))){
-      e.preventDefault();
-      e.stopImmediatePropagation();
-      hide(b);
-      return false;
-    }
-  }, true);
-
-  document.addEventListener('DOMContentLoaded', ()=>{
-    apply();
-    setTimeout(apply,300);
-    setTimeout(apply,1000);
-    setTimeout(apply,2200);
+  document.addEventListener('DOMContentLoaded', function(){
+    setTimeout(refreshPermission, 300);
+    setTimeout(refreshPermission, 1000);
+    setTimeout(refreshPermission, 2200);
   });
-  document.addEventListener('click', ()=>setTimeout(apply,100));
-  setInterval(apply,500);
 })();
 </script>
 
