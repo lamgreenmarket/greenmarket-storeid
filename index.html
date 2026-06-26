@@ -5367,6 +5367,92 @@ body:has(#loginPage:not(.hidden)) .menu{
 }
 </style>
 
+
+<style id="tiem-thuy-4p1L-return-exact-class-final">
+/* =========================================================
+   4P.1L - SỬA ĐÚNG CLASS KHỐI HOÀN TRẢ
+   - Tổng quan hoàn trả tháng này nằm ngang như khối Lợi nhuận thực
+   - Top món bị trả xuống dưới, rộng toàn hàng
+   - Không kéo DOM, không làm mất dữ liệu
+   ========================================================= */
+@media (min-width:901px){
+
+  /* Card hoàn trả rộng toàn hàng, giống khối lợi nhuận */
+  .dashboard-pro-return-card,
+  .dashboard-pro-return-smart-card{
+    grid-column:1 / -1!important;
+    width:100%!important;
+    display:grid!important;
+    grid-template-columns:repeat(5,minmax(0,1fr))!important;
+    gap:12px!important;
+    align-items:stretch!important;
+    min-height:auto!important;
+    padding:18px 20px!important;
+  }
+
+  .dashboard-pro-return-smart-card > h3{
+    grid-column:1 / -1!important;
+    margin:0 0 2px!important;
+  }
+
+  .dashboard-pro-return-smart-card .return-metric,
+  .dashboard-pro-return-smart-card .return-alert{
+    min-height:76px!important;
+    margin:0!important;
+    padding:12px 14px!important;
+    border-radius:16px!important;
+    display:flex!important;
+    flex-direction:column!important;
+    justify-content:center!important;
+  }
+
+  .dashboard-pro-return-smart-card .return-metric span{
+    font-size:12px!important;
+    line-height:1.22!important;
+    margin-bottom:6px!important;
+  }
+
+  .dashboard-pro-return-smart-card .return-metric strong{
+    font-size:22px!important;
+    line-height:1.1!important;
+  }
+
+  .dashboard-pro-return-smart-card .return-alert{
+    font-size:14px!important;
+    line-height:1.25!important;
+    font-weight:900!important;
+  }
+
+  /* Top món bị trả nằm dưới hoàn trả, không chen ngang */
+  .dashboard-pro-top-return-card{
+    grid-column:1 / -1!important;
+    width:100%!important;
+    min-height:155px!important;
+  }
+
+  .dashboard-pro-top-return-card .return-top-summary{
+    margin-top:10px!important;
+  }
+
+  /* Thu gọn một chút các card phía trên để tổng thể đỡ dài */
+  .dashboard-pro-card{
+    border-radius:18px!important;
+  }
+}
+
+/* Màn hẹp hơn: hoàn trả xuống 2 hàng, không vỡ chữ */
+@media (min-width:901px) and (max-width:1280px){
+  .dashboard-pro-return-card,
+  .dashboard-pro-return-smart-card{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  }
+
+  .dashboard-pro-return-smart-card > h3{
+    grid-column:1 / -1!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <!-- =========================================================
