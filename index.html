@@ -5788,31 +5788,7 @@ body:has(#loginPage:not(.hidden)) .menu{
 <!-- =========================================================
      10. HTML HEADER + MENU
      ========================================================= -->
-  <div class="header gm-topbar-pro">
-    <div class="app-brand gm-topbar-brand">
-      <div class="gm-brand-icon">🥤</div>
-      <div>
-        <h1 id="headerBrandTitle"><span class="header-logo-mark">☕</span> Tiệm của Thúy</h1>
-        <p id="headerBrandSlogan" class="cafe-header-3line"><span class="brand-industry-line">CAFE – TRÀ SỮA – ĂN VẶT</span><span class="brand-slogan-line">Cà phê nguyên chất – Gu Việt đậm đà</span></p>
-        <small id="headerPoweredBy">Powered by Green Market POS</small>
-      </div>
-    </div>
-
-    <div class="gm-topbar-metrics" aria-label="Tổng quan nhanh">
-      <div class="gm-topbar-metric"><span>💰 Doanh thu</span><b id="topbarRevenue">0 VNĐ</b></div>
-      <div class="gm-topbar-metric"><span>📈 Lợi nhuận thực hôm nay</span><b id="topbarProfit">0 VNĐ</b></div>
-      <div class="gm-topbar-metric"><span>☕ Món trong thực đơn</span><b id="topbarProducts">0 món</b></div>
-    </div>
-
-    <div class="gm-topbar-user">
-      <div class="gm-user-line">Xin chào: <b id="userName"></b><span>- Quyền:</span> <b id="userRole"></b></div>
-      <div class="gm-user-actions">
-        <span id="firebaseSyncStatus">☁️ Firebase</span>
-        <span id="currentStoreBadge">☕ Store A</span>
-        <button id="mainLogoutBtn" class="btn-gray" onclick="confirmLogout()">Đăng xuất</button>
-      </div>
-    </div>
-  </div>
+  <div class="header"><div class="app-brand"><h1 id="headerBrandTitle"><span class="header-logo-mark">☕</span> TIỆM CỦA THÚY</h1><p id="headerBrandSlogan" class="cafe-header-3line"><span class="brand-industry-line">CAFE – TRÀ SỮA – ĂN VẶT</span><span class="brand-slogan-line">Cà phê nguyên chất – Gu Việt đậm đà</span></p><small id="headerPoweredBy" style="display:block;margin-top:4px;color:#64748b;font-weight:700">Powered by Green Market POS</small></div><div>Xin chào: <b id="userName"></b> - Quyền: <b id="userRole"></b> <span id="firebaseSyncStatus" style="display:inline-block;margin-left:8px;padding:4px 10px;border-radius:999px;background:#eef7ff;color:#075985;font-weight:800;font-size:12px">☁️ Firebase</span> <span id="currentStoreBadge" style="display:inline-block;margin-left:8px;padding:4px 10px;border-radius:999px;background:#f0fdf4;color:#047857;font-weight:900;font-size:12px">☕ Store A</span> <button id="mainLogoutBtn" class="btn-gray" onclick="confirmLogout()">Đăng xuất</button></div></div>
   <div class="menu">
     <button onclick="showPage('home')">🏠 Trang chủ</button>
     <button data-permission="shift" onclick="showPage('shift')">⏱ Ca làm việc</button>
@@ -20282,599 +20258,200 @@ setSyncStatus("ℹ️ Đăng nhập để đồng bộ Firebase", true);
 
 
 
-<style id="gm-topbar-pro-final-83">
+<style id="gm-header-giong-hinh-2-v4">
 /* =========================================================
-   HEADER PRO GIỐNG HÌNH 2 - KHÔNG ĐỤNG LOGIC
-   Thanh ngang xanh đậm có brand + 3 chỉ số + tài khoản.
-   Tổng quan vận hành vẫn nằm bên dưới như cũ.
+   HEADER GIỐNG HÌNH 2 - KHÔNG ĐƯA DOANH THU/LỢI NHUẬN LÊN HEADER
+   Chỉ chỉnh giao diện header + khoảng đệm. Không đổi logic bán hàng.
    ========================================================= */
 @media (min-width:901px){
-  body{background:#f6fbf8!important;}
-
-  #appPage.app{
-    padding-top:112px!important;
-    padding-left:252px!important;
-    padding-right:22px!important;
-    background:#f6fbf8!important;
+  :root{
+    --tt-sidebar-w:238px;
+    --gm-topbar-h:94px;
   }
-  #appPage::before{display:none!important;}
 
-  .gm-topbar-pro.header{
+  .app{
+    padding-left:calc(var(--tt-sidebar-w) + 26px)!important;
+    padding-top:calc(var(--gm-topbar-h) + 26px)!important;
+    padding-right:22px!important;
+    padding-bottom:32px!important;
+  }
+
+  #appPage::before{
+    left:0!important;
+    right:0!important;
+    top:0!important;
+    height:calc(var(--gm-topbar-h) + 18px)!important;
+    z-index:9998!important;
+    background:linear-gradient(180deg,#eafff7 0%,rgba(234,255,247,.98) 72%,rgba(234,255,247,.70) 100%)!important;
+    pointer-events:none!important;
+  }
+
+  .header{
     position:fixed!important;
     top:0!important;
     left:0!important;
     right:0!important;
-    z-index:30000!important;
-    min-height:96px!important;
-    height:96px!important;
+    height:var(--gm-topbar-h)!important;
+    min-height:var(--gm-topbar-h)!important;
+    padding:0 28px!important;
     margin:0!important;
-    padding:14px 22px!important;
-    border-radius:0 0 16px 16px!important;
-    border:none!important;
-    background:
-      radial-gradient(circle at 8% 0%,rgba(34,197,94,.28),transparent 30%),
-      linear-gradient(90deg,#003729 0%,#006343 52%,#003b2d 100%)!important;
-    box-shadow:0 10px 30px rgba(2,44,34,.28)!important;
+    border-radius:0 0 20px 20px!important;
+    border:0!important;
+    background:linear-gradient(90deg,#003b2e 0%,#006b4a 52%,#003b2e 100%)!important;
+    box-shadow:0 12px 32px rgba(0,0,0,.24)!important;
+    color:#fff!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:space-between!important;
+    gap:22px!important;
+    z-index:10020!important;
     backdrop-filter:none!important;
-    display:grid!important;
-    grid-template-columns:295px minmax(420px,1fr) 520px!important;
-    gap:18px!important;
-    align-items:center!important;
     overflow:hidden!important;
-    color:#fff!important;
   }
 
-  .gm-topbar-pro.header,
-  .gm-topbar-pro.header *{color:#fff!important;}
-
-  .gm-topbar-brand.app-brand{
+  .header > div:first-child{
     display:flex!important;
     align-items:center!important;
-    gap:13px!important;
-    min-width:0!important;
-  }
-  .gm-brand-icon{
-    width:58px!important;
-    height:58px!important;
-    border-radius:50%!important;
-    display:flex!important;
-    align-items:center!important;
-    justify-content:center!important;
-    background:linear-gradient(135deg,#10b981,#059669)!important;
-    box-shadow:0 8px 22px rgba(0,0,0,.22)!important;
-    font-size:29px!important;
-    flex:0 0 58px!important;
-  }
-  .gm-topbar-brand h1{
-    display:block!important;
+    gap:12px!important;
+    width:auto!important;
+    min-width:245px!important;
+    max-width:360px!important;
+    padding:0!important;
     margin:0!important;
-    font-size:24px!important;
-    line-height:1.05!important;
-    letter-spacing:.2px!important;
-    text-transform:none!important;
-    text-shadow:none!important;
-    white-space:nowrap!important;
-  }
-  .gm-topbar-brand .header-logo-mark{display:none!important;}
-  .gm-topbar-brand p{
-    display:block!important;
-    margin:5px 0 0!important;
-    font-size:12px!important;
-    line-height:1.25!important;
-    font-weight:900!important;
-    letter-spacing:.2px!important;
-  }
-  .gm-topbar-brand small{
-    display:block!important;
-    margin-top:4px!important;
-    color:rgba(255,255,255,.74)!important;
-    font-size:10.5px!important;
-    font-weight:800!important;
-  }
-
-  .gm-topbar-metrics{
-    display:grid!important;
-    grid-template-columns:repeat(3,minmax(0,1fr))!important;
-    align-items:center!important;
-    gap:0!important;
-    min-width:0!important;
-  }
-  .gm-topbar-metric{
-    min-width:0!important;
-    padding:0 20px!important;
-    border-left:1px solid rgba(255,255,255,.17)!important;
-  }
-  .gm-topbar-metric span{
-    display:block!important;
-    font-size:14px!important;
-    font-weight:800!important;
-    color:rgba(255,255,255,.86)!important;
-    white-space:nowrap!important;
-    overflow:hidden!important;
-    text-overflow:ellipsis!important;
-    margin-bottom:5px!important;
-  }
-  .gm-topbar-metric b{
-    display:block!important;
-    font-size:19px!important;
-    line-height:1.15!important;
-    font-weight:900!important;
-    white-space:nowrap!important;
+    text-align:left!important;
     color:#fff!important;
   }
 
-  .gm-topbar-user{
-    display:flex!important;
-    align-items:center!important;
-    justify-content:flex-end!important;
-    gap:14px!important;
-    flex-wrap:nowrap!important;
-    min-width:0!important;
-    font-size:14px!important;
-    font-weight:800!important;
-  }
-  .gm-user-line{
-    display:flex!important;
-    align-items:center!important;
-    gap:7px!important;
+  .header .app-brand h1#headerBrandTitle{
+    margin:0!important;
+    color:#fff!important;
+    font-size:22px!important;
+    line-height:1.05!important;
+    font-weight:900!important;
+    letter-spacing:.1px!important;
     white-space:nowrap!important;
+    text-shadow:none!important;
   }
-  .gm-user-actions{
-    display:flex!important;
-    align-items:center!important;
-    justify-content:flex-end!important;
-    gap:10px!important;
-    flex-wrap:nowrap!important;
+
+  .header .app-brand p,
+  .header .app-brand .cafe-header-3line{
+    margin:3px 0 0!important;
+    color:#eafff7!important;
+    font-size:12px!important;
+    line-height:1.18!important;
+    font-weight:900!important;
+    display:block!important;
   }
-  .gm-user-actions #firebaseSyncStatus,
-  .gm-user-actions #currentStoreBadge{
+
+  .header .brand-slogan-line{
+    display:none!important;
+  }
+
+  #headerPoweredBy{
+    color:rgba(255,255,255,.72)!important;
+    font-size:9px!important;
+    margin-top:3px!important;
+    font-weight:700!important;
+  }
+
+  .header .header-logo-mark{
+    width:48px!important;
+    height:48px!important;
+    min-width:48px!important;
+    border-radius:16px!important;
     display:inline-flex!important;
     align-items:center!important;
     justify-content:center!important;
-    min-height:30px!important;
-    padding:6px 14px!important;
-    margin-left:0!important;
-    border-radius:999px!important;
-    background:rgba(255,255,255,.13)!important;
-    border:1px solid rgba(255,255,255,.22)!important;
+    margin-right:10px!important;
+    background:linear-gradient(135deg,#10b981,#047857)!important;
     color:#fff!important;
-    font-weight:900!important;
-    font-size:12px!important;
+    box-shadow:0 8px 18px rgba(0,0,0,.20)!important;
+    font-size:25px!important;
+    vertical-align:middle!important;
+  }
+
+  .header > div:last-child{
+    display:flex!important;
+    align-items:center!important;
+    justify-content:flex-end!important;
+    gap:10px!important;
+    width:auto!important;
+    min-width:0!important;
+    max-width:none!important;
+    margin:0!important;
+    padding:0!important;
+    color:#fff!important;
+    font-size:14px!important;
+    line-height:1.25!important;
+    font-weight:800!important;
     white-space:nowrap!important;
+  }
+
+  .header > div:last-child b,
+  .header > div:last-child span:not(#firebaseSyncStatus):not(#currentStoreBadge){
+    color:#fff!important;
+  }
+
+  #firebaseSyncStatus,
+  #currentStoreBadge{
+    display:inline-flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    height:34px!important;
+    padding:0 14px!important;
+    margin-left:4px!important;
+    border-radius:999px!important;
+    color:#fff!important;
+    background:rgba(255,255,255,.13)!important;
+    border:1px solid rgba(255,255,255,.20)!important;
+    font-size:12px!important;
+    font-weight:900!important;
     box-shadow:none!important;
+    backdrop-filter:blur(6px)!important;
   }
-  .gm-user-actions #firebaseSyncStatus{
-    background:linear-gradient(135deg,rgba(16,185,129,.65),rgba(5,150,105,.65))!important;
+
+  #firebaseSyncStatus{
+    background:linear-gradient(135deg,rgba(16,185,129,.82),rgba(5,150,105,.76))!important;
   }
+
   #mainLogoutBtn{
-    margin-left:0!important;
-    min-width:104px!important;
-    min-height:46px!important;
+    height:42px!important;
+    min-height:42px!important;
+    min-width:108px!important;
+    margin-left:6px!important;
     padding:0 18px!important;
     border-radius:16px!important;
     background:#fff!important;
-    color:#053b2e!important;
+    color:#003b2e!important;
     font-weight:900!important;
-    border:none!important;
-    box-shadow:0 8px 22px rgba(0,0,0,.18)!important;
+    box-shadow:0 8px 20px rgba(0,0,0,.20)!important;
   }
 
-  /* Sidebar bắt đầu dưới thanh ngang, không còn chồng brand */
   .menu{
-    top:96px!important;
-    left:0!important;
-    bottom:0!important;
-    width:226px!important;
-    padding:18px 14px 16px!important;
-    border-radius:0!important;
-    z-index:20000!important;
+    top:var(--gm-topbar-h)!important;
+    height:calc(100vh - var(--gm-topbar-h))!important;
+    min-height:0!important;
+    padding-top:16px!important;
+    z-index:10001!important;
   }
-  .menu::before,
-  .menu .sidebar-brand-card{display:none!important;}
 
-  .dashboard-title{margin-top:0!important;}
-  .page{scroll-margin-top:118px!important;}
+  body.menu-scrolled .header{
+    box-shadow:0 12px 32px rgba(0,0,0,.24)!important;
+  }
 }
 
-@media (min-width:901px) and (max-width:1280px){
-  .gm-topbar-pro.header{
-    grid-template-columns:260px minmax(360px,1fr) 430px!important;
-    gap:12px!important;
-  }
-  .gm-topbar-metric{padding:0 12px!important;}
-  .gm-topbar-metric span{font-size:12.5px!important;}
-  .gm-topbar-metric b{font-size:16.5px!important;}
-  .gm-topbar-brand h1{font-size:21px!important;}
-  .gm-user-line{font-size:12.5px!important;}
-  .gm-user-actions #firebaseSyncStatus,
-  .gm-user-actions #currentStoreBadge{padding:5px 10px!important;font-size:11px!important;}
-}
-</style>
-
-<script id="gm-topbar-pro-sync-83">
-(function(){
-  function textOf(id, fallback){
-    var el=document.getElementById(id);
-    return el && el.textContent.trim() ? el.textContent.trim() : fallback;
-  }
-  function setText(id, value){
-    var el=document.getElementById(id);
-    if(el) el.textContent=value;
-  }
-  function syncTopbarMetrics(){
-    setText('topbarRevenue', textOf('proTodayRevenue','0 VNĐ'));
-    setText('topbarProfit', textOf('proTodayProfit','0 VNĐ'));
-    setText('topbarProducts', (function(t){var m=(t||'').replace(/\s+/g,' ').trim().match(/(\d+)\s*món/i); return m ? (m[1]+' món') : ((t||'0 món').replace(/\s+/g,' ').trim());})(textOf('statProducts','0 món')));
-  }
-  document.addEventListener('DOMContentLoaded', function(){
-    syncTopbarMetrics();
-    setInterval(syncTopbarMetrics, 800);
-  });
-  window.gmSyncTopbarMetrics = syncTopbarMetrics;
-})();
-</script>
-
-
-
-<style id="gm-topbar-pro-fix-hinh2-v2">
-/* FIX V2: header giống hình 2, có logo + 3 chỉ số, tổng quan vẫn ở dưới */
-@media (min-width:901px){
-  #appPage.app{
-    padding-top:176px!important;
-    padding-left:20px!important;
-    padding-right:20px!important;
-  }
-
-  .gm-topbar-pro.header{
-    position:fixed!important;
-    top:0!important;
-    left:0!important;
-    right:0!important;
-    height:94px!important;
-    min-height:94px!important;
-    padding:12px 28px!important;
-    border-radius:0 0 14px 14px!important;
-    display:grid!important;
-    grid-template-columns:285px minmax(500px,1fr) 600px!important;
-    column-gap:22px!important;
-    align-items:center!important;
-    overflow:hidden!important;
-    background:linear-gradient(90deg,#003729 0%,#006343 52%,#003b2d 100%)!important;
-    box-shadow:0 10px 30px rgba(2,44,34,.28)!important;
-    z-index:30000!important;
-  }
-
-  .gm-topbar-pro.header .gm-topbar-brand.app-brand{
-    display:flex!important;
-    align-items:center!important;
-    gap:12px!important;
-    min-width:0!important;
-    max-width:none!important;
-  }
-  .gm-topbar-pro.header #headerBrandTitle,
-  .gm-topbar-pro.header #headerBrandSlogan,
-  .gm-topbar-pro.header #headerPoweredBy{
-    display:block!important;
-  }
-  .gm-topbar-pro.header #headerBrandTitle{
-    margin:0!important;
-    font-size:24px!important;
-    line-height:1.05!important;
-    white-space:nowrap!important;
+@media (max-width:900px){
+  .header{
+    background:linear-gradient(90deg,#003b2e 0%,#006b4a 52%,#003b2e 100%)!important;
     color:#fff!important;
   }
-  .gm-topbar-pro.header #headerBrandSlogan{
-    margin:4px 0 0!important;
-    font-size:12px!important;
-    line-height:1.2!important;
-    font-weight:900!important;
-    color:#fff!important;
-  }
-  .gm-topbar-pro.header #headerPoweredBy{
-    margin-top:3px!important;
-    font-size:10px!important;
-    color:rgba(255,255,255,.72)!important;
-  }
-  .gm-topbar-pro.header .gm-brand-icon{
-    display:flex!important;
-    width:56px!important;
-    height:56px!important;
-    flex:0 0 56px!important;
-    border-radius:50%!important;
-    align-items:center!important;
-    justify-content:center!important;
-    background:linear-gradient(135deg,#10b981,#059669)!important;
-    font-size:28px!important;
-  }
-  .gm-topbar-pro.header .header-logo-mark{display:none!important;}
-
-  .gm-topbar-pro.header .gm-topbar-metrics{
-    display:grid!important;
-    grid-template-columns:repeat(3,minmax(0,1fr))!important;
-    align-items:center!important;
-    min-width:0!important;
-  }
-  .gm-topbar-pro.header .gm-topbar-metric{
-    padding:0 18px!important;
-    border-left:1px solid rgba(255,255,255,.18)!important;
-    min-width:0!important;
-  }
-  .gm-topbar-pro.header .gm-topbar-metric span{
-    display:block!important;
-    font-size:14px!important;
-    margin-bottom:5px!important;
-    white-space:nowrap!important;
-    overflow:hidden!important;
-    text-overflow:ellipsis!important;
-  }
-  .gm-topbar-pro.header .gm-topbar-metric b{
-    display:block!important;
-    font-size:19px!important;
-    line-height:1.15!important;
-    white-space:nowrap!important;
-    overflow:hidden!important;
-    text-overflow:ellipsis!important;
-  }
-
-  .gm-topbar-pro.header .gm-topbar-user{
-    display:flex!important;
-    justify-content:flex-end!important;
-    align-items:center!important;
-    gap:14px!important;
-    min-width:0!important;
-  }
-  .gm-topbar-pro.header .gm-user-line{
-    display:flex!important;
-    gap:7px!important;
-    white-space:nowrap!important;
-    font-size:14px!important;
-  }
-  .gm-topbar-pro.header .gm-user-actions{
-    display:flex!important;
-    align-items:center!important;
-    gap:10px!important;
-    flex-wrap:nowrap!important;
-  }
-
-  /* Menu trái nằm dưới header, không che tổng quan */
-  .menu{
-    position:fixed!important;
-    top:94px!important;
-    left:0!important;
-    bottom:0!important;
-    width:250px!important;
-    right:auto!important;
-    padding:16px 14px!important;
-    border-radius:0!important;
-    display:flex!important;
-    flex-direction:column!important;
-    align-items:stretch!important;
-    gap:10px!important;
-    overflow-y:auto!important;
-    overflow-x:hidden!important;
-  }
-  .menu button, .menu-dropdown .menu-btn{
-    width:100%!important;
-    text-align:left!important;
-    justify-content:flex-start!important;
-  }
-  .menu-dropdown{width:100%!important;}
-
-  #home{margin-left:260px!important;}
-  .page:not(#home){margin-left:260px!important;}
-  .dashboard-title{margin-top:0!important;}
-}
-
-@media (min-width:901px) and (max-width:1500px){
-  .gm-topbar-pro.header{
-    grid-template-columns:260px minmax(430px,1fr) 520px!important;
-    column-gap:14px!important;
-    padding-left:20px!important;
-    padding-right:20px!important;
-  }
-  .gm-topbar-pro.header #headerBrandTitle{font-size:21px!important;}
-  .gm-topbar-pro.header .gm-topbar-metric{padding:0 12px!important;}
-  .gm-topbar-pro.header .gm-topbar-metric span{font-size:12.5px!important;}
-  .gm-topbar-pro.header .gm-topbar-metric b{font-size:16.5px!important;}
+  .header *{color:#fff!important;}
+  #mainLogoutBtn{background:#fff!important;color:#003b2e!important;}
 }
 </style>
-
-<script id="gm-topbar-pro-fix-products-v2">
-(function(){
-  function cleanProductsText(txt){
-    txt = (txt || '').replace(/\s+/g,' ').trim();
-    var m = txt.match(/(\d+)\s*món/i);
-    return m ? (m[1] + ' món') : (txt || '0 món');
-  }
-  function fixTopbarProducts(){
-    var src = document.getElementById('statProducts');
-    var dst = document.getElementById('topbarProducts');
-    if(src && dst) dst.textContent = cleanProductsText(src.textContent);
-  }
-  document.addEventListener('DOMContentLoaded', function(){
-    fixTopbarProducts();
-    setInterval(fixTopbarProducts, 120);
-  });
-})();
-</script>
 
 </body>
 </html>
 <!-- GREEN MARKET CLEAN LOGS PATCH: bỏ chú thích nhật ký, tự động lọc, sửa ngày nhóm -->
 
 <!-- 5C Step 4C: Rà soát và đồng bộ ngôn ngữ quán cafe / trà sữa cho Tiệm của Thúy. -->
-
-
-<style id="gm-topbar-final-clean-v3">
-/* FINAL V3: header giống hình 2, bỏ nhấp nháy 24 món, không đẩy Tổng quan lên header */
-@media (min-width:901px){
-  #appPage.app{
-    padding-top:165px!important;
-    padding-left:20px!important;
-    padding-right:20px!important;
-  }
-
-  .gm-topbar-pro.header{
-    top:0!important;
-    left:0!important;
-    right:0!important;
-    height:94px!important;
-    min-height:94px!important;
-    padding:12px 28px!important;
-    border-radius:0 0 16px 16px!important;
-    display:grid!important;
-    grid-template-columns:250px minmax(520px,1fr) 560px!important;
-    gap:18px!important;
-    align-items:center!important;
-    background:linear-gradient(90deg,#003729 0%,#006343 52%,#003b2d 100%)!important;
-    box-shadow:0 12px 34px rgba(2,44,34,.30)!important;
-    overflow:hidden!important;
-    z-index:30000!important;
-  }
-
-  /* Ở desktop đã có logo ở sidebar, nên header chỉ giữ thống kê + tài khoản như hình 2 */
-  .gm-topbar-pro.header .gm-topbar-brand{
-    display:none!important;
-  }
-
-  .gm-topbar-pro.header .gm-topbar-metrics{
-    grid-column:1 / 3!important;
-    display:grid!important;
-    grid-template-columns:repeat(3,minmax(0,1fr))!important;
-    align-items:center!important;
-    min-width:0!important;
-    width:100%!important;
-  }
-
-  .gm-topbar-pro.header .gm-topbar-metric{
-    min-width:0!important;
-    padding:0 20px!important;
-    border-left:1px solid rgba(255,255,255,.18)!important;
-  }
-  .gm-topbar-pro.header .gm-topbar-metric:first-child{border-left:0!important;}
-
-  .gm-topbar-pro.header .gm-topbar-metric span{
-    display:block!important;
-    font-size:14px!important;
-    font-weight:800!important;
-    color:rgba(255,255,255,.92)!important;
-    margin-bottom:5px!important;
-    white-space:nowrap!important;
-    overflow:hidden!important;
-    text-overflow:ellipsis!important;
-  }
-
-  .gm-topbar-pro.header .gm-topbar-metric b{
-    display:block!important;
-    font-size:21px!important;
-    line-height:1.15!important;
-    font-weight:900!important;
-    color:#fff!important;
-    white-space:nowrap!important;
-    overflow:hidden!important;
-    text-overflow:ellipsis!important;
-    max-width:100%!important;
-  }
-
-  .gm-topbar-pro.header #topbarProducts{
-    max-width:150px!important;
-  }
-
-  .gm-topbar-pro.header .gm-topbar-user{
-    grid-column:3 / 4!important;
-    display:flex!important;
-    justify-content:flex-end!important;
-    align-items:center!important;
-    gap:12px!important;
-    min-width:0!important;
-    width:100%!important;
-  }
-  .gm-topbar-pro.header .gm-user-line{
-    display:flex!important;
-    gap:7px!important;
-    align-items:center!important;
-    white-space:nowrap!important;
-    color:#fff!important;
-    font-size:14px!important;
-    font-weight:800!important;
-  }
-  .gm-topbar-pro.header .gm-user-actions{
-    display:flex!important;
-    align-items:center!important;
-    gap:10px!important;
-    flex-wrap:nowrap!important;
-    min-width:0!important;
-  }
-  .gm-topbar-pro.header #firebaseSyncStatus,
-  .gm-topbar-pro.header #currentStoreBadge{
-    white-space:nowrap!important;
-    border-radius:999px!important;
-    padding:8px 16px!important;
-    color:#fff!important;
-    background:rgba(255,255,255,.14)!important;
-    border:1px solid rgba(255,255,255,.22)!important;
-    font-weight:900!important;
-  }
-  .gm-topbar-pro.header #mainLogoutBtn{
-    min-width:112px!important;
-    height:54px!important;
-    border-radius:16px!important;
-    background:#fff!important;
-    color:#003729!important;
-    font-weight:900!important;
-    box-shadow:0 8px 18px rgba(0,0,0,.16)!important;
-  }
-
-  .menu{
-    top:94px!important;
-  }
-
-  #home, .page:not(#home){
-    margin-left:260px!important;
-  }
-
-  .dashboard-title{
-    margin-top:0!important;
-  }
-}
-
-@media (min-width:901px) and (max-width:1500px){
-  .gm-topbar-pro.header{
-    grid-template-columns:220px minmax(480px,1fr) 500px!important;
-    padding-left:22px!important;
-    padding-right:22px!important;
-  }
-  .gm-topbar-pro.header .gm-topbar-metric{padding:0 14px!important;}
-  .gm-topbar-pro.header .gm-topbar-metric span{font-size:12.5px!important;}
-  .gm-topbar-pro.header .gm-topbar-metric b{font-size:18px!important;}
-  .gm-topbar-pro.header .gm-user-line{font-size:12.5px!important;}
-  .gm-topbar-pro.header #firebaseSyncStatus,
-  .gm-topbar-pro.header #currentStoreBadge{padding:6px 11px!important;font-size:11px!important;}
-  .gm-topbar-pro.header #mainLogoutBtn{min-width:100px!important;height:46px!important;}
-}
-</style>
-
-<script id="gm-topbar-products-final-v3">
-(function(){
-  function cleanProductsText(txt){
-    txt = (txt || '').replace(/\s+/g,' ').trim();
-    var m = txt.match(/(\d+)\s*món/i);
-    return m ? (m[1] + ' món') : (txt || '0 món');
-  }
-  function fixTopbar(){
-    var revSrc=document.getElementById('proTodayRevenue');
-    var proSrc=document.getElementById('proTodayProfit');
-    var prodSrc=document.getElementById('statProducts');
-    var rev=document.getElementById('topbarRevenue');
-    var pro=document.getElementById('topbarProfit');
-    var prod=document.getElementById('topbarProducts');
-    if(rev && revSrc) rev.textContent=(revSrc.textContent||'0 VNĐ').replace(/\s+/g,' ').trim();
-    if(pro && proSrc) pro.textContent=(proSrc.textContent||'0 VNĐ').replace(/\s+/g,' ').trim();
-    if(prod && prodSrc) prod.textContent=cleanProductsText(prodSrc.textContent);
-  }
-  document.addEventListener('DOMContentLoaded', function(){
-    fixTopbar();
-    setInterval(fixTopbar, 100);
-  });
-})();
-</script>
