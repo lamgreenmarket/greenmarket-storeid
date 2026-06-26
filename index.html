@@ -5754,9 +5754,12 @@ body:has(#loginPage:not(.hidden)) .menu{
 
 
 
-<style id="tiem-thuy-4q7I-final-role-css">
-.q7i-hide{display:none!important;visibility:hidden!important;pointer-events:none!important}
-.q7i-readonly{opacity:.45!important;pointer-events:none!important;filter:grayscale(.25)}
+
+
+
+<style id="tiem-thuy-4q7J-final-role-css">
+.q7j-hide{display:none!important;visibility:hidden!important;pointer-events:none!important}
+.q7j-readonly{opacity:.45!important;pointer-events:none!important;filter:grayscale(.25)}
 </style>
 
 </head>
@@ -20204,11 +20207,11 @@ setSyncStatus("ℹ️ Đăng nhập để đồng bộ Firebase", true);
 
 
 
-<script id="tiem-thuy-4q7I-final-role">
-(function(){
-  const CASHIER_ALLOW = ['trang chủ','ca làm việc','bán hàng','hóa đơn'];
-  const ACCOUNTANT_ALLOW = ['trang chủ','báo cáo ca','kho hàng','thực đơn','hóa đơn','thu chi'];
 
+
+
+<script id="tiem-thuy-4q7J-final-role">
+(function(){
   function role(){
     try{
       if(window.current && window.current.role) return String(window.current.role).toLowerCase();
@@ -20216,7 +20219,6 @@ setSyncStatus("ℹ️ Đăng nhập để đồng bộ Firebase", true);
       if(/Quyền:\s*Thu\s*Ngân/i.test(t)) return 'cashier';
       if(/Quyền:\s*Kế\s*Toán/i.test(t)) return 'accountant';
       if(/Quyền:\s*Admin/i.test(t)) return 'admin';
-      if(/Quyền:\s*Quản/i.test(t)) return 'manager';
     }catch(e){}
     return '';
   }
@@ -20225,34 +20227,36 @@ setSyncStatus("ℹ️ Đăng nhập để đồng bộ Firebase", true);
     return String((el && el.textContent) || '').replace(/\s+/g,' ').trim().toLowerCase();
   }
 
-  function leftMenuButton(el){
-    if(!el || el.tagName !== 'BUTTON' || !el.getBoundingClientRect) return false;
-    const r = el.getBoundingClientRect();
-    return r.left < 220 && r.top > 80 && r.width > 80 && r.width < 230 && r.height >= 28;
+  function isSideBtn(btn){
+    if(!btn || btn.tagName !== 'BUTTON' || !btn.getBoundingClientRect) return false;
+    const r = btn.getBoundingClientRect();
+    return r.left < 230 && r.width < 260 && r.height > 24;
   }
 
-  function allow(r, t){
-    const arr = r === 'cashier' ? CASHIER_ALLOW : r === 'accountant' ? ACCOUNTANT_ALLOW : null;
-    if(!arr) return true;
-    return arr.some(x => t.includes(x));
-  }
-
-  function hide(el){
-    el.classList.add('q7i-hide');
-    el.style.setProperty('display','none','important');
-    el.style.setProperty('visibility','hidden','important');
-    el.style.setProperty('pointer-events','none','important');
-    el.setAttribute('aria-hidden','true');
-    el.tabIndex = -1;
+  function allowMenu(r,t){
+    if(r === 'cashier'){
+      return t.includes('trang chủ') || t.includes('ca làm việc') || t.includes('bán hàng') || t.includes('hóa đơn');
+    }
+    if(r === 'accountant'){
+      return t.includes('trang chủ') || t.includes('báo cáo ca') || t.includes('thực đơn') || t.includes('kho hàng') || t.includes('hóa đơn') || t.includes('thu chi');
+    }
+    return true;
   }
 
   function show(el){
-    el.classList.remove('q7i-hide');
+    el.classList.remove('q7j-hide');
     el.style.removeProperty('display');
     el.style.removeProperty('visibility');
     el.style.removeProperty('pointer-events');
     el.removeAttribute('aria-hidden');
-    el.tabIndex = 0;
+  }
+
+  function hide(el){
+    el.classList.add('q7j-hide');
+    el.style.setProperty('display','none','important');
+    el.style.setProperty('visibility','hidden','important');
+    el.style.setProperty('pointer-events','none','important');
+    el.setAttribute('aria-hidden','true');
   }
 
   function applyMenu(){
@@ -20260,7 +20264,7 @@ setSyncStatus("ℹ️ Đăng nhập để đồng bộ Firebase", true);
     if(r !== 'cashier' && r !== 'accountant') return;
 
     document.querySelectorAll('button').forEach(btn=>{
-      if(!leftMenuButton(btn)) return;
+      if(!isSideBtn(btn)) return;
       let t = txt(btn);
 
       if(r === 'accountant' && t.includes('thực đơn')){
@@ -20268,39 +20272,31 @@ setSyncStatus("ℹ️ Đăng nhập để đồng bộ Firebase", true);
         t = txt(btn);
       }
 
-      if(allow(r, t)) show(btn);
+      if(allowMenu(r,t)) show(btn);
       else hide(btn);
-    });
-
-    // Ẩn các dòng tiêu đề nhóm của dropdown Dữ liệu nếu lọt ra
-    document.querySelectorAll('div,span,p,strong').forEach(el=>{
-      if(!el.getBoundingClientRect) return;
-      const b = el.getBoundingClientRect();
-      const t = txt(el);
-      if(b.left < 220 && ['vận hành','danh mục','quản trị'].includes(t)) hide(el);
     });
   }
 
-  function pageBlocked(r, p){
-    p = String(p || '').toLowerCase();
+  function blocked(r,p){
+    p = String(p||'').toLowerCase();
     if(p.includes('dashboard') || p.includes('home')) return false;
 
     if(r === 'cashier'){
-      // Thu ngân được: trang chủ, ca làm việc, bán hàng, hóa đơn.
+      // Thu ngân được: ca/shift, bán hàng/pos/sale, hóa đơn/bill/invoice.
       return ['report','money','staff','employee','log','backup','data','barcode','product','menu','import','stock','setting','expense','ingredient'].some(x=>p.includes(x));
     }
 
     if(r === 'accountant'){
-      // Kế toán được: trang chủ, báo cáo ca, kho/thực đơn, hóa đơn, thu chi.
-      // Không chặn product/menu/stock/bill/money/report/shift.
+      // Kế toán được: báo cáo/report, kho product/menu/stock/inventory, hóa đơn bill/invoice, thu chi money.
       return ['pos','sale','staff','employee','log','backup','data','barcode','import','setting','ingredient'].some(x=>p.includes(x));
     }
+
     return false;
   }
 
-  function patchNavigation(){
-    ['showPage','openPage','goPage','showSection','scrollToPage','navigate'].forEach(fn=>{
-      if(typeof window[fn] !== 'function' || window[fn].__q7i) return;
+  function patchNav(){
+    ['showPage','openPage','goPage','showSection','scrollToPage','navigate','showModule','openModule'].forEach(fn=>{
+      if(typeof window[fn] !== 'function' || window[fn].__q7j) return;
       const old = window[fn];
       window[fn] = function(){
         const r = role();
@@ -20308,46 +20304,72 @@ setSyncStatus("ℹ️ Đăng nhập để đồng bộ Firebase", true);
         for(let i=0;i<arguments.length;i++){
           if(typeof arguments[i] === 'string'){ p = arguments[i]; break; }
         }
-        if(pageBlocked(r, p)){
-          try{return old.call(this, 'dashboard');}catch(e){return false;}
+        if(blocked(r,p)){
+          try{return old.call(this,'dashboard');}catch(e){return false;}
         }
-        return old.apply(this, arguments);
+        return old.apply(this,arguments);
       };
-      window[fn].__q7i = true;
+      window[fn].__q7j = true;
     });
   }
 
-  function lockWrites(){
+  function suppressOldAlerts(){
+    if(window.__q7jAlertPatched) return;
+    const oldAlert = window.alert;
+    window.alert = function(msg){
+      const m = String(msg || '').toLowerCase();
+      if((role()==='accountant' || role()==='cashier') && m.includes('không có quyền') && m.includes('thực đơn')){
+        return;
+      }
+      return oldAlert.apply(window, arguments);
+    };
+    window.__q7jAlertPatched = true;
+  }
+
+  function unlockAllowedButtons(){
     const r = role();
     if(r !== 'cashier' && r !== 'accountant') return;
-
     document.querySelectorAll('button').forEach(btn=>{
-      if(leftMenuButton(btn)) return;
+      if(!isSideBtn(btn)) return;
+      if(allowMenu(r, txt(btn))){
+        btn.disabled = false;
+        btn.classList.remove('q7j-readonly');
+        show(btn);
+      }
+    });
+  }
+
+  function lockDanger(){
+    const r = role();
+    if(r !== 'cashier' && r !== 'accountant') return;
+    document.querySelectorAll('button').forEach(btn=>{
+      if(isSideBtn(btn)) return;
       const t = txt(btn);
       const danger = /(xóa|sửa|khôi phục|backup|nhập dữ liệu|xuất dữ liệu|thêm nhân viên|xóa nhân viên|điều chỉnh|tạo phiếu nhập|xóa phiếu nhập|lưu)/i.test(t);
       if(danger){
         btn.disabled = true;
-        btn.classList.add('q7i-readonly');
-        btn.title = r === 'accountant' ? 'Kế toán chỉ được xem, không được sửa/xóa dữ liệu' : 'Thu ngân không có quyền thao tác mục này';
+        btn.classList.add('q7j-readonly');
       }
     });
   }
 
   function apply(){
-    patchNavigation();
+    suppressOldAlerts();
+    patchNav();
     applyMenu();
-    lockWrites();
+    unlockAllowedButtons();
+    lockDanger();
   }
 
   document.addEventListener('click', function(e){
     const r = role();
     if(r !== 'cashier' && r !== 'accountant') return;
-    const btn = e.target.closest('button');
-    if(!btn || !leftMenuButton(btn)) return;
-    if(!allow(r, txt(btn))){
+    const b = e.target.closest('button');
+    if(!b || !isSideBtn(b)) return;
+    if(!allowMenu(r, txt(b))){
       e.preventDefault();
       e.stopImmediatePropagation();
-      hide(btn);
+      hide(b);
       return false;
     }
   }, true);
@@ -20358,20 +20380,8 @@ setSyncStatus("ℹ️ Đăng nhập để đồng bộ Firebase", true);
     setTimeout(apply,1000);
     setTimeout(apply,2200);
   });
-
-  document.addEventListener('click', ()=>setTimeout(apply,120));
-
-  // Chạy liên tục nhẹ, vì app render sidebar lại sau Firebase/session
-  setInterval(apply, 600);
-
-  setTimeout(()=>{
-    try{
-      new MutationObserver(()=>{
-        clearTimeout(window.__q7iTimer);
-        window.__q7iTimer = setTimeout(apply, 80);
-      }).observe(document.body,{childList:true,subtree:true,characterData:true,attributes:true});
-    }catch(e){}
-  },700);
+  document.addEventListener('click', ()=>setTimeout(apply,100));
+  setInterval(apply,500);
 })();
 </script>
 
