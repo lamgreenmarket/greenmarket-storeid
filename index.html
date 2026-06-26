@@ -5563,6 +5563,65 @@ body:has(#loginPage:not(.hidden)) .menu{
 }
 </style>
 
+
+<style id="tiem-thuy-4p1o-top-return-polish">
+/* =========================================================
+   4P.1O – Polish ô Top món bị hoàn trả
+   - Đồng bộ style với 4 ô còn lại
+   - Rút nội dung còn 2 dòng
+   - Giảm chiều cao hàng hoàn trả
+   ========================================================= */
+@media (min-width:901px){
+  #returnTopMiniBox{
+    min-height:72px!important;
+    padding:12px 14px!important;
+    display:flex!important;
+    flex-direction:column!important;
+    justify-content:center!important;
+    gap:2px!important;
+  }
+
+  #returnTopMiniBox span{
+    font-size:12px!important;
+    line-height:1.18!important;
+    margin:0 0 4px!important;
+    font-weight:900!important;
+    text-transform:uppercase!important;
+    color:#475569!important;
+    letter-spacing:.2px!important;
+  }
+
+  #returnTopMiniBox strong{
+    display:block!important;
+    margin:0!important;
+    font-size:18px!important;
+    line-height:1.15!important;
+    font-weight:900!important;
+    color:#0f4c81!important;
+    white-space:nowrap!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+  }
+
+  #returnTopMiniBox small{
+    display:block!important;
+    margin:0!important;
+    font-size:11px!important;
+    line-height:1.2!important;
+    font-weight:800!important;
+    color:#64748b!important;
+    white-space:nowrap!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+  }
+
+  .dashboard-pro-return-smart-card .return-metric,
+  .dashboard-pro-return-smart-card .return-top-mini{
+    min-height:72px!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <!-- =========================================================
@@ -19873,6 +19932,45 @@ setSyncStatus("ℹ️ Đăng nhập để đồng bộ Firebase", true);
   document.addEventListener('DOMContentLoaded', function(){ setTimeout(fix, 300); });
   setTimeout(fix, 900);
   setInterval(fix, 1500);
+})();
+</script>
+
+
+<script id="tiem-thuy-4p1o-top-return-polish-js">
+(function(){
+  function norm(s){return (s||'').replace(/\s+/g,' ').trim();}
+  function polish(){
+    var mini = document.getElementById('returnTopMiniBox');
+    if(!mini) return;
+
+    var topList = document.getElementById('proTopReturnedProducts');
+    var summary = document.getElementById('proTopReturnedSummary');
+
+    var main = 'Chưa có dữ liệu';
+    if(topList){
+      var first = topList.querySelector('li');
+      if(first){
+        var txt = norm(first.textContent);
+        if(txt && !/chưa có dữ liệu/i.test(txt)) main = txt;
+      }
+    }
+
+    var sub = '0 SP • 0 lần';
+    if(summary){
+      var s = norm(summary.textContent);
+      var sp = s.match(/(\d+)\s*SP/i);
+      var lan = s.match(/(\d+)\s*lần/i);
+      if(sp || lan){
+        sub = (sp ? sp[1] + ' SP' : '0 SP') + ' • ' + (lan ? lan[1] + ' lần' : '0 lần');
+      }
+    }
+
+    mini.innerHTML = '<span>📦 Top món bị hoàn trả</span><strong>' + main + '</strong><small>' + sub + '</small>';
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){ setTimeout(polish, 250); });
+  setTimeout(polish, 800);
+  setInterval(polish, 1500);
 })();
 </script>
 
