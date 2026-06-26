@@ -5299,6 +5299,27 @@ body:has(#loginPage:not(.hidden)) .menu{
 }
 </style>
 
+
+<style id="tiem-thuy-4p1h-force-return-horizontal">
+@media (min-width:901px){
+  /* Chốt cứng card hoàn trả thành 5 ô ngang */
+  #home .refund-overview-horizontal,
+  #dashboard .refund-overview-horizontal{
+    display:grid!important;
+    grid-template-columns:repeat(5,minmax(0,1fr))!important;
+    gap:10px!important;
+    align-items:stretch!important;
+  }
+  #home .refund-overview-horizontal > *,
+  #dashboard .refund-overview-horizontal > *{
+    min-height:62px!important;
+    padding:10px 12px!important;
+    border-radius:14px!important;
+    margin:0!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <!-- =========================================================
@@ -8328,6 +8349,27 @@ ${'<scr' + 'ipt src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcod
     font-size:12.5px!important;
     padding-left:6px!important;
     padding-right:6px!important;
+  }
+}
+</style>
+
+
+<style id="tiem-thuy-4p1h-force-return-horizontal">
+@media (min-width:901px){
+  /* Chốt cứng card hoàn trả thành 5 ô ngang */
+  #home .refund-overview-horizontal,
+  #dashboard .refund-overview-horizontal{
+    display:grid!important;
+    grid-template-columns:repeat(5,minmax(0,1fr))!important;
+    gap:10px!important;
+    align-items:stretch!important;
+  }
+  #home .refund-overview-horizontal > *,
+  #dashboard .refund-overview-horizontal > *{
+    min-height:62px!important;
+    padding:10px 12px!important;
+    border-radius:14px!important;
+    margin:0!important;
   }
 }
 </style>
@@ -12134,6 +12176,27 @@ function buildImportReceiptPrintHtml(data){
 }
 </style>
 
+
+<style id="tiem-thuy-4p1h-force-return-horizontal">
+@media (min-width:901px){
+  /* Chốt cứng card hoàn trả thành 5 ô ngang */
+  #home .refund-overview-horizontal,
+  #dashboard .refund-overview-horizontal{
+    display:grid!important;
+    grid-template-columns:repeat(5,minmax(0,1fr))!important;
+    gap:10px!important;
+    align-items:stretch!important;
+  }
+  #home .refund-overview-horizontal > *,
+  #dashboard .refund-overview-horizontal > *{
+    min-height:62px!important;
+    padding:10px 12px!important;
+    border-radius:14px!important;
+    margin:0!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <div class="print-actions"><button class="btn" onclick="window.print()">🖨️ In</button><button class="btn2" onclick="window.close()">Đóng</button></div>
@@ -13351,6 +13414,27 @@ function buildDailyImportReportPrintHtml(selected, list){
     font-size:12.5px!important;
     padding-left:6px!important;
     padding-right:6px!important;
+  }
+}
+</style>
+
+
+<style id="tiem-thuy-4p1h-force-return-horizontal">
+@media (min-width:901px){
+  /* Chốt cứng card hoàn trả thành 5 ô ngang */
+  #home .refund-overview-horizontal,
+  #dashboard .refund-overview-horizontal{
+    display:grid!important;
+    grid-template-columns:repeat(5,minmax(0,1fr))!important;
+    gap:10px!important;
+    align-items:stretch!important;
+  }
+  #home .refund-overview-horizontal > *,
+  #dashboard .refund-overview-horizontal > *{
+    min-height:62px!important;
+    padding:10px 12px!important;
+    border-radius:14px!important;
+    margin:0!important;
   }
 }
 </style>
@@ -19566,6 +19650,48 @@ setSyncStatus("ℹ️ Đăng nhập để đồng bộ Firebase", true);
   }
   document.addEventListener('DOMContentLoaded', fix);
   setInterval(fix, 800);
+})();
+</script>
+
+
+<script id="tiem-thuy-4p1h-force-return-horizontal-js">
+(function(){
+  function norm(s){return (s||"").replace(/\s+/g," ").trim().toLowerCase();}
+  function isMetricBox(el){
+    const t = norm(el.innerText);
+    return ['doanh thu gốc','doanh thu thực nhận','hoàn trả tháng này','tỷ lệ hoàn trả','tỷ lệ hoàn trả trong mức an toàn']
+      .some(k=>t.includes(k));
+  }
+  function fix(){
+    const app = document.getElementById('appPage');
+    if(!app) return;
+    const cards = Array.from(app.querySelectorAll('.card, section, article, div'));
+    cards.forEach(el=>{
+      const t = norm(el.innerText);
+      if(t.includes('tổng quan hoàn trả tháng này')){
+        const card = el.classList.contains('card') ? el : el.closest('.card') || el;
+        // tìm tất cả box metric bên trong card này
+        const kids = Array.from(card.querySelectorAll(':scope > div, :scope > section, :scope > article'));
+        const metrics = kids.filter(isMetricBox);
+        if(metrics.length >= 4){
+          const wrap = document.createElement('div');
+          wrap.className = 'refund-overview-horizontal';
+          metrics.forEach(m => wrap.appendChild(m));
+          // chèn wrap ngay sau tiêu đề/card header
+          let inserted = false
+          const titleEl = kids.find(k => norm(k.innerText).includes('tổng quan hoàn trả tháng này'));
+          if(titleEl && titleEl.parentNode===card){
+            titleEl.insertAdjacentElement('afterend', wrap);
+          } else {
+            card.appendChild(wrap);
+          }
+        }
+      }
+    });
+  }
+  document.addEventListener('DOMContentLoaded', ()=>setTimeout(fix,300));
+  setTimeout(fix,900);
+  setTimeout(fix,1800);
 })();
 </script>
 
