@@ -5622,6 +5622,69 @@ body:has(#loginPage:not(.hidden)) .menu{
 }
 </style>
 
+
+<style id="tiem-thuy-4q5a-employees-polish">
+/* =========================================================
+   4Q.5A - POLISH TRANG QUẢN LÝ NHÂN VIÊN
+   - Xóa món -> Xóa nhân viên
+   - Mật khẩu Firebase Auth -> Mật khẩu đăng nhập
+   - Hàng input thoáng hơn
+   - Bảng nhân viên dễ đọc hơn
+   ========================================================= */
+@media (min-width:901px){
+
+  /* Form thêm nhân viên thoáng hơn */
+  #employeesPage input,
+  #employeesPage select,
+  #employeePage input,
+  #employeePage select,
+  .employee-page input,
+  .employee-page select{
+    min-height:44px!important;
+    border-radius:13px!important;
+    font-size:14px!important;
+  }
+
+  #employeesPage .form-row,
+  #employeePage .form-row,
+  .employee-page .form-row{
+    gap:12px!important;
+    align-items:center!important;
+  }
+
+  /* Nút thêm nhân viên đẹp hơn */
+  #employeesPage button,
+  #employeePage button,
+  .employee-page button{
+    border-radius:13px!important;
+    font-weight:850!important;
+  }
+
+  /* Bảng nhân viên thoáng hơn */
+  #employeesPage table th,
+  #employeesPage table td,
+  #employeePage table th,
+  #employeePage table td,
+  .employee-page table th,
+  .employee-page table td{
+    padding-top:13px!important;
+    padding-bottom:13px!important;
+  }
+
+  /* Nút xóa nhân viên không quá gắt */
+  #employeesPage button.delete-btn,
+  #employeePage button.delete-btn,
+  .employee-page button.delete-btn,
+  #employeesPage table button,
+  #employeePage table button,
+  .employee-page table button{
+    min-height:36px!important;
+    padding:8px 14px!important;
+    border-radius:12px!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <!-- =========================================================
@@ -6353,7 +6416,7 @@ body:has(#loginPage:not(.hidden)) .menu{
     <div id="billDetailBox" class="bill-detail-box hidden"></div>
   </section>
   <section id="money" class="page hidden card"><h2>💵 Thu chi</h2><div class="table-wrap"><table><thead><tr><th>STT</th><th>Ngày</th><th>Loại</th><th>Số tiền</th></tr></thead><tbody id="moneyBody"></tbody></table></div></section>
-  <section id="staff" class="page hidden card"><h2>👥 Quản lý nhân viên</h2><div class="grid"><input id="staffName" placeholder="Tên nhân viên"><input id="staffUser" placeholder="Tên đăng nhập"><input id="staffPass" type="password" placeholder="Mật khẩu Firebase Auth (không lưu local)"><select id="staffRole">
+  <section id="staff" class="page hidden card"><h2>👥 Quản lý nhân viên</h2><div class="grid"><input id="staffName" placeholder="Nhập tên nhân viên"><input id="staffUser" placeholder="Nhập tài khoản đăng nhập"><input id="staffPass" type="password" placeholder="Mật khẩu đăng nhập (không lưu local)"><select id="staffRole">
   <option value="cashier">Thu Ngân</option>
   <option value="accountant">Kế toán</option>
   <option value="manager">Quản lý</option>
@@ -9359,7 +9422,7 @@ function delProduct(id){
   products = products.filter(x => x.id !== id);
 
   addLog(
-    'Xóa món',
+    'Xóa nhân viên',
     `${p.name || ''} | Mã: ${p.barcode || ''} | Tồn còn: ${stockQty} | Lý do: ${cleanReason}`
   );
 
@@ -9598,7 +9661,7 @@ function stockActionButtons(p){
     buttons.push(``);
   }
   if(r === 'admin'){
-    buttons.push(`<button class="btn-red" onclick="delProduct(${p.id})">Xóa món</button>`);
+    buttons.push(`<button class="btn-red" onclick="delProduct(${p.id})">Xóa nhân viên</button>`);
   }
   if(!buttons.length){
     return '<span class="muted"><b>Chỉ xem</b></span>';
@@ -16184,7 +16247,7 @@ function renderAll(){
 
   staffBody.innerHTML = users.map((u, i) => {
     const staffAction = normalizeRole(current?.role) === 'admin'
-      ? `<button class="btn-red" onclick="delStaff('${u.user}')">Xóa món</button>`
+      ? `<button class="btn-red" onclick="delStaff('${u.user}')">Xóa nhân viên</button>`
       : '<span class="muted"><b>Chỉ xem</b></span>';
     return `
       <tr>
@@ -19977,6 +20040,48 @@ setSyncStatus("ℹ️ Đăng nhập để đồng bộ Firebase", true);
   }
 
   setTimeout(startObserver, 1200);
+})();
+</script>
+
+
+<script id="tiem-thuy-4q5a-employees-text-fix">
+(function(){
+  function fixEmployeePageText(){
+    // Sửa toàn bộ text node/nút "Xóa món" thành "Xóa nhân viên"
+    document.querySelectorAll('button').forEach(function(btn){
+      var t = (btn.textContent || '').trim();
+      if(t === 'Xóa món' || t === '🗑 Xóa món' || t.includes('Xóa món')){
+        btn.textContent = t.replace('Xóa món', 'Xóa nhân viên');
+        btn.title = 'Xóa nhân viên';
+      }
+      if(t === 'Thêm nhân viên'){
+        btn.textContent = '➕ Thêm nhân viên';
+      }
+    });
+
+    // Placeholder thân thiện hơn
+    document.querySelectorAll('input').forEach(function(inp){
+      var ph = inp.getAttribute('placeholder') || '';
+      if(ph === 'Tên nhân viên') inp.setAttribute('placeholder','Nhập tên nhân viên');
+      if(ph === 'Tên đăng nhập') inp.setAttribute('placeholder','Nhập tài khoản đăng nhập');
+      if(ph.includes('Firebase Auth')) inp.setAttribute('placeholder','Mật khẩu đăng nhập');
+    });
+
+    // Header bảng: Tên -> Tên nhân viên
+    document.querySelectorAll('th').forEach(function(th){
+      if((th.textContent || '').trim() === 'Tên') th.textContent = 'Tên nhân viên';
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){
+    setTimeout(fixEmployeePageText, 300);
+    setTimeout(fixEmployeePageText, 1000);
+  });
+
+  // Khi chuyển tab/trang trong app thì sửa lại text nếu module render lại
+  document.addEventListener('click', function(){
+    setTimeout(fixEmployeePageText, 250);
+  });
 })();
 </script>
 
