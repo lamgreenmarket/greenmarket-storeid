@@ -20228,6 +20228,34 @@ setSyncStatus("ℹ️ Đăng nhập để đồng bộ Firebase", true);
 })();
 </script>
 
+
+<script id="tiem-thuy-4q7o-fix-stock-delete-label-only">
+(function(){
+  function fixStockDeleteLabel(){
+    try{
+      const stock = document.getElementById('stock');
+      if(!stock) return;
+      stock.querySelectorAll('button').forEach(function(btn){
+        const onclick = btn.getAttribute('onclick') || '';
+        if(onclick.includes('delProduct(')){
+          btn.textContent = 'Xóa món';
+        }
+      });
+    }catch(e){}
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){
+    fixStockDeleteLabel();
+    setTimeout(fixStockDeleteLabel, 300);
+    setTimeout(fixStockDeleteLabel, 1000);
+  });
+  document.addEventListener('click', function(){
+    setTimeout(fixStockDeleteLabel, 80);
+  });
+  setInterval(fixStockDeleteLabel, 700);
+})();
+</script>
+
 </body>
 </html>
 <!-- GREEN MARKET CLEAN LOGS PATCH: bỏ chú thích nhật ký, tự động lọc, sửa ngày nhóm -->
