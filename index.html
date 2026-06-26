@@ -5355,6 +5355,40 @@ body:has(#loginPage:not(.hidden)) .menu{
 }
 </style>
 
+
+<style id="refund-fix-restore-boxes">
+@media (min-width:901px){
+  .refund-like-profit .refund-overview-horizontal{
+    display:grid!important;
+    grid-template-columns:repeat(5,minmax(0,1fr))!important;
+    gap:12px!important;
+    width:100%!important;
+    margin-top:12px!important;
+  }
+  .refund-like-profit .refund-overview-horizontal .refund-mini-card{
+    min-height:88px!important;
+    border-radius:16px!important;
+    padding:12px 14px!important;
+    display:flex!important;
+    flex-direction:column!important;
+    justify-content:center!important;
+  }
+  .refund-like-profit .refund-overview-horizontal .refund-mini-card .refund-mini-label{
+    font-size:12px!important;
+    font-weight:800!important;
+    line-height:1.25!important;
+    margin-bottom:6px!important;
+    text-transform:uppercase!important;
+    opacity:.9!important;
+  }
+  .refund-like-profit .refund-overview-horizontal .refund-mini-card .refund-mini-value{
+    font-size:22px!important;
+    font-weight:900!important;
+    line-height:1.1!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <!-- =========================================================
@@ -8440,6 +8474,40 @@ ${'<scr' + 'ipt src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcod
     grid-column:1 / -1!important;
     width:100%!important;
     margin-top:12px!important;
+  }
+}
+</style>
+
+
+<style id="refund-fix-restore-boxes">
+@media (min-width:901px){
+  .refund-like-profit .refund-overview-horizontal{
+    display:grid!important;
+    grid-template-columns:repeat(5,minmax(0,1fr))!important;
+    gap:12px!important;
+    width:100%!important;
+    margin-top:12px!important;
+  }
+  .refund-like-profit .refund-overview-horizontal .refund-mini-card{
+    min-height:88px!important;
+    border-radius:16px!important;
+    padding:12px 14px!important;
+    display:flex!important;
+    flex-direction:column!important;
+    justify-content:center!important;
+  }
+  .refund-like-profit .refund-overview-horizontal .refund-mini-card .refund-mini-label{
+    font-size:12px!important;
+    font-weight:800!important;
+    line-height:1.25!important;
+    margin-bottom:6px!important;
+    text-transform:uppercase!important;
+    opacity:.9!important;
+  }
+  .refund-like-profit .refund-overview-horizontal .refund-mini-card .refund-mini-value{
+    font-size:22px!important;
+    font-weight:900!important;
+    line-height:1.1!important;
   }
 }
 </style>
@@ -12302,6 +12370,40 @@ function buildImportReceiptPrintHtml(data){
 }
 </style>
 
+
+<style id="refund-fix-restore-boxes">
+@media (min-width:901px){
+  .refund-like-profit .refund-overview-horizontal{
+    display:grid!important;
+    grid-template-columns:repeat(5,minmax(0,1fr))!important;
+    gap:12px!important;
+    width:100%!important;
+    margin-top:12px!important;
+  }
+  .refund-like-profit .refund-overview-horizontal .refund-mini-card{
+    min-height:88px!important;
+    border-radius:16px!important;
+    padding:12px 14px!important;
+    display:flex!important;
+    flex-direction:column!important;
+    justify-content:center!important;
+  }
+  .refund-like-profit .refund-overview-horizontal .refund-mini-card .refund-mini-label{
+    font-size:12px!important;
+    font-weight:800!important;
+    line-height:1.25!important;
+    margin-bottom:6px!important;
+    text-transform:uppercase!important;
+    opacity:.9!important;
+  }
+  .refund-like-profit .refund-overview-horizontal .refund-mini-card .refund-mini-value{
+    font-size:22px!important;
+    font-weight:900!important;
+    line-height:1.1!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <div class="print-actions"><button class="btn" onclick="window.print()">🖨️ In</button><button class="btn2" onclick="window.close()">Đóng</button></div>
@@ -13575,6 +13677,40 @@ function buildDailyImportReportPrintHtml(selected, list){
     grid-column:1 / -1!important;
     width:100%!important;
     margin-top:12px!important;
+  }
+}
+</style>
+
+
+<style id="refund-fix-restore-boxes">
+@media (min-width:901px){
+  .refund-like-profit .refund-overview-horizontal{
+    display:grid!important;
+    grid-template-columns:repeat(5,minmax(0,1fr))!important;
+    gap:12px!important;
+    width:100%!important;
+    margin-top:12px!important;
+  }
+  .refund-like-profit .refund-overview-horizontal .refund-mini-card{
+    min-height:88px!important;
+    border-radius:16px!important;
+    padding:12px 14px!important;
+    display:flex!important;
+    flex-direction:column!important;
+    justify-content:center!important;
+  }
+  .refund-like-profit .refund-overview-horizontal .refund-mini-card .refund-mini-label{
+    font-size:12px!important;
+    font-weight:800!important;
+    line-height:1.25!important;
+    margin-bottom:6px!important;
+    text-transform:uppercase!important;
+    opacity:.9!important;
+  }
+  .refund-like-profit .refund-overview-horizontal .refund-mini-card .refund-mini-value{
+    font-size:22px!important;
+    font-weight:900!important;
+    line-height:1.1!important;
   }
 }
 </style>
@@ -19900,6 +20036,98 @@ setSyncStatus("ℹ️ Đăng nhập để đồng bộ Firebase", true);
         refundCard.appendChild(wrap);
       }
     }
+  }
+
+  document.addEventListener('DOMContentLoaded', ()=>setTimeout(fix,300));
+  setTimeout(fix,900);
+  setTimeout(fix,1800);
+})();
+</script>
+
+
+<script id="refund-fix-restore-boxes-js">
+(function(){
+  function norm(s){return (s||'').replace(/\s+/g,' ').trim().toLowerCase();}
+  function findCardByTitle(root, title){
+    const nodes = Array.from(root.querySelectorAll('.card, section, article, div'));
+    for(const el of nodes){
+      const txt = norm(el.innerText);
+      if(txt.includes(title)) return el.classList.contains('card') ? el : (el.closest('.card') || el);
+    }
+    return null;
+  }
+  function parseRefundData(card){
+    const text = card.innerText || '';
+    const lines = text.split(/\n+/).map(s=>s.trim()).filter(Boolean);
+    const wanted = [
+      'DOANH THU GỐC',
+      'DOANH THU THỰC NHẬN',
+      'HOÀN TRẢ THÁNG NÀY',
+      'TỶ LỆ HOÀN TRẢ',
+      'Tỷ lệ hoàn trả trong mức an toàn'
+    ];
+    const found = {};
+    for(let i=0;i<lines.length;i++){
+      const line = lines[i].toLowerCase();
+      if(line.includes('doanh thu gốc')) found[wanted[0]] = lines[i+1] || '0 VNĐ';
+      if(line.includes('doanh thu thực nhận')) found[wanted[1]] = lines[i+1] || '0 VNĐ';
+      if(line.includes('hoàn trả tháng này')) found[wanted[2]] = lines[i+1] || '0 VNĐ';
+      if(line.includes('tỷ lệ hoàn trả') && !line.includes('mức an toàn')) found[wanted[3]] = lines[i+1] || '0,00%';
+      if(line.includes('tỷ lệ hoàn trả trong mức an toàn')) found[wanted[4]] = lines[i+1] || 'An toàn';
+    }
+    return wanted.map(k => ({label:k, value: found[k] || (k.includes('%') ? '0,00%' : (k.includes('an toàn') ? 'An toàn' : '0 VNĐ'))}));
+  }
+  function cardClass(label){
+    const s = label.toLowerCase();
+    if(s.includes('doanh thu gốc')) return 'background:#f4f7ff;border:1px solid #cdddfd;color:#0b67b2;';
+    if(s.includes('doanh thu thực nhận')) return 'background:#eefbf4;border:1px solid #b8ecc8;color:#0a8f4b;';
+    if(s.includes('hoàn trả tháng này')) return 'background:#fff3f3;border:1px solid #ffd2d2;color:#e53935;';
+    if(s.includes('tỷ lệ hoàn trả') && !s.includes('mức an toàn')) return 'background:#fff8ef;border:1px solid #ffd9a8;color:#f39c12;';
+    return 'background:#eefbf4;border:1px solid #b8ecc8;color:#0a8f4b;';
+  }
+  function fix(){
+    const app = document.getElementById('appPage') || document.body;
+    const refundCard = findCardByTitle(app,'tổng quan hoàn trả tháng này');
+    if(!refundCard) return;
+    refundCard.classList.add('refund-like-profit');
+
+    // remove previous generated row if any
+    const old = refundCard.querySelector('.refund-overview-horizontal');
+    if(old) old.remove();
+
+    const data = parseRefundData(refundCard);
+    const row = document.createElement('div');
+    row.className = 'refund-overview-horizontal';
+
+    data.forEach(item=>{
+      const box = document.createElement('div');
+      box.className = 'refund-mini-card';
+      box.setAttribute('style', cardClass(item.label));
+      box.innerHTML = `<div class="refund-mini-label">${item.label}</div><div class="refund-mini-value">${item.value}</div>`;
+      row.appendChild(box);
+    });
+
+    // insert after heading line
+    let inserted = false;
+    const children = Array.from(refundCard.children);
+    for(const child of children){
+      if(norm(child.innerText).includes('tổng quan hoàn trả tháng này')){
+        child.insertAdjacentElement('afterend', row);
+        inserted = true;
+        break;
+      }
+    }
+    if(!inserted) refundCard.prepend(row);
+
+    // hide legacy vertical metric boxes only, keep title
+    const direct = Array.from(refundCard.children);
+    direct.forEach(el=>{
+      if(el === row) return;
+      const t = norm(el.innerText);
+      if(t.includes('doanh thu gốc') || t.includes('doanh thu thực nhận') || t.includes('hoàn trả tháng này') || t.includes('tỷ lệ hoàn trả')){
+        el.style.display = 'none';
+      }
+    });
   }
 
   document.addEventListener('DOMContentLoaded', ()=>setTimeout(fix,300));
