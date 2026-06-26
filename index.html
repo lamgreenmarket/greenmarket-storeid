@@ -20256,7 +20256,7 @@ setSyncStatus("ℹ️ Đăng nhập để đồng bộ Firebase", true);
       return t.includes('trang chủ') || t.includes('ca làm việc') || t.includes('bán hàng') || t.includes('hóa đơn');
     }
     if(role === 'accountant'){
-      return t.includes('trang chủ') || t.includes('báo cáo ca') || t.includes('hóa đơn') || t.includes('thu chi');
+      return t.includes('trang chủ') || t.includes('báo cáo ca') || t.includes('kho hàng') || t.includes('thực đơn') || t.includes('hóa đơn') || t.includes('thu chi');
     }
     return true;
   }
@@ -20321,7 +20321,7 @@ setSyncStatus("ℹ️ Đăng nhập để đồng bộ Firebase", true);
       return ['report','money','staff','employee','log','backup','data','barcode','product','menu','import','stock','setting','expense'].some(function(x){return p.includes(x)});
     }
     if(role === 'accountant'){
-      return ['pos','sale','staff','employee','log','backup','data','barcode','product','menu','import','stock','shift','setting'].some(function(x){return p.includes(x)});
+      return ['pos','sale','staff','employee','log','backup','data','barcode','import','shift','setting'].some(function(x){return p.includes(x)});
     }
     return false;
   }
@@ -20388,6 +20388,39 @@ setSyncStatus("ℹ️ Đăng nhập để đồng bộ Firebase", true);
       }).observe(document.body, {childList:true, subtree:true, characterData:true, attributes:true});
     }catch(e){}
   }, 500);
+})();
+</script>
+
+
+<script id="tiem-thuy-4q7f-accountant-menu-polish">
+(function(){
+  function getRole(){
+    try{
+      if(window.current && window.current.role) return String(window.current.role).toLowerCase();
+      const t = document.body.innerText || '';
+      if(/Quyền:\s*Kế\s*Toán/i.test(t)) return 'accountant';
+    }catch(e){}
+    return '';
+  }
+  function polishAccountantMenu(){
+    if(getRole() !== 'accountant') return;
+    document.querySelectorAll('button,a,[onclick],.nav-item,.menu-item,div').forEach(el=>{
+      if(!el.getBoundingClientRect) return;
+      const r = el.getBoundingClientRect();
+      const t = String(el.textContent || '').replace(/\s+/g,' ').trim();
+      if(r.left < 230 && t === '📋 Thực đơn'){
+        el.textContent = '📦 Kho hàng';
+      }else if(r.left < 230 && t === 'Thực đơn'){
+        el.textContent = '📦 Kho hàng';
+      }
+    });
+  }
+  document.addEventListener('DOMContentLoaded',()=>{
+    setTimeout(polishAccountantMenu,300);
+    setTimeout(polishAccountantMenu,1000);
+  });
+  document.addEventListener('click',()=>setTimeout(polishAccountantMenu,100));
+  setInterval(polishAccountantMenu,1000);
 })();
 </script>
 
