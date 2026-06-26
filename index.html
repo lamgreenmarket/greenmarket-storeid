@@ -19893,55 +19893,27 @@ setSyncStatus("ℹ️ Đăng nhập để đồng bộ Firebase", true);
 </script>
 
 
-<script id="tiem-thuy-4p1n-final-refund-5-boxes-js">
+
+
+
+
+
+
+<script id="tiem-thuy-4p1p-no-blink-top-return">
 (function(){
   function norm(s){return (s||'').replace(/\s+/g,' ').trim();}
-  function fix(){
+
+  function buildTopReturnBox(){
     var card = document.querySelector('.dashboard-pro-return-smart-card, .dashboard-pro-return-card');
     if(!card) return;
 
-    // Ẩn ô an toàn nếu còn hiện
+    // Ẩn ô an toàn vì đã bỏ ở bản 4P.1N
     var alert = document.getElementById('proMonthRefundAlert');
     if(alert) alert.style.display = 'none';
 
-    // Lấy dữ liệu Top món bị trả từ box cũ
-    var topList = document.getElementById('proTopReturnedProducts');
-    var summary = document.getElementById('proTopReturnedSummary');
-    var topText = 'Chưa có dữ liệu';
-    if(topList){
-      var first = topList.querySelector('li');
-      if(first) topText = norm(first.textContent) || topText;
-    }
-    var sumText = summary ? norm(summary.textContent) : 'Tổng món bị trả: 0 SP';
-
-    // Tạo/cập nhật ô thứ 5: Top món bị hoàn trả
-    var mini = document.getElementById('returnTopMiniBox');
-    if(!mini){
-      mini = document.createElement('div');
-      mini.id = 'returnTopMiniBox';
-      mini.className = 'return-top-mini';
-      card.appendChild(mini);
-    }
-    mini.innerHTML = '<span>📦 Top món bị hoàn trả</span><strong>' + topText + '</strong><small>' + sumText + '</small>';
-
-    // Ẩn box top lớn
+    // Ẩn box Top món bị trả lớn nếu còn
     var big = document.querySelector('.dashboard-pro-top-return-card');
     if(big) big.style.display = 'none';
-  }
-
-  document.addEventListener('DOMContentLoaded', function(){ setTimeout(fix, 300); });
-  setTimeout(fix, 900);
-  setInterval(fix, 1500);
-})();
-</script>
-
-
-<script id="tiem-thuy-4p1o-top-return-polish-js">
-(function(){
-  function norm(s){return (s||'').replace(/\s+/g,' ').trim();}
-  function polish(){
-    var mini = document.getElementById('returnTopMiniBox');
-    if(!mini) return;
 
     var topList = document.getElementById('proTopReturnedProducts');
     var summary = document.getElementById('proTopReturnedSummary');
@@ -19965,12 +19937,46 @@ setSyncStatus("ℹ️ Đăng nhập để đồng bộ Firebase", true);
       }
     }
 
-    mini.innerHTML = '<span>📦 Top món bị hoàn trả</span><strong>' + main + '</strong><small>' + sub + '</small>';
+    var html = '<span>📦 Top món bị hoàn trả</span><strong>' + main + '</strong><small>' + sub + '</small>';
+
+    var mini = document.getElementById('returnTopMiniBox');
+    if(!mini){
+      mini = document.createElement('div');
+      mini.id = 'returnTopMiniBox';
+      mini.className = 'return-top-mini';
+      card.appendChild(mini);
+    }
+
+    // Chỉ cập nhật khi nội dung thật sự thay đổi, tránh nhấp nháy
+    if(mini.innerHTML !== html){
+      mini.innerHTML = html;
+    }
   }
 
-  document.addEventListener('DOMContentLoaded', function(){ setTimeout(polish, 250); });
-  setTimeout(polish, 800);
-  setInterval(polish, 1500);
+  // Chạy vài lần đầu để chờ dashboard render, không chạy vòng lặp mãi
+  document.addEventListener('DOMContentLoaded', function(){
+    setTimeout(buildTopReturnBox, 250);
+    setTimeout(buildTopReturnBox, 900);
+    setTimeout(buildTopReturnBox, 1800);
+  });
+
+  // Khi dữ liệu Firebase/render thay đổi, cập nhật nhẹ nhưng không innerHTML liên tục
+  var observerStarted = false;
+  function startObserver(){
+    if(observerStarted) return;
+    var app = document.getElementById('appPage');
+    if(!app) return;
+    observerStarted = true;
+
+    var obs = new MutationObserver(function(){
+      clearTimeout(window.__returnTopMiniTimer);
+      window.__returnTopMiniTimer = setTimeout(buildTopReturnBox, 250);
+    });
+
+    obs.observe(app, {childList:true, subtree:true, characterData:true});
+  }
+
+  setTimeout(startObserver, 1200);
 })();
 </script>
 
