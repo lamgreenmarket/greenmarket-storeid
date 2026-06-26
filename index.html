@@ -6144,7 +6144,7 @@ body:has(#loginPage:not(.hidden)) .menu{
     <hr>
     
     <div class="stock-tabs"><button class="btn-green active" id="btnStockAll" onclick="showStockAll()">✔️ Tất cả món</button><button class="btn-orange" id="btnStockLow" onclick="showLowStock()">⚠️ Sắp hết</button><button class="btn-red" id="btnStockOut" onclick="showOutStock()">❌ Đã hết</button></div>
-    <div class="table-wrap"><table><thead><tr><th>STT</th><th>Tên món</th><th>Mã món</th><th>Còn</th><th>Giá nhập</th><th>Giá bán</th><th>Mức báo hết</th><th>Trạng thái</th><th>Thao tác</th></tr></thead><tbody id="stockBody"></tbody></table></div>
+    <div class="table-wrap"><table><thead><tr id="stockHeadRow"><th>STT</th><th>Tên món</th><th>Mã món</th><th>Còn</th><th>Giá nhập</th><th>Giá bán</th><th>Mức báo hết</th><th>Trạng thái</th><th>Thao tác</th></tr></thead><tbody id="stockBody"></tbody></table></div>
   </section>
 
 <section id="barcodeA4" class="page hidden card">
@@ -9750,6 +9750,16 @@ function renderStock(){
     clearSensitiveAdminViews();
     return;
   }
+  const isAccountantStockView = normalizeRole(current?.role) === 'accountant';
+
+  // Kế toán chỉ xem kho: bỏ hẳn cột Thao tác, không hiện chữ "Chỉ xem".
+  const stockHeadRow = document.getElementById('stockHeadRow');
+  if(stockHeadRow){
+    stockHeadRow.innerHTML = isAccountantStockView
+      ? '<th>STT</th><th>Tên món</th><th>Mã món</th><th>Còn</th><th>Giá nhập</th><th>Giá bán</th><th>Mức báo hết</th><th>Trạng thái</th>'
+      : '<th>STT</th><th>Tên món</th><th>Mã món</th><th>Còn</th><th>Giá nhập</th><th>Giá bán</th><th>Mức báo hết</th><th>Trạng thái</th><th>Thao tác</th>';
+  }
+
   const low = products.filter(isLowStock);
   const out = products.filter(isOutStock);
   const list = getVisibleStock();
@@ -9781,12 +9791,12 @@ function renderStock(){
         <td>${money(p.sellPrice)}</td>
         <td>${getLowLimit(p)}</td>
         <td>${stockStatusHtml(p)}</td>
-        <td>${stockActionButtons(p)}</td>
+        ${isAccountantStockView ? '' : `<td>${stockActionButtons(p)}</td>`}
       </tr>
     `).join('')
     : `
       <tr>
-        <td colspan="9">Không có món phù hợp</td>
+        <td colspan="${isAccountantStockView ? 8 : 9}">Không có món phù hợp</td>
       </tr>
     `;
 
