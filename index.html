@@ -5060,6 +5060,58 @@ body:not(.app-ready) .menu.app-only-hidden{
 }
 </style>
 
+
+<style id="tiem-thuy-4p1f-hide-app-before-login">
+/* =========================================================
+   4P.1F - ẨN TOÀN BỘ APP KHI CHƯA ĐĂNG NHẬP
+   - Không cho phần dashboard / topbar / sidebar lộ ra phía dưới form login
+   ========================================================= */
+
+/* Nếu còn class hidden thì giữ nguyên */
+#appPage.hidden{
+  display:none!important;
+}
+
+/* Trạng thái chưa đăng nhập: nếu body / app đang ở login mode thì ép ẩn appPage */
+body.login-mode #appPage,
+body.auth-mode #appPage,
+body.logged-out #appPage,
+body:not(.logged-in) #appPage.hidden,
+body:not(.logged-in) #appPage[style*="display: none"]{
+  display:none!important;
+}
+
+/* Fallback mạnh: khi loginPage đang hiện, appPage phải biến mất hoàn toàn */
+body:has(#loginPage:not(.hidden)) #appPage,
+body:has(#loginPage[style*="display: block"]) #appPage,
+body:has(#loginPage[style*="display:block"]) #appPage{
+  display:none!important;
+  visibility:hidden!important;
+  opacity:0!important;
+  pointer-events:none!important;
+  height:0!important;
+  min-height:0!important;
+  overflow:hidden!important;
+  margin:0!important;
+  padding:0!important;
+}
+
+/* Và chỉ giữ loginPage ở giữa màn hình */
+body:has(#loginPage:not(.hidden)) #loginPage,
+body:has(#loginPage[style*="display: block"]) #loginPage,
+body:has(#loginPage[style*="display:block"]) #loginPage{
+  position:relative!important;
+  z-index:20!important;
+}
+
+/* Chặn topbar rơi xuống dưới form đăng nhập */
+body:has(#loginPage:not(.hidden)) .topbar,
+body:has(#loginPage:not(.hidden)) .header,
+body:has(#loginPage:not(.hidden)) .menu{
+  display:none!important;
+}
+</style>
+
 </head>
 <body>
 <!-- =========================================================
