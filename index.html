@@ -20256,7 +20256,7 @@ setSyncStatus("ℹ️ Đăng nhập để đồng bộ Firebase", true);
       return t.includes('trang chủ') || t.includes('ca làm việc') || t.includes('bán hàng') || t.includes('hóa đơn');
     }
     if(role === 'accountant'){
-      return t.includes('trang chủ') || t.includes('báo cáo ca') || t.includes('kho hàng') || t.includes('thực đơn') || t.includes('hóa đơn') || t.includes('thu chi');
+      return t.includes('trang chủ') || t.includes('ca làm việc') || t.includes('báo cáo ca') || t.includes('kho hàng') || t.includes('thực đơn') || t.includes('hóa đơn') || t.includes('thu chi');
     }
     return true;
   }
@@ -20321,7 +20321,7 @@ setSyncStatus("ℹ️ Đăng nhập để đồng bộ Firebase", true);
       return ['report','money','staff','employee','log','backup','data','barcode','product','menu','import','stock','setting','expense'].some(function(x){return p.includes(x)});
     }
     if(role === 'accountant'){
-      return ['pos','sale','staff','employee','log','backup','data','barcode','import','shift','setting'].some(function(x){return p.includes(x)});
+      return ['pos','sale','staff','employee','log','backup','data','barcode','import','setting'].some(function(x){return p.includes(x)});
     }
     return false;
   }
@@ -20421,6 +20421,58 @@ setSyncStatus("ℹ️ Đăng nhập để đồng bộ Firebase", true);
   });
   document.addEventListener('click',()=>setTimeout(polishAccountantMenu,100));
   setInterval(polishAccountantMenu,1000);
+})();
+</script>
+
+
+<script id="tiem-thuy-4q7g-accountant-allow-stock-shift">
+(function(){
+  function isAccountant(){
+    try{
+      if(window.current && String(window.current.role).toLowerCase()==='accountant') return true;
+      return /Quyền:\s*Kế\s*Toán/i.test(document.body.innerText || '');
+    }catch(e){ return false; }
+  }
+
+  function forceAccountantMenu(){
+    if(!isAccountant()) return;
+    document.querySelectorAll('button,a,[onclick],.nav-item,.menu-item,div').forEach(el=>{
+      if(!el.getBoundingClientRect) return;
+      const r = el.getBoundingClientRect();
+      const t = String(el.textContent || '').replace(/\s+/g,' ').trim().toLowerCase();
+      if(r.left > 230) return;
+
+      const allow =
+        t.includes('trang chủ') ||
+        t.includes('ca làm việc') ||
+        t.includes('báo cáo ca') ||
+        t.includes('kho hàng') ||
+        t.includes('thực đơn') ||
+        t.includes('hóa đơn') ||
+        t.includes('thu chi');
+
+      if(allow){
+        el.classList.remove('gm-role-hidden','role-locked-hidden');
+        el.style.removeProperty('display');
+        el.style.removeProperty('visibility');
+        el.style.removeProperty('pointer-events');
+        el.removeAttribute('aria-hidden');
+        el.tabIndex = 0;
+
+        if(t.includes('thực đơn')){
+          el.textContent = '📦 Kho hàng';
+        }
+      }
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded',()=>{
+    setTimeout(forceAccountantMenu,300);
+    setTimeout(forceAccountantMenu,1000);
+    setTimeout(forceAccountantMenu,2000);
+  });
+  document.addEventListener('click',()=>setTimeout(forceAccountantMenu,100));
+  setInterval(forceAccountantMenu,1000);
 })();
 </script>
 
