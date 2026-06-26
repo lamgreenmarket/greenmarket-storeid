@@ -5453,6 +5453,116 @@ body:has(#loginPage:not(.hidden)) .menu{
 }
 </style>
 
+
+<style id="tiem-thuy-4p1n-final-refund-5-boxes">
+/* =========================================================
+   4P.1N FINAL
+   Khối hoàn trả chỉ còn 5 ô ngang:
+   1 Doanh thu gốc
+   2 Doanh thu thực nhận
+   3 Hoàn trả tháng này
+   4 Tỷ lệ hoàn trả
+   5 Top món bị hoàn trả
+   Bỏ ô "Tỷ lệ hoàn trả trong mức an toàn" và bỏ box Top món bị trả lớn.
+   ========================================================= */
+@media (min-width:901px){
+
+  .dashboard-pro-return-card,
+  .dashboard-pro-return-smart-card{
+    grid-column:1 / -1!important;
+    width:100%!important;
+    display:grid!important;
+    grid-template-columns:repeat(5,minmax(0,1fr))!important;
+    gap:12px!important;
+    align-items:stretch!important;
+    min-height:auto!important;
+    padding:18px 20px!important;
+  }
+
+  .dashboard-pro-return-smart-card > h3{
+    grid-column:1 / -1!important;
+    margin:0 0 2px!important;
+  }
+
+  .dashboard-pro-return-smart-card .return-metric,
+  .dashboard-pro-return-smart-card .return-top-mini{
+    min-height:78px!important;
+    margin:0!important;
+    padding:12px 14px!important;
+    border-radius:16px!important;
+    display:flex!important;
+    flex-direction:column!important;
+    justify-content:center!important;
+  }
+
+  .dashboard-pro-return-smart-card .return-metric span,
+  .dashboard-pro-return-smart-card .return-top-mini span{
+    display:block!important;
+    font-size:12px!important;
+    line-height:1.22!important;
+    margin-bottom:6px!important;
+    font-weight:900!important;
+    text-transform:uppercase!important;
+    color:#475569!important;
+  }
+
+  .dashboard-pro-return-smart-card .return-metric strong,
+  .dashboard-pro-return-smart-card .return-top-mini strong{
+    display:block!important;
+    font-size:22px!important;
+    line-height:1.1!important;
+    font-weight:900!important;
+  }
+
+  /* Bỏ ô tỷ lệ hoàn trả an toàn vì đã có tỷ lệ hoàn trả */
+  .dashboard-pro-return-smart-card .return-alert,
+  #proMonthRefundAlert{
+    display:none!important;
+  }
+
+  /* Bỏ box Top món bị trả lớn phía dưới */
+  .dashboard-pro-top-return-card{
+    display:none!important;
+  }
+
+  .return-top-mini{
+    background:linear-gradient(135deg,#ffffff,#f8fafc)!important;
+    border:1px solid #e2e8f0!important;
+    color:#0f4c81!important;
+  }
+
+  .return-top-mini strong{
+    color:#0f4c81!important;
+    font-size:18px!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+    white-space:nowrap!important;
+  }
+
+  .return-top-mini small{
+    display:block!important;
+    margin-top:4px!important;
+    font-size:11px!important;
+    color:#64748b!important;
+    font-weight:800!important;
+    white-space:nowrap!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+  }
+}
+
+@media (min-width:901px) and (max-width:1280px){
+  .dashboard-pro-return-card,
+  .dashboard-pro-return-smart-card{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  }
+
+  .dashboard-pro-return-smart-card > h3{
+    grid-column:1 / -1!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <!-- =========================================================
@@ -19720,6 +19830,49 @@ setSyncStatus("ℹ️ Đăng nhập để đồng bộ Firebase", true);
   }
   document.addEventListener('DOMContentLoaded', fix);
   setInterval(fix, 800);
+})();
+</script>
+
+
+<script id="tiem-thuy-4p1n-final-refund-5-boxes-js">
+(function(){
+  function norm(s){return (s||'').replace(/\s+/g,' ').trim();}
+  function fix(){
+    var card = document.querySelector('.dashboard-pro-return-smart-card, .dashboard-pro-return-card');
+    if(!card) return;
+
+    // Ẩn ô an toàn nếu còn hiện
+    var alert = document.getElementById('proMonthRefundAlert');
+    if(alert) alert.style.display = 'none';
+
+    // Lấy dữ liệu Top món bị trả từ box cũ
+    var topList = document.getElementById('proTopReturnedProducts');
+    var summary = document.getElementById('proTopReturnedSummary');
+    var topText = 'Chưa có dữ liệu';
+    if(topList){
+      var first = topList.querySelector('li');
+      if(first) topText = norm(first.textContent) || topText;
+    }
+    var sumText = summary ? norm(summary.textContent) : 'Tổng món bị trả: 0 SP';
+
+    // Tạo/cập nhật ô thứ 5: Top món bị hoàn trả
+    var mini = document.getElementById('returnTopMiniBox');
+    if(!mini){
+      mini = document.createElement('div');
+      mini.id = 'returnTopMiniBox';
+      mini.className = 'return-top-mini';
+      card.appendChild(mini);
+    }
+    mini.innerHTML = '<span>📦 Top món bị hoàn trả</span><strong>' + topText + '</strong><small>' + sumText + '</small>';
+
+    // Ẩn box top lớn
+    var big = document.querySelector('.dashboard-pro-top-return-card');
+    if(big) big.style.display = 'none';
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){ setTimeout(fix, 300); });
+  setTimeout(fix, 900);
+  setInterval(fix, 1500);
 })();
 </script>
 
