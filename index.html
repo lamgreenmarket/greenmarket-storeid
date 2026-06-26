@@ -4901,6 +4901,165 @@ body:not(.app-ready) .menu.app-only-hidden{
 }
 </style>
 
+
+<style id="tiem-thuy-4p1e-fix-sidebar-duplicate-return-horizontal">
+/* =========================================================
+   4P.1E - FIX SIDEBAR DƯ CHỮ + HOÀN TRẢ NẰM NGANG
+   - Bỏ chữ Tiệm của Thúy dư ở đầu sidebar
+   - Giữ 1 khối logo trắng hiện có
+   - Chuyển Tổng quan hoàn trả tháng này về layout ngang
+   - Không đụng logic
+   ========================================================= */
+@media (min-width:901px){
+
+  /* BỎ KHỐI PSEUDO BRAND DƯ TRÊN ĐẦU SIDEBAR */
+  #appPage:not(.hidden) .menu::before{
+    content:none!important;
+    display:none!important;
+  }
+
+  /* Sidebar cân lại sau khi bỏ khối dư */
+  #appPage:not(.hidden) .menu{
+    width:248px!important;
+    padding:14px 12px 16px!important;
+    gap:8px!important;
+    border-radius:26px!important;
+  }
+
+  #appPage.app:not(.hidden){
+    padding-left:282px!important;
+  }
+
+  /* Khối logo thật trong sidebar: giữ 1 cái, làm gọn và không rớt chữ xấu */
+  #appPage:not(.hidden) .menu > .brand-card,
+  #appPage:not(.hidden) .menu > .sidebar-brand-card,
+  #appPage:not(.hidden) .menu > .menu-brand-card,
+  #appPage:not(.hidden) .menu > .brand-box,
+  #appPage:not(.hidden) .menu > div:first-child{
+    display:block!important;
+    margin:0 0 12px!important;
+    padding:15px 10px 13px!important;
+    border-radius:22px!important;
+    background:rgba(255,255,255,.96)!important;
+    color:#064e3b!important;
+    box-shadow:0 10px 24px rgba(0,0,0,.10)!important;
+    border:1px solid rgba(255,255,255,.42)!important;
+    text-align:center!important;
+    max-height:none!important;
+  }
+
+  /* Chữ trong logo box */
+  #appPage:not(.hidden) .menu > div:first-child h1,
+  #appPage:not(.hidden) .menu > div:first-child h2,
+  #appPage:not(.hidden) .menu > div:first-child .brand-title{
+    font-size:18px!important;
+    line-height:1.08!important;
+    margin:6px 0 4px!important;
+    color:#064e3b!important;
+    font-weight:900!important;
+    letter-spacing:-.25px!important;
+  }
+
+  #appPage:not(.hidden) .menu > div:first-child p,
+  #appPage:not(.hidden) .menu > div:first-child small,
+  #appPage:not(.hidden) .menu > div:first-child .brand-subtitle,
+  #appPage:not(.hidden) .menu > div:first-child .brand-slogan{
+    font-size:11px!important;
+    line-height:1.22!important;
+    color:#047857!important;
+    font-weight:800!important;
+    margin:2px 0!important;
+    word-break:normal!important;
+    overflow-wrap:normal!important;
+  }
+
+  /* Nếu có text trong brand bị ép quá dài thì cho co chữ */
+  #appPage:not(.hidden) .menu > div:first-child{
+    word-break:normal!important;
+    overflow-wrap:normal!important;
+  }
+
+  /* Nút sidebar thấp và đều hơn */
+  #appPage:not(.hidden) .menu > button,
+  #appPage:not(.hidden) .menu > .menu-dropdown > .menu-btn{
+    min-height:40px!important;
+    padding:9px 12px!important;
+    border-radius:14px!important;
+    font-size:13.1px!important;
+  }
+
+  /* Dữ liệu không bị dư khoảng cách quá nhiều */
+  #appPage:not(.hidden) .menu > .menu-dropdown{
+    margin-top:8px!important;
+    padding-top:8px!important;
+  }
+
+  /* =====================================================
+     TỔNG QUAN HOÀN TRẢ THÁNG NÀY - CHUYỂN VỀ NGANG
+     Bắt các card con trong khối hoàn trả nằm ngang khi đủ rộng
+     ===================================================== */
+
+  /* Các selector thường gặp trong bản hiện tại */
+  .return-overview-grid,
+  .refund-overview-grid,
+  .returns-overview-grid,
+  .return-summary-grid,
+  .refund-summary-grid,
+  .dashboard-refund-grid{
+    display:grid!important;
+    grid-template-columns:repeat(4,minmax(0,1fr))!important;
+    gap:10px!important;
+  }
+
+  .return-overview-card,
+  .refund-overview-card,
+  .returns-month-card,
+  .dashboard-refund-card{
+    min-height:auto!important;
+  }
+
+  /* Fallback mạnh: trong card hoàn trả, các box màu con nằm ngang */
+  .return-overview-card > div,
+  .refund-overview-card > div,
+  .returns-month-card > div,
+  .dashboard-refund-card > div{
+    display:grid!important;
+    grid-template-columns:repeat(4,minmax(0,1fr))!important;
+    gap:10px!important;
+    align-items:stretch!important;
+  }
+
+  .return-overview-card > div > div,
+  .refund-overview-card > div > div,
+  .returns-month-card > div > div,
+  .dashboard-refund-card > div > div{
+    min-height:66px!important;
+    padding:10px 12px!important;
+    border-radius:14px!important;
+  }
+
+  /* Fallback theo cấu trúc hiện thấy: card đầu của hàng hoàn trả */
+  .page.card .card:has(h3):has(.red),
+  .card:has(.bill-return-money){
+    min-height:auto!important;
+  }
+
+  /* Nếu khối hoàn trả đang là cột trái 1/3, cho rộng hơn toàn hàng */
+  #dashboard .refund-overview-card,
+  #dashboard .return-overview-card,
+  #dashboard .returns-month-card,
+  #dashboard .dashboard-refund-card{
+    grid-column:1 / -1!important;
+  }
+
+  /* Top món bị trả đỡ trống hơn nếu nằm dưới */
+  #dashboard .top-return-card,
+  #dashboard .top-returned-card{
+    min-height:170px!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <!-- =========================================================
