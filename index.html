@@ -17720,16 +17720,16 @@ async function getProfileByEmail(email){
 
   // Tiệm của Thúy - bộ tài khoản cửa hàng riêng
   if(mail === 'admin@tiemcuathuy.com'){
-    return {email:mail, name:'Chủ quán Thúy', user:'admin_tiemcuathuy', role:'admin', active:true, source:'tiemcuathuy-fallback'};
+    return {email:mail, name:'Chủ quán Thúy', user:'admin', role:'admin', active:true, source:'tiemcuathuy-fallback'};
   }
   if(mail === 'thungan1@tiemcuathuy.com'){
-    return {email:mail, name:'Thu ngân 1', user:'thungan1_tiemcuathuy', role:'cashier', active:true, source:'tiemcuathuy-fallback'};
+    return {email:mail, name:'Thu ngân 1', user:'thungan1', role:'cashier', active:true, source:'tiemcuathuy-fallback'};
   }
   if(mail === 'thungan2@tiemcuathuy.com'){
-    return {email:mail, name:'Thu ngân 2', user:'thungan2_tiemcuathuy', role:'cashier', active:true, source:'tiemcuathuy-fallback'};
+    return {email:mail, name:'Thu ngân 2', user:'thungan2', role:'cashier', active:true, source:'tiemcuathuy-fallback'};
   }
   if(mail === 'ketoan@tiemcuathuy.com'){
-    return {email:mail, name:'Kế toán', user:'ketoan_tiemcuathuy', role:'accountant', active:true, source:'tiemcuathuy-fallback'};
+    return {email:mail, name:'Kế toán', user:'ketoan', role:'accountant', active:true, source:'tiemcuathuy-fallback'};
   }
 
   return null;
@@ -17807,8 +17807,8 @@ async function buildGreenMarketSessionFromFirebaseUser(firebaseUser){
 
   // FIX V14: Kế toán tuyệt đối không được rơi vào nhóm Admin/chuyển thiết bị.
   // Nếu Firestore còn hồ sơ cũ sai quyền thì vẫn ép ketoan@greenmarket.com = accountant.
-  if(email === 'ketoan@tiemcuathuy.com' || userKey === 'ketoan_tiemcuathuy'){
-    profile = {name:'Kế toán', user:'ketoan_tiemcuathuy', email:'ketoan@tiemcuathuy.com', role:'accountant', active:true, source:'accountant-force'};
+  if(email === 'ketoan@tiemcuathuy.com' || userKey === 'ketoan'){
+    profile = {name:'Kế toán', user:'ketoan', email:'ketoan@tiemcuathuy.com', role:'accountant', active:true, source:'accountant-force'};
   }
 
   // Ưu tiên 1: hồ sơ theo email để nhân viên tạo tay trong Firestore đăng nhập được ngay.
@@ -20152,6 +20152,42 @@ setSyncStatus("ℹ️ Đăng nhập để đồng bộ Firebase", true);
   }
   document.addEventListener('DOMContentLoaded',()=>{setTimeout(cleanEmployeeTable,400);setTimeout(cleanEmployeeTable,1200);});
   document.addEventListener('click',()=>setTimeout(cleanEmployeeTable,300));
+})();
+</script>
+
+
+<script id="tiem-thuy-4q6a-normalize-employee-usernames">
+(function(){
+  function normalizeUsernameText(s){
+    return String(s || '')
+      .replace(/admin_tiemcuathuy/g, 'admin')
+      .replace(/ketoan_tiemcuathuy/g, 'ketoan')
+      .replace(/thungan1_tiemcuathuy/g, 'thungan1')
+      .replace(/thungan2_tiemcuathuy/g, 'thungan2')
+      .replace(/@tiemcuathuy\.com/g, '');
+  }
+
+  function normalizeEmployeeTable(){
+    document.querySelectorAll('table').forEach(table => {
+      const text = (table.innerText || '').toLowerCase();
+      if(!text.includes('tài khoản') || !text.includes('quyền')) return;
+
+      table.querySelectorAll('td').forEach(td => {
+        const before = td.textContent || '';
+        const after = normalizeUsernameText(before);
+        if(before !== after) td.textContent = after;
+      });
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){
+    setTimeout(normalizeEmployeeTable, 300);
+    setTimeout(normalizeEmployeeTable, 1000);
+  });
+
+  document.addEventListener('click', function(){
+    setTimeout(normalizeEmployeeTable, 250);
+  });
 })();
 </script>
 
