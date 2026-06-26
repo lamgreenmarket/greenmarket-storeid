@@ -5320,6 +5320,41 @@ body:has(#loginPage:not(.hidden)) .menu{
 }
 </style>
 
+
+<style id="tiem-thuy-4p1i-refund-like-profit">
+@media (min-width:901px){
+  /* Card hoàn trả phải giống card Lợi nhuận thực:
+     - title ở trên
+     - 5 box nằm ngang bên dưới
+     - Top món bị trả nằm thành card riêng bên dưới */
+  .refund-like-profit{
+    display:block!important;
+  }
+  .refund-like-profit .refund-overview-horizontal{
+    display:grid!important;
+    grid-template-columns:repeat(5,minmax(0,1fr))!important;
+    gap:12px!important;
+    margin-top:10px!important;
+    width:100%!important;
+  }
+  .refund-like-profit .refund-overview-horizontal > *{
+    min-height:76px!important;
+    padding:12px 14px!important;
+    border-radius:16px!important;
+    display:flex!important;
+    flex-direction:column!important;
+    justify-content:center!important;
+  }
+
+  /* Đưa card Top món bị trả xuống full row bên dưới */
+  .top-return-below{
+    grid-column:1 / -1!important;
+    width:100%!important;
+    margin-top:12px!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <!-- =========================================================
@@ -8370,6 +8405,41 @@ ${'<scr' + 'ipt src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcod
     padding:10px 12px!important;
     border-radius:14px!important;
     margin:0!important;
+  }
+}
+</style>
+
+
+<style id="tiem-thuy-4p1i-refund-like-profit">
+@media (min-width:901px){
+  /* Card hoàn trả phải giống card Lợi nhuận thực:
+     - title ở trên
+     - 5 box nằm ngang bên dưới
+     - Top món bị trả nằm thành card riêng bên dưới */
+  .refund-like-profit{
+    display:block!important;
+  }
+  .refund-like-profit .refund-overview-horizontal{
+    display:grid!important;
+    grid-template-columns:repeat(5,minmax(0,1fr))!important;
+    gap:12px!important;
+    margin-top:10px!important;
+    width:100%!important;
+  }
+  .refund-like-profit .refund-overview-horizontal > *{
+    min-height:76px!important;
+    padding:12px 14px!important;
+    border-radius:16px!important;
+    display:flex!important;
+    flex-direction:column!important;
+    justify-content:center!important;
+  }
+
+  /* Đưa card Top món bị trả xuống full row bên dưới */
+  .top-return-below{
+    grid-column:1 / -1!important;
+    width:100%!important;
+    margin-top:12px!important;
   }
 }
 </style>
@@ -12197,6 +12267,41 @@ function buildImportReceiptPrintHtml(data){
 }
 </style>
 
+
+<style id="tiem-thuy-4p1i-refund-like-profit">
+@media (min-width:901px){
+  /* Card hoàn trả phải giống card Lợi nhuận thực:
+     - title ở trên
+     - 5 box nằm ngang bên dưới
+     - Top món bị trả nằm thành card riêng bên dưới */
+  .refund-like-profit{
+    display:block!important;
+  }
+  .refund-like-profit .refund-overview-horizontal{
+    display:grid!important;
+    grid-template-columns:repeat(5,minmax(0,1fr))!important;
+    gap:12px!important;
+    margin-top:10px!important;
+    width:100%!important;
+  }
+  .refund-like-profit .refund-overview-horizontal > *{
+    min-height:76px!important;
+    padding:12px 14px!important;
+    border-radius:16px!important;
+    display:flex!important;
+    flex-direction:column!important;
+    justify-content:center!important;
+  }
+
+  /* Đưa card Top món bị trả xuống full row bên dưới */
+  .top-return-below{
+    grid-column:1 / -1!important;
+    width:100%!important;
+    margin-top:12px!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <div class="print-actions"><button class="btn" onclick="window.print()">🖨️ In</button><button class="btn2" onclick="window.close()">Đóng</button></div>
@@ -13435,6 +13540,41 @@ function buildDailyImportReportPrintHtml(selected, list){
     padding:10px 12px!important;
     border-radius:14px!important;
     margin:0!important;
+  }
+}
+</style>
+
+
+<style id="tiem-thuy-4p1i-refund-like-profit">
+@media (min-width:901px){
+  /* Card hoàn trả phải giống card Lợi nhuận thực:
+     - title ở trên
+     - 5 box nằm ngang bên dưới
+     - Top món bị trả nằm thành card riêng bên dưới */
+  .refund-like-profit{
+    display:block!important;
+  }
+  .refund-like-profit .refund-overview-horizontal{
+    display:grid!important;
+    grid-template-columns:repeat(5,minmax(0,1fr))!important;
+    gap:12px!important;
+    margin-top:10px!important;
+    width:100%!important;
+  }
+  .refund-like-profit .refund-overview-horizontal > *{
+    min-height:76px!important;
+    padding:12px 14px!important;
+    border-radius:16px!important;
+    display:flex!important;
+    flex-direction:column!important;
+    justify-content:center!important;
+  }
+
+  /* Đưa card Top món bị trả xuống full row bên dưới */
+  .top-return-below{
+    grid-column:1 / -1!important;
+    width:100%!important;
+    margin-top:12px!important;
   }
 }
 </style>
@@ -19689,6 +19829,79 @@ setSyncStatus("ℹ️ Đăng nhập để đồng bộ Firebase", true);
       }
     });
   }
+  document.addEventListener('DOMContentLoaded', ()=>setTimeout(fix,300));
+  setTimeout(fix,900);
+  setTimeout(fix,1800);
+})();
+</script>
+
+
+<script id="tiem-thuy-4p1i-refund-like-profit-js">
+(function(){
+  function norm(s){return (s||"").replace(/\s+/g," ").trim().toLowerCase();}
+  function isMetricBox(el){
+    const t = norm(el.innerText);
+    return ['doanh thu gốc','doanh thu thực nhận','hoàn trả tháng này','tỷ lệ hoàn trả','tỷ lệ hoàn trả trong mức an toàn']
+      .some(k=>t.includes(k));
+  }
+  function findCardByTitle(root, title){
+    const nodes = Array.from(root.querySelectorAll('.card, section, article, div'));
+    for(const el of nodes){
+      const txt = norm(el.innerText);
+      if(txt.includes(title)){
+        return el.classList.contains('card') ? el : el.closest('.card') || el;
+      }
+    }
+    return null;
+  }
+  function fix(){
+    const app = document.getElementById('appPage');
+    if(!app) return;
+
+    const refundCard = findCardByTitle(app, 'tổng quan hoàn trả tháng này');
+    const topReturnCard = findCardByTitle(app, 'top món bị trả');
+    if(!refundCard) return;
+
+    refundCard.classList.add('refund-like-profit');
+
+    // Nếu top món bị trả đang nằm cùng hàng cạnh refund, kéo nó xuống dưới refund
+    if(topReturnCard && topReturnCard !== refundCard){
+      topReturnCard.classList.add('top-return-below');
+      const parent = refundCard.parentElement;
+      if(parent && topReturnCard.parentElement === parent){
+        // đặt topReturnCard ngay sau refundCard
+        if(refundCard.nextElementSibling !== topReturnCard){
+          parent.insertBefore(topReturnCard, refundCard.nextElementSibling);
+        }
+      }
+    }
+
+    // Gom đúng 5 box metric của refundCard vào 1 hàng ngang
+    let wrap = refundCard.querySelector('.refund-overview-horizontal');
+    if(!wrap){
+      wrap = document.createElement('div');
+      wrap.className = 'refund-overview-horizontal';
+    }else{
+      wrap.innerHTML = '';
+    }
+
+    // lấy box metric trực tiếp trong refundCard
+    const candidates = Array.from(refundCard.querySelectorAll(':scope > div, :scope > section, :scope > article'));
+    const metrics = candidates.filter(isMetricBox);
+
+    if(metrics.length >= 4){
+      metrics.forEach(m => wrap.appendChild(m));
+      // chèn sau title/header
+      const kids = Array.from(refundCard.children);
+      const titleChild = kids.find(k => norm(k.innerText).includes('tổng quan hoàn trả tháng này'));
+      if(titleChild){
+        titleChild.insertAdjacentElement('afterend', wrap);
+      }else if(!refundCard.contains(wrap)){
+        refundCard.appendChild(wrap);
+      }
+    }
+  }
+
   document.addEventListener('DOMContentLoaded', ()=>setTimeout(fix,300));
   setTimeout(fix,900);
   setTimeout(fix,1800);
