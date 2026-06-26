@@ -5788,7 +5788,31 @@ body:has(#loginPage:not(.hidden)) .menu{
 <!-- =========================================================
      10. HTML HEADER + MENU
      ========================================================= -->
-  <div class="header"><div class="app-brand"><h1 id="headerBrandTitle"><span class="header-logo-mark">☕</span> TIỆM CỦA THÚY</h1><p id="headerBrandSlogan" class="cafe-header-3line"><span class="brand-industry-line">CAFE – TRÀ SỮA – ĂN VẶT</span><span class="brand-slogan-line">Cà phê nguyên chất – Gu Việt đậm đà</span></p><small id="headerPoweredBy" style="display:block;margin-top:4px;color:#64748b;font-weight:700">Powered by Green Market POS</small></div><div>Xin chào: <b id="userName"></b> - Quyền: <b id="userRole"></b> <span id="firebaseSyncStatus" style="display:inline-block;margin-left:8px;padding:4px 10px;border-radius:999px;background:#eef7ff;color:#075985;font-weight:800;font-size:12px">☁️ Firebase</span> <span id="currentStoreBadge" style="display:inline-block;margin-left:8px;padding:4px 10px;border-radius:999px;background:#f0fdf4;color:#047857;font-weight:900;font-size:12px">☕ Store A</span> <button id="mainLogoutBtn" class="btn-gray" onclick="confirmLogout()">Đăng xuất</button></div></div>
+  <div class="header gm-topbar-pro">
+    <div class="app-brand gm-topbar-brand">
+      <div class="gm-brand-icon">🥤</div>
+      <div>
+        <h1 id="headerBrandTitle"><span class="header-logo-mark">☕</span> Tiệm của Thúy</h1>
+        <p id="headerBrandSlogan" class="cafe-header-3line"><span class="brand-industry-line">CAFE – TRÀ SỮA – ĂN VẶT</span><span class="brand-slogan-line">Cà phê nguyên chất – Gu Việt đậm đà</span></p>
+        <small id="headerPoweredBy">Powered by Green Market POS</small>
+      </div>
+    </div>
+
+    <div class="gm-topbar-metrics" aria-label="Tổng quan nhanh">
+      <div class="gm-topbar-metric"><span>💰 Doanh thu</span><b id="topbarRevenue">0 VNĐ</b></div>
+      <div class="gm-topbar-metric"><span>📈 Lợi nhuận thực hôm nay</span><b id="topbarProfit">0 VNĐ</b></div>
+      <div class="gm-topbar-metric"><span>☕ Món trong thực đơn</span><b id="topbarProducts">0 món</b></div>
+    </div>
+
+    <div class="gm-topbar-user">
+      <div class="gm-user-line">Xin chào: <b id="userName"></b><span>- Quyền:</span> <b id="userRole"></b></div>
+      <div class="gm-user-actions">
+        <span id="firebaseSyncStatus">☁️ Firebase</span>
+        <span id="currentStoreBadge">☕ Store A</span>
+        <button id="mainLogoutBtn" class="btn-gray" onclick="confirmLogout()">Đăng xuất</button>
+      </div>
+    </div>
+  </div>
   <div class="menu">
     <button onclick="showPage('home')">🏠 Trang chủ</button>
     <button data-permission="shift" onclick="showPage('shift')">⏱ Ca làm việc</button>
@@ -20258,157 +20282,237 @@ setSyncStatus("ℹ️ Đăng nhập để đồng bộ Firebase", true);
 
 
 
-<!-- PATCH: HEADER XANH ĐẬM PRO - sửa thanh đăng nhập/đăng xuất bị nhỏ và hở trắng khi cuộn -->
-<style id="patch-header-xanh-dam-pro-20260626">
+<style id="gm-topbar-pro-final-83">
+/* =========================================================
+   HEADER PRO GIỐNG HÌNH 2 - KHÔNG ĐỤNG LOGIC
+   Thanh ngang xanh đậm có brand + 3 chỉ số + tài khoản.
+   Tổng quan vận hành vẫn nằm bên dưới như cũ.
+   ========================================================= */
 @media (min-width:901px){
-  /* Giảm khoảng trống phía trên nội dung, chỉ chừa đúng chiều cao header */
-  #appPage:not(.hidden).app,
-  #appPage:not(.hidden){
-    padding-top:118px!important;
-  }
+  body{background:#f6fbf8!important;}
 
-  /* Lớp nền che phía sau header khi cuộn: đổi sang nền xanh nhạt, không còn mảng trắng xấu */
-  #appPage:not(.hidden)::before{
-    left:310px!important;
-    height:118px!important;
-    background:linear-gradient(180deg,rgba(236,253,245,.98) 0%,rgba(236,253,245,.92) 72%,rgba(236,253,245,0) 100%)!important;
+  #appPage.app{
+    padding-top:112px!important;
+    padding-left:252px!important;
+    padding-right:22px!important;
+    background:#f6fbf8!important;
   }
+  #appPage::before{display:none!important;}
 
-  /* Thanh ngang chính: xanh đậm giống mẫu */
-  #appPage:not(.hidden) .header{
+  .gm-topbar-pro.header{
     position:fixed!important;
-    top:16px!important;
-    left:330px!important;
-    right:24px!important;
-    z-index:10000!important;
+    top:0!important;
+    left:0!important;
+    right:0!important;
+    z-index:30000!important;
+    min-height:96px!important;
+    height:96px!important;
+    margin:0!important;
+    padding:14px 22px!important;
+    border-radius:0 0 16px 16px!important;
+    border:none!important;
+    background:
+      radial-gradient(circle at 8% 0%,rgba(34,197,94,.28),transparent 30%),
+      linear-gradient(90deg,#003729 0%,#006343 52%,#003b2d 100%)!important;
+    box-shadow:0 10px 30px rgba(2,44,34,.28)!important;
+    backdrop-filter:none!important;
+    display:grid!important;
+    grid-template-columns:295px minmax(420px,1fr) 520px!important;
+    gap:18px!important;
+    align-items:center!important;
+    overflow:hidden!important;
+    color:#fff!important;
+  }
 
-    min-height:82px!important;
-    height:82px!important;
-    padding:12px 22px!important;
+  .gm-topbar-pro.header,
+  .gm-topbar-pro.header *{color:#fff!important;}
 
+  .gm-topbar-brand.app-brand{
+    display:flex!important;
+    align-items:center!important;
+    gap:13px!important;
+    min-width:0!important;
+  }
+  .gm-brand-icon{
+    width:58px!important;
+    height:58px!important;
+    border-radius:50%!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    background:linear-gradient(135deg,#10b981,#059669)!important;
+    box-shadow:0 8px 22px rgba(0,0,0,.22)!important;
+    font-size:29px!important;
+    flex:0 0 58px!important;
+  }
+  .gm-topbar-brand h1{
+    display:block!important;
+    margin:0!important;
+    font-size:24px!important;
+    line-height:1.05!important;
+    letter-spacing:.2px!important;
+    text-transform:none!important;
+    text-shadow:none!important;
+    white-space:nowrap!important;
+  }
+  .gm-topbar-brand .header-logo-mark{display:none!important;}
+  .gm-topbar-brand p{
+    display:block!important;
+    margin:5px 0 0!important;
+    font-size:12px!important;
+    line-height:1.25!important;
+    font-weight:900!important;
+    letter-spacing:.2px!important;
+  }
+  .gm-topbar-brand small{
+    display:block!important;
+    margin-top:4px!important;
+    color:rgba(255,255,255,.74)!important;
+    font-size:10.5px!important;
+    font-weight:800!important;
+  }
+
+  .gm-topbar-metrics{
+    display:grid!important;
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+    align-items:center!important;
+    gap:0!important;
+    min-width:0!important;
+  }
+  .gm-topbar-metric{
+    min-width:0!important;
+    padding:0 20px!important;
+    border-left:1px solid rgba(255,255,255,.17)!important;
+  }
+  .gm-topbar-metric span{
+    display:block!important;
+    font-size:14px!important;
+    font-weight:800!important;
+    color:rgba(255,255,255,.86)!important;
+    white-space:nowrap!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+    margin-bottom:5px!important;
+  }
+  .gm-topbar-metric b{
+    display:block!important;
+    font-size:19px!important;
+    line-height:1.15!important;
+    font-weight:900!important;
+    white-space:nowrap!important;
+    color:#fff!important;
+  }
+
+  .gm-topbar-user{
     display:flex!important;
     align-items:center!important;
     justify-content:flex-end!important;
     gap:14px!important;
-
-    background:linear-gradient(90deg,#003b2e 0%,#006b4a 52%,#004b39 100%)!important;
-    color:#fff!important;
-    border:1px solid rgba(255,255,255,.18)!important;
-    border-radius:18px!important;
-    box-shadow:0 12px 30px rgba(0,35,25,.28)!important;
-    backdrop-filter:none!important;
-    overflow:hidden!important;
+    flex-wrap:nowrap!important;
+    min-width:0!important;
+    font-size:14px!important;
+    font-weight:800!important;
   }
-
-  /* Desktop đang có logo ở sidebar rồi, nên header chỉ giữ thông tin nhanh + đăng xuất */
-  #appPage:not(.hidden) .header .app-brand{
-    display:none!important;
+  .gm-user-line{
+    display:flex!important;
+    align-items:center!important;
+    gap:7px!important;
+    white-space:nowrap!important;
   }
-
-  #appPage:not(.hidden) .header,
-  #appPage:not(.hidden) .header *{
-    color:#fff!important;
-  }
-
-  #appPage:not(.hidden) .header > div:last-child{
-    width:100%!important;
+  .gm-user-actions{
     display:flex!important;
     align-items:center!important;
     justify-content:flex-end!important;
-    gap:12px!important;
+    gap:10px!important;
     flex-wrap:nowrap!important;
-    text-align:right!important;
-    white-space:nowrap!important;
-    font-size:14px!important;
-    font-weight:700!important;
-    line-height:1.25!important;
   }
-
-  #appPage:not(.hidden) .header b{
-    color:#fff!important;
-    font-weight:900!important;
-  }
-
-  /* Badge đã lưu Firebase / tên tiệm */
-  #firebaseSyncStatus,
-  #currentStoreBadge{
+  .gm-user-actions #firebaseSyncStatus,
+  .gm-user-actions #currentStoreBadge{
     display:inline-flex!important;
     align-items:center!important;
     justify-content:center!important;
     min-height:30px!important;
-    padding:6px 13px!important;
+    padding:6px 14px!important;
+    margin-left:0!important;
     border-radius:999px!important;
-    font-size:12px!important;
-    font-weight:900!important;
-    white-space:nowrap!important;
-    box-shadow:0 6px 16px rgba(0,0,0,.12)!important;
-  }
-
-  #firebaseSyncStatus{
-    background:rgba(34,197,94,.22)!important;
-    color:#dcfce7!important;
-    border:1px solid rgba(187,247,208,.45)!important;
-  }
-
-  #currentStoreBadge{
     background:rgba(255,255,255,.13)!important;
+    border:1px solid rgba(255,255,255,.22)!important;
     color:#fff!important;
-    border:1px solid rgba(255,255,255,.28)!important;
-  }
-
-  /* Nút đăng xuất trắng nổi bật như hình mẫu */
-  #mainLogoutBtn,
-  #appPage:not(.hidden) .header .btn-gray{
-    min-width:118px!important;
-    height:46px!important;
-    margin-left:4px!important;
-    padding:0 18px!important;
-    border-radius:14px!important;
-    background:#ffffff!important;
-    color:#003b2e!important;
-    border:1px solid rgba(255,255,255,.75)!important;
-    box-shadow:0 8px 18px rgba(0,0,0,.18)!important;
-    font-size:14px!important;
     font-weight:900!important;
+    font-size:12px!important;
+    white-space:nowrap!important;
+    box-shadow:none!important;
+  }
+  .gm-user-actions #firebaseSyncStatus{
+    background:linear-gradient(135deg,rgba(16,185,129,.65),rgba(5,150,105,.65))!important;
+  }
+  #mainLogoutBtn{
+    margin-left:0!important;
+    min-width:104px!important;
+    min-height:46px!important;
+    padding:0 18px!important;
+    border-radius:16px!important;
+    background:#fff!important;
+    color:#053b2e!important;
+    font-weight:900!important;
+    border:none!important;
+    box-shadow:0 8px 22px rgba(0,0,0,.18)!important;
   }
 
-  #mainLogoutBtn:hover{
-    transform:translateY(-1px)!important;
-    filter:brightness(1.02)!important;
+  /* Sidebar bắt đầu dưới thanh ngang, không còn chồng brand */
+  .menu{
+    top:96px!important;
+    left:0!important;
+    bottom:0!important;
+    width:226px!important;
+    padding:18px 14px 16px!important;
+    border-radius:0!important;
+    z-index:20000!important;
   }
+  .menu::before,
+  .menu .sidebar-brand-card{display:none!important;}
 
-  /* Menu trái giữ nguyên vị trí, hạ nhẹ cho đồng bộ với header mới */
-  #appPage:not(.hidden) .menu{
-    top:16px!important;
-    bottom:20px!important;
-  }
+  .dashboard-title{margin-top:0!important;}
+  .page{scroll-margin-top:118px!important;}
 }
 
-/* Màn hình laptop nhỏ: tránh chữ bị chen */
 @media (min-width:901px) and (max-width:1280px){
-  #appPage:not(.hidden) .header{
-    left:310px!important;
-    right:16px!important;
-    padding:10px 14px!important;
+  .gm-topbar-pro.header{
+    grid-template-columns:260px minmax(360px,1fr) 430px!important;
+    gap:12px!important;
   }
-  #appPage:not(.hidden) .header > div:last-child{
-    gap:8px!important;
-    font-size:12.5px!important;
-  }
-  #firebaseSyncStatus,
-  #currentStoreBadge{
-    padding:5px 9px!important;
-    font-size:11px!important;
-  }
-  #mainLogoutBtn,
-  #appPage:not(.hidden) .header .btn-gray{
-    min-width:102px!important;
-    height:42px!important;
-    padding:0 12px!important;
-    font-size:12.5px!important;
-  }
+  .gm-topbar-metric{padding:0 12px!important;}
+  .gm-topbar-metric span{font-size:12.5px!important;}
+  .gm-topbar-metric b{font-size:16.5px!important;}
+  .gm-topbar-brand h1{font-size:21px!important;}
+  .gm-user-line{font-size:12.5px!important;}
+  .gm-user-actions #firebaseSyncStatus,
+  .gm-user-actions #currentStoreBadge{padding:5px 10px!important;font-size:11px!important;}
 }
 </style>
+
+<script id="gm-topbar-pro-sync-83">
+(function(){
+  function textOf(id, fallback){
+    var el=document.getElementById(id);
+    return el && el.textContent.trim() ? el.textContent.trim() : fallback;
+  }
+  function setText(id, value){
+    var el=document.getElementById(id);
+    if(el) el.textContent=value;
+  }
+  function syncTopbarMetrics(){
+    setText('topbarRevenue', textOf('proTodayRevenue','0 VNĐ'));
+    setText('topbarProfit', textOf('proTodayProfit','0 VNĐ'));
+    setText('topbarProducts', textOf('statProducts','0 món'));
+  }
+  document.addEventListener('DOMContentLoaded', function(){
+    syncTopbarMetrics();
+    setInterval(syncTopbarMetrics, 800);
+  });
+  window.gmSyncTopbarMetrics = syncTopbarMetrics;
+})();
+</script>
 
 </body>
 </html>
