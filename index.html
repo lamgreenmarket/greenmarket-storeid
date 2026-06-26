@@ -5760,14 +5760,17 @@ body:has(#loginPage:not(.hidden)) .menu{
 
 
 
-<style id="tiem-thuy-4q7d-force-sidebar-lock-css">
-/* 4Q.7D - Ép khóa sidebar theo quyền */
-.gm-role-hidden{
+
+
+
+<style id="tiem-thuy-4q7h-clean-role-menu-css">
+/* 4Q.7H - Làm lại phân quyền sidebar sạch, không làm sai Trang chủ */
+.q7h-hide{
   display:none!important;
   visibility:hidden!important;
   pointer-events:none!important;
 }
-.gm-role-disabled{
+.q7h-readonly{
   opacity:.45!important;
   pointer-events:none!important;
   filter:grayscale(.25);
@@ -20225,12 +20228,21 @@ setSyncStatus("ℹ️ Đăng nhập để đồng bộ Firebase", true);
 
 
 
-<script id="tiem-thuy-4q7d-force-sidebar-lock">
+
+
+
+
+
+
+
+
+
+<script id="tiem-thuy-4q7h-clean-role-menu">
 (function(){
   function getRole(){
     try{
       if(window.current && window.current.role) return String(window.current.role).toLowerCase();
-      var t = document.body.innerText || '';
+      const t = document.body.innerText || '';
       if(/Quyền:\s*Thu\s*Ngân/i.test(t)) return 'cashier';
       if(/Quyền:\s*Kế\s*Toán/i.test(t)) return 'accountant';
       if(/Quyền:\s*Admin/i.test(t)) return 'admin';
@@ -20239,30 +20251,30 @@ setSyncStatus("ℹ️ Đăng nhập để đồng bộ Firebase", true);
     return '';
   }
 
-  function txt(el){
+  function cleanText(el){
     return String((el && el.textContent) || '').replace(/\s+/g,' ').trim().toLowerCase();
   }
 
-  function isSidebarItem(el){
+  function isSidebarControl(el){
     if(!el || !el.getBoundingClientRect) return false;
-    var r = el.getBoundingClientRect();
-    if(r.left > 230 || r.width > 260 || r.height < 18) return false;
-    var t = txt(el);
-    return /trang chủ|ca làm việc|bán hàng|báo cáo ca|thực đơn|nhập nguyên liệu|in tem|hóa đơn|thu chi|nhân viên|nhật ký|dữ liệu|backup|khôi phục|hồ sơ|xuất dữ liệu|nhập dữ liệu|qr/.test(t);
+    const r = el.getBoundingClientRect();
+    if(r.left > 230 || r.width > 260 || r.height < 20) return false;
+    const t = cleanText(el);
+    return /trang chủ|ca làm việc|bán hàng|báo cáo ca|thực đơn|kho hàng|nhập nguyên liệu|in tem|hóa đơn|thu chi|nhân viên|nhật ký|dữ liệu|backup|khôi phục|xuất dữ liệu|nhập dữ liệu|qr|hồ sơ|menu mẫu/.test(t);
   }
 
-  function allowedFor(role, t){
+  function allowForRole(role, t){
     if(role === 'cashier'){
       return t.includes('trang chủ') || t.includes('ca làm việc') || t.includes('bán hàng') || t.includes('hóa đơn');
     }
     if(role === 'accountant'){
-      return t.includes('trang chủ') || t.includes('ca làm việc') || t.includes('báo cáo ca') || t.includes('kho hàng') || t.includes('thực đơn') || t.includes('hóa đơn') || t.includes('thu chi');
+      return t.includes('trang chủ') || t.includes('báo cáo ca') || t.includes('thực đơn') || t.includes('kho hàng') || t.includes('hóa đơn') || t.includes('thu chi');
     }
     return true;
   }
 
-  function hideElement(el){
-    el.classList.add('gm-role-hidden');
+  function hide(el){
+    el.classList.add('q7h-hide');
     el.style.setProperty('display','none','important');
     el.style.setProperty('visibility','hidden','important');
     el.style.setProperty('pointer-events','none','important');
@@ -20270,70 +20282,101 @@ setSyncStatus("ℹ️ Đăng nhập để đồng bộ Firebase", true);
     el.tabIndex = -1;
   }
 
-  function showElement(el){
-    el.classList.remove('gm-role-hidden');
+  function show(el){
+    el.classList.remove('q7h-hide');
     el.style.removeProperty('display');
     el.style.removeProperty('visibility');
     el.style.removeProperty('pointer-events');
     el.removeAttribute('aria-hidden');
   }
 
-  function forceSidebar(){
-    var role = getRole();
+  function renameAccountantStock(el){
+    const role = getRole();
+    if(role !== 'accountant') return;
+    if(!isSidebarControl(el)) return;
+    const t = cleanText(el);
+    if(t.includes('thực đơn') && !t.includes('kho hàng')){
+      // Chỉ đổi nhãn ở sidebar, không đổi nội dung trang chủ
+      el.textContent = '📦 Kho hàng';
+    }
+  }
+
+  function applySidebar(){
+    const role = getRole();
     if(role !== 'cashier' && role !== 'accountant') return;
 
-    // Quét mạnh toàn bộ phần bên trái, kể cả button/a/div có onclick
-    var candidates = Array.from(document.querySelectorAll('button,a,[onclick],.nav-item,.menu-item,.sidebar-item,li,div'));
-    candidates.forEach(function(el){
-      if(!isSidebarItem(el)) return;
-      var t = txt(el);
-      if(allowedFor(role, t)) showElement(el);
-      else hideElement(el);
+    const candidates = Array.from(document.querySelectorAll('button,a,[onclick],.nav-item,.menu-item,.sidebar-item,li,div'));
+    candidates.forEach(el=>{
+      if(!isSidebarControl(el)) return;
+      const t = cleanText(el);
+      const ok = allowForRole(role, t);
+      if(ok){
+        show(el);
+        renameAccountantStock(el);
+      }else{
+        hide(el);
+      }
     });
 
-    // Ẩn các tiêu đề nhóm còn sót trong menu xổ xuống
-    Array.from(document.querySelectorAll('div,span,p,strong')).forEach(function(el){
+    // Ẩn tiêu đề nhóm trong dropdown Dữ liệu nếu còn sót
+    Array.from(document.querySelectorAll('div,span,p,strong')).forEach(el=>{
       if(!el.getBoundingClientRect) return;
-      var r = el.getBoundingClientRect();
-      var t = txt(el);
-      if(r.left < 230 && ['vận hành','danh mục','quản trị'].includes(t)) hideElement(el);
+      const r = el.getBoundingClientRect();
+      const t = cleanText(el);
+      if(r.left < 230 && ['vận hành','danh mục','quản trị'].includes(t)) hide(el);
     });
   }
 
-  function blockDangerButtons(){
-    var role = getRole();
+  function lockWriteButtons(){
+    const role = getRole();
     if(role !== 'cashier' && role !== 'accountant') return;
-    Array.from(document.querySelectorAll('button')).forEach(function(btn){
-      if(isSidebarItem(btn)) return;
-      var t = txt(btn);
-      var danger = /(xóa|sửa|khôi phục|backup|nhập dữ liệu|xuất dữ liệu|thêm nhân viên|xóa nhân viên|điều chỉnh|tạo phiếu nhập|xóa phiếu nhập|lưu|in tem)/i.test(t);
-      if(danger){
+
+    Array.from(document.querySelectorAll('button')).forEach(btn=>{
+      if(isSidebarControl(btn)) return;
+      const t = cleanText(btn);
+
+      // Kế toán xem kho/hóa đơn/thu chi nhưng không sửa/xóa/nhập liệu
+      const danger = /(xóa|sửa|khôi phục|backup|nhập dữ liệu|xuất dữ liệu|thêm nhân viên|xóa nhân viên|điều chỉnh|tạo phiếu nhập|xóa phiếu nhập|lưu)/i.test(t);
+      if(danger && role === 'accountant'){
         btn.disabled = true;
-        btn.classList.add('gm-role-disabled');
-        btn.title = role === 'cashier' ? 'Thu ngân không có quyền thao tác mục này' : 'Kế toán chỉ được xem, không được sửa/xóa dữ liệu';
+        btn.classList.add('q7h-readonly');
+        btn.title = 'Kế toán chỉ được xem, không được sửa/xóa dữ liệu';
+      }
+      if(danger && role === 'cashier'){
+        btn.disabled = true;
+        btn.classList.add('q7h-readonly');
+        btn.title = 'Thu ngân không có quyền thao tác mục này';
       }
     });
   }
 
-  function blockedPage(role, p){
-    p = String(p || '').toLowerCase();
+  function blockedPage(role, page){
+    page = String(page || '').toLowerCase();
+
+    // Không chặn dashboard/home để Trang chủ luôn đúng
+    if(page.includes('dashboard') || page.includes('home')) return false;
+
     if(role === 'cashier'){
-      return ['report','money','staff','employee','log','backup','data','barcode','product','menu','import','stock','setting','expense'].some(function(x){return p.includes(x)});
+      // Thu ngân được: trang chủ, ca, bán hàng, hóa đơn
+      return ['report','money','staff','employee','log','backup','data','barcode','product','menu','import','stock','setting','expense'].some(x=>page.includes(x));
     }
+
     if(role === 'accountant'){
-      return ['pos','sale','staff','employee','log','backup','data','barcode','import','setting'].some(function(x){return p.includes(x)});
+      // Kế toán được: trang chủ, báo cáo ca, kho/thực đơn, hóa đơn, thu chi
+      return ['pos','sale','staff','employee','log','backup','data','barcode','import','setting'].some(x=>page.includes(x));
     }
+
     return false;
   }
 
   function patchNav(){
-    ['showPage','openPage','goPage','showSection','scrollToPage','navigate'].forEach(function(fn){
-      if(typeof window[fn] !== 'function' || window[fn].__q7dLocked) return;
-      var old = window[fn];
+    ['showPage','openPage','goPage','showSection','scrollToPage','navigate'].forEach(fn=>{
+      if(typeof window[fn] !== 'function' || window[fn].__q7hLocked) return;
+      const old = window[fn];
       window[fn] = function(){
-        var role = getRole();
-        var page = '';
-        for(var i=0;i<arguments.length;i++){
+        const role = getRole();
+        let page = '';
+        for(let i=0;i<arguments.length;i++){
           if(typeof arguments[i] === 'string'){ page = arguments[i]; break; }
         }
         if(blockedPage(role, page)){
@@ -20341,138 +20384,56 @@ setSyncStatus("ℹ️ Đăng nhập để đồng bộ Firebase", true);
         }
         return old.apply(this, arguments);
       };
-      window[fn].__q7dLocked = true;
+      window[fn].__q7hLocked = true;
     });
+  }
+
+  function stopHiddenClick(){
+    document.addEventListener('click', function(e){
+      const role = getRole();
+      if(role !== 'cashier' && role !== 'accountant') return;
+      const el = e.target.closest('button,a,[onclick],.nav-item,.menu-item,div');
+      if(!el || !isSidebarControl(el)) return;
+      if(!allowForRole(role, cleanText(el))){
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        hide(el);
+        return false;
+      }
+    }, true);
   }
 
   function apply(){
     patchNav();
-    forceSidebar();
-    blockDangerButtons();
+    applySidebar();
+    lockWriteButtons();
   }
 
-  document.addEventListener('click', function(e){
-    var role = getRole();
-    if(role !== 'cashier' && role !== 'accountant') return;
-    var el = e.target.closest('button,a,[onclick],.nav-item,.menu-item,div');
-    if(!el || !isSidebarItem(el)) return;
-    if(!allowedFor(role, txt(el))){
-      e.preventDefault();
-      e.stopImmediatePropagation();
-      hideElement(el);
-      return false;
-    }
-  }, true);
+  stopHiddenClick();
 
-  document.addEventListener('DOMContentLoaded', function(){
+  document.addEventListener('DOMContentLoaded', ()=>{
     apply();
     setTimeout(apply,200);
     setTimeout(apply,800);
     setTimeout(apply,1800);
-    setTimeout(apply,3000);
   });
+  document.addEventListener('click', ()=>setTimeout(apply,80));
 
-  // Chạy lặp nhẹ 5 giây đầu vì app có thể render sidebar sau khi Firebase load xong
-  var n = 0;
-  var timer = setInterval(function(){
+  let n = 0;
+  const timer = setInterval(()=>{
     apply();
     n++;
-    if(n > 25) clearInterval(timer);
-  }, 200);
+    if(n > 20) clearInterval(timer);
+  }, 250);
 
-  setTimeout(function(){
+  setTimeout(()=>{
     try{
-      new MutationObserver(function(){
-        clearTimeout(window.__q7dTimer);
-        window.__q7dTimer = setTimeout(apply, 80);
-      }).observe(document.body, {childList:true, subtree:true, characterData:true, attributes:true});
+      new MutationObserver(()=>{
+        clearTimeout(window.__q7hTimer);
+        window.__q7hTimer = setTimeout(apply,80);
+      }).observe(document.body,{childList:true,subtree:true,characterData:true,attributes:true});
     }catch(e){}
-  }, 500);
-})();
-</script>
-
-
-<script id="tiem-thuy-4q7f-accountant-menu-polish">
-(function(){
-  function getRole(){
-    try{
-      if(window.current && window.current.role) return String(window.current.role).toLowerCase();
-      const t = document.body.innerText || '';
-      if(/Quyền:\s*Kế\s*Toán/i.test(t)) return 'accountant';
-    }catch(e){}
-    return '';
-  }
-  function polishAccountantMenu(){
-    if(getRole() !== 'accountant') return;
-    document.querySelectorAll('button,a,[onclick],.nav-item,.menu-item,div').forEach(el=>{
-      if(!el.getBoundingClientRect) return;
-      const r = el.getBoundingClientRect();
-      const t = String(el.textContent || '').replace(/\s+/g,' ').trim();
-      if(r.left < 230 && t === '📋 Thực đơn'){
-        el.textContent = '📦 Kho hàng';
-      }else if(r.left < 230 && t === 'Thực đơn'){
-        el.textContent = '📦 Kho hàng';
-      }
-    });
-  }
-  document.addEventListener('DOMContentLoaded',()=>{
-    setTimeout(polishAccountantMenu,300);
-    setTimeout(polishAccountantMenu,1000);
-  });
-  document.addEventListener('click',()=>setTimeout(polishAccountantMenu,100));
-  setInterval(polishAccountantMenu,1000);
-})();
-</script>
-
-
-<script id="tiem-thuy-4q7g-accountant-allow-stock-shift">
-(function(){
-  function isAccountant(){
-    try{
-      if(window.current && String(window.current.role).toLowerCase()==='accountant') return true;
-      return /Quyền:\s*Kế\s*Toán/i.test(document.body.innerText || '');
-    }catch(e){ return false; }
-  }
-
-  function forceAccountantMenu(){
-    if(!isAccountant()) return;
-    document.querySelectorAll('button,a,[onclick],.nav-item,.menu-item,div').forEach(el=>{
-      if(!el.getBoundingClientRect) return;
-      const r = el.getBoundingClientRect();
-      const t = String(el.textContent || '').replace(/\s+/g,' ').trim().toLowerCase();
-      if(r.left > 230) return;
-
-      const allow =
-        t.includes('trang chủ') ||
-        t.includes('ca làm việc') ||
-        t.includes('báo cáo ca') ||
-        t.includes('kho hàng') ||
-        t.includes('thực đơn') ||
-        t.includes('hóa đơn') ||
-        t.includes('thu chi');
-
-      if(allow){
-        el.classList.remove('gm-role-hidden','role-locked-hidden');
-        el.style.removeProperty('display');
-        el.style.removeProperty('visibility');
-        el.style.removeProperty('pointer-events');
-        el.removeAttribute('aria-hidden');
-        el.tabIndex = 0;
-
-        if(t.includes('thực đơn')){
-          el.textContent = '📦 Kho hàng';
-        }
-      }
-    });
-  }
-
-  document.addEventListener('DOMContentLoaded',()=>{
-    setTimeout(forceAccountantMenu,300);
-    setTimeout(forceAccountantMenu,1000);
-    setTimeout(forceAccountantMenu,2000);
-  });
-  document.addEventListener('click',()=>setTimeout(forceAccountantMenu,100));
-  setInterval(forceAccountantMenu,1000);
+  },600);
 })();
 </script>
 
