@@ -5750,6 +5750,13 @@ body:has(#loginPage:not(.hidden)) .menu{
 }
 </style>
 
+
+<style id="tiem-thuy-4q7a-role-lock-css">
+.role-locked-hidden{display:none!important}
+body.role-accountant button.role-write-locked,
+body.role-cashier button.role-write-locked{opacity:.45!important;pointer-events:none!important}
+</style>
+
 </head>
 <body>
 <!-- =========================================================
@@ -20188,6 +20195,88 @@ setSyncStatus("ℹ️ Đăng nhập để đồng bộ Firebase", true);
   document.addEventListener('click', function(){
     setTimeout(normalizeEmployeeTable, 250);
   });
+})();
+</script>
+
+
+<script id="tiem-thuy-4q7a-role-lock">
+(function(){
+  function role(){
+    try{
+      if(window.current && window.current.role) return String(window.current.role).toLowerCase();
+      var t=document.body.innerText||'';
+      if(/Quyền:\s*Thu\s*Ngân/i.test(t)) return 'cashier';
+      if(/Quyền:\s*Kế\s*Toán/i.test(t)) return 'accountant';
+      if(/Quyền:\s*Admin/i.test(t)) return 'admin';
+      if(/Quyền:\s*Quản/i.test(t)) return 'manager';
+    }catch(e){}
+    return '';
+  }
+  function txt(el){return String((el&&el.textContent)||'').replace(/\s+/g,' ').trim().toLowerCase();}
+  function allowMenu(r,t){
+    if(r==='cashier') return ['trang chủ','ca làm việc','bán hàng','đăng xuất'].some(x=>t.includes(x));
+    if(r==='accountant'){
+      if(['bán hàng','ca làm việc','thực đơn','nhập nguyên liệu','in tem','nhân viên','nhật ký','dữ liệu','backup','khôi phục','nhập dữ liệu'].some(x=>t.includes(x))) return false;
+      return ['trang chủ','báo cáo ca','hóa đơn','thu chi','đăng xuất'].some(x=>t.includes(x));
+    }
+    return true;
+  }
+  function blockPage(r,p){
+    p=String(p||'').toLowerCase();
+    if(r==='cashier') return ['stock','import','bill','money','staff','employee','log','backup','data','barcode','product','report'].some(x=>p.includes(x));
+    if(r==='accountant') return ['pos','sale','stock','import','staff','employee','log','backup','data','barcode','product','shift'].some(x=>p.includes(x));
+    return false;
+  }
+  function safeHome(){
+    try{ if(typeof window.showPage==='function') window.showPage('dashboard'); }catch(e){}
+  }
+  function lock(){
+    var r=role();
+    document.body.classList.toggle('role-cashier',r==='cashier');
+    document.body.classList.toggle('role-accountant',r==='accountant');
+    if(!['cashier','accountant'].includes(r)) return;
+
+    document.querySelectorAll('.menu button,.sidebar button,nav button,.dropdown-content button,.menu-dropdown').forEach(el=>{
+      el.classList.toggle('role-locked-hidden', !allowMenu(r,txt(el)));
+    });
+
+    document.querySelectorAll('button').forEach(b=>{
+      var t=txt(b);
+      var dangerous=/(xóa|sửa|khôi phục|backup|nhập dữ liệu|xuất dữ liệu|thêm nhân viên|xóa nhân viên|điều chỉnh|tạo phiếu nhập|xóa phiếu nhập|lưu)/i.test(t);
+      if(dangerous && r==='accountant'){
+        b.classList.add('role-write-locked');
+        b.disabled=true;
+        b.title='Kế toán chỉ được xem, không được sửa/xóa dữ liệu';
+      }
+      if(dangerous && r==='cashier'){
+        b.classList.add('role-write-locked');
+        b.disabled=true;
+        b.title='Thu ngân không có quyền thao tác mục này';
+      }
+    });
+  }
+  function patch(fn){
+    if(typeof window[fn] !== 'function' || window[fn].__locked) return;
+    var old=window[fn];
+    window[fn]=function(){
+      var r=role(), p='';
+      for(var i=0;i<arguments.length;i++){ if(typeof arguments[i]==='string'){p=arguments[i];break;} }
+      if(blockPage(r,p)){
+        alert(r==='cashier'?'Thu ngân không có quyền truy cập mục này.':'Kế toán không có quyền truy cập mục này.');
+        safeHome();
+        return false;
+      }
+      return old.apply(this,arguments);
+    };
+    window[fn].__locked=true;
+  }
+  function apply(){
+    ['showPage','openPage','goPage','showSection','scrollToPage'].forEach(patch);
+    lock();
+  }
+  document.addEventListener('DOMContentLoaded',()=>{setTimeout(apply,300);setTimeout(apply,1000);setTimeout(apply,2200);});
+  document.addEventListener('click',()=>setTimeout(apply,120));
+  setTimeout(()=>{try{new MutationObserver(()=>{clearTimeout(window.__rl);window.__rl=setTimeout(apply,180)}).observe(document.body,{childList:true,subtree:true,characterData:true});}catch(e){}},1000);
 })();
 </script>
 
