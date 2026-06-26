@@ -5757,16 +5757,17 @@ body:has(#loginPage:not(.hidden)) .menu{
 
 
 
-<style id="tiem-thuy-4q7c-sidebar-role-lock-css">
-/* 4Q.7C - Sidebar phân quyền sạch */
-.role-locked-hidden{display:none!important}
-body.role-cashier .sidebar button:not(.cashier-allow),
-body.role-cashier aside button:not(.cashier-allow),
-body.role-accountant .sidebar button:not(.accountant-allow),
-body.role-accountant aside button:not(.accountant-allow){
+
+
+
+<style id="tiem-thuy-4q7d-force-sidebar-lock-css">
+/* 4Q.7D - Ép khóa sidebar theo quyền */
+.gm-role-hidden{
   display:none!important;
+  visibility:hidden!important;
+  pointer-events:none!important;
 }
-.role-write-locked{
+.gm-role-disabled{
   opacity:.45!important;
   pointer-events:none!important;
   filter:grayscale(.25);
@@ -20221,12 +20222,15 @@ setSyncStatus("ℹ️ Đăng nhập để đồng bộ Firebase", true);
 
 
 
-<script id="tiem-thuy-4q7c-sidebar-role-lock">
+
+
+
+<script id="tiem-thuy-4q7d-force-sidebar-lock">
 (function(){
   function getRole(){
     try{
       if(window.current && window.current.role) return String(window.current.role).toLowerCase();
-      const t = document.body.innerText || '';
+      var t = document.body.innerText || '';
       if(/Quyền:\s*Thu\s*Ngân/i.test(t)) return 'cashier';
       if(/Quyền:\s*Kế\s*Toán/i.test(t)) return 'accountant';
       if(/Quyền:\s*Admin/i.test(t)) return 'admin';
@@ -20235,141 +20239,155 @@ setSyncStatus("ℹ️ Đăng nhập để đồng bộ Firebase", true);
     return '';
   }
 
-  function text(el){
+  function txt(el){
     return String((el && el.textContent) || '').replace(/\s+/g,' ').trim().toLowerCase();
   }
 
-  function isLeftSidebarButton(btn){
-    const r = btn.getBoundingClientRect ? btn.getBoundingClientRect() : null;
-    if(!r) return false;
-    return r.left < 260 && r.width < 260 && r.height > 20;
+  function isSidebarItem(el){
+    if(!el || !el.getBoundingClientRect) return false;
+    var r = el.getBoundingClientRect();
+    if(r.left > 230 || r.width > 260 || r.height < 18) return false;
+    var t = txt(el);
+    return /trang chủ|ca làm việc|bán hàng|báo cáo ca|thực đơn|nhập nguyên liệu|in tem|hóa đơn|thu chi|nhân viên|nhật ký|dữ liệu|backup|khôi phục|hồ sơ|xuất dữ liệu|nhập dữ liệu|qr/.test(t);
   }
 
-  function markSidebar(){
-    const role = getRole();
-    document.body.classList.toggle('role-cashier', role === 'cashier');
-    document.body.classList.toggle('role-accountant', role === 'accountant');
+  function allowedFor(role, t){
+    if(role === 'cashier'){
+      return t.includes('trang chủ') || t.includes('ca làm việc') || t.includes('bán hàng');
+    }
+    if(role === 'accountant'){
+      return t.includes('trang chủ') || t.includes('báo cáo ca') || t.includes('hóa đơn') || t.includes('thu chi');
+    }
+    return true;
+  }
 
-    if(!['cashier','accountant'].includes(role)) return;
+  function hideElement(el){
+    el.classList.add('gm-role-hidden');
+    el.style.setProperty('display','none','important');
+    el.style.setProperty('visibility','hidden','important');
+    el.style.setProperty('pointer-events','none','important');
+    el.setAttribute('aria-hidden','true');
+    el.tabIndex = -1;
+  }
 
-    document.querySelectorAll('button').forEach(btn=>{
-      if(!isLeftSidebarButton(btn)) return;
+  function showElement(el){
+    el.classList.remove('gm-role-hidden');
+    el.style.removeProperty('display');
+    el.style.removeProperty('visibility');
+    el.style.removeProperty('pointer-events');
+    el.removeAttribute('aria-hidden');
+  }
 
-      const t = text(btn);
-      const cashierOK = t.includes('trang chủ') || t.includes('ca làm việc') || t.includes('bán hàng');
-      const accountantOK = t.includes('trang chủ') || t.includes('báo cáo ca') || t.includes('hóa đơn') || t.includes('thu chi');
+  function forceSidebar(){
+    var role = getRole();
+    if(role !== 'cashier' && role !== 'accountant') return;
 
-      btn.classList.remove('cashier-allow','accountant-allow','role-locked-hidden');
-
-      if(cashierOK) btn.classList.add('cashier-allow');
-      if(accountantOK) btn.classList.add('accountant-allow');
-
-      const ok = role === 'cashier' ? cashierOK : accountantOK;
-      if(!ok){
-        btn.classList.add('role-locked-hidden');
-        btn.setAttribute('aria-hidden','true');
-        btn.tabIndex = -1;
-      }
+    // Quét mạnh toàn bộ phần bên trái, kể cả button/a/div có onclick
+    var candidates = Array.from(document.querySelectorAll('button,a,[onclick],.nav-item,.menu-item,.sidebar-item,li,div'));
+    candidates.forEach(function(el){
+      if(!isSidebarItem(el)) return;
+      var t = txt(el);
+      if(allowedFor(role, t)) showElement(el);
+      else hideElement(el);
     });
 
-    // Ẩn luôn các nhóm con của Dữ liệu nếu còn sót
-    document.querySelectorAll('*').forEach(el=>{
-      const t = text(el);
-      if(['vận hành','danh mục','quản trị'].includes(t)){
-        el.classList.add('role-locked-hidden');
-      }
+    // Ẩn các tiêu đề nhóm còn sót trong menu xổ xuống
+    Array.from(document.querySelectorAll('div,span,p,strong')).forEach(function(el){
+      if(!el.getBoundingClientRect) return;
+      var r = el.getBoundingClientRect();
+      var t = txt(el);
+      if(r.left < 230 && ['vận hành','danh mục','quản trị'].includes(t)) hideElement(el);
     });
   }
 
   function blockDangerButtons(){
-    const role = getRole();
-    if(!['cashier','accountant'].includes(role)) return;
-
-    document.querySelectorAll('button').forEach(btn=>{
-      if(isLeftSidebarButton(btn)) return;
-      const t = text(btn);
-      const danger = /(xóa|sửa|khôi phục|backup|nhập dữ liệu|xuất dữ liệu|thêm nhân viên|xóa nhân viên|điều chỉnh|tạo phiếu nhập|xóa phiếu nhập|lưu|in tem)/i.test(t);
+    var role = getRole();
+    if(role !== 'cashier' && role !== 'accountant') return;
+    Array.from(document.querySelectorAll('button')).forEach(function(btn){
+      if(isSidebarItem(btn)) return;
+      var t = txt(btn);
+      var danger = /(xóa|sửa|khôi phục|backup|nhập dữ liệu|xuất dữ liệu|thêm nhân viên|xóa nhân viên|điều chỉnh|tạo phiếu nhập|xóa phiếu nhập|lưu|in tem)/i.test(t);
       if(danger){
         btn.disabled = true;
-        btn.classList.add('role-write-locked');
-        btn.title = role === 'cashier'
-          ? 'Thu ngân không có quyền thao tác mục này'
-          : 'Kế toán chỉ được xem, không được sửa/xóa dữ liệu';
+        btn.classList.add('gm-role-disabled');
+        btn.title = role === 'cashier' ? 'Thu ngân không có quyền thao tác mục này' : 'Kế toán chỉ được xem, không được sửa/xóa dữ liệu';
       }
     });
   }
 
-  function blockedPage(role, page){
-    page = String(page || '').toLowerCase();
+  function blockedPage(role, p){
+    p = String(p || '').toLowerCase();
     if(role === 'cashier'){
-      return ['report','bill','money','staff','employee','log','backup','data','barcode','product','menu','import','stock','setting','invoice'].some(x=>page.includes(x));
+      return ['report','bill','money','staff','employee','log','backup','data','barcode','product','menu','import','stock','setting','invoice','expense'].some(function(x){return p.includes(x)});
     }
     if(role === 'accountant'){
-      return ['pos','sale','staff','employee','log','backup','data','barcode','product','menu','import','stock','shift','setting'].some(x=>page.includes(x));
+      return ['pos','sale','staff','employee','log','backup','data','barcode','product','menu','import','stock','shift','setting'].some(function(x){return p.includes(x)});
     }
     return false;
   }
 
   function patchNav(){
-    ['showPage','openPage','goPage','showSection','scrollToPage','navigate'].forEach(fn=>{
-      if(typeof window[fn] !== 'function' || window[fn].__q7cLocked) return;
-      const old = window[fn];
+    ['showPage','openPage','goPage','showSection','scrollToPage','navigate'].forEach(function(fn){
+      if(typeof window[fn] !== 'function' || window[fn].__q7dLocked) return;
+      var old = window[fn];
       window[fn] = function(){
-        const role = getRole();
-        let page = '';
-        for(let i=0;i<arguments.length;i++){
+        var role = getRole();
+        var page = '';
+        for(var i=0;i<arguments.length;i++){
           if(typeof arguments[i] === 'string'){ page = arguments[i]; break; }
         }
         if(blockedPage(role, page)){
-          // Không hiện popup, chỉ đưa về trang chủ an toàn
           try{return old.call(this, 'dashboard');}catch(e){return false;}
         }
         return old.apply(this, arguments);
       };
-      window[fn].__q7cLocked = true;
+      window[fn].__q7dLocked = true;
     });
-  }
-
-  function interceptClick(){
-    document.addEventListener('click', function(e){
-      const role = getRole();
-      if(!['cashier','accountant'].includes(role)) return;
-      const btn = e.target.closest('button');
-      if(!btn || !isLeftSidebarButton(btn)) return;
-      const allowed = role === 'cashier' ? btn.classList.contains('cashier-allow') : btn.classList.contains('accountant-allow');
-      if(!allowed){
-        e.preventDefault();
-        e.stopImmediatePropagation();
-        markSidebar();
-        return false;
-      }
-    }, true);
   }
 
   function apply(){
     patchNav();
-    markSidebar();
+    forceSidebar();
     blockDangerButtons();
   }
 
-  interceptClick();
+  document.addEventListener('click', function(e){
+    var role = getRole();
+    if(role !== 'cashier' && role !== 'accountant') return;
+    var el = e.target.closest('button,a,[onclick],.nav-item,.menu-item,div');
+    if(!el || !isSidebarItem(el)) return;
+    if(!allowedFor(role, txt(el))){
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      hideElement(el);
+      return false;
+    }
+  }, true);
 
-  document.addEventListener('DOMContentLoaded', ()=>{
-    setTimeout(apply,100);
-    setTimeout(apply,500);
-    setTimeout(apply,1200);
-    setTimeout(apply,2500);
+  document.addEventListener('DOMContentLoaded', function(){
+    apply();
+    setTimeout(apply,200);
+    setTimeout(apply,800);
+    setTimeout(apply,1800);
+    setTimeout(apply,3000);
   });
-  document.addEventListener('click', ()=>setTimeout(apply,80));
 
-  setTimeout(()=>{
+  // Chạy lặp nhẹ 5 giây đầu vì app có thể render sidebar sau khi Firebase load xong
+  var n = 0;
+  var timer = setInterval(function(){
+    apply();
+    n++;
+    if(n > 25) clearInterval(timer);
+  }, 200);
+
+  setTimeout(function(){
     try{
-      new MutationObserver(()=>{
-        clearTimeout(window.__q7cTimer);
-        window.__q7cTimer = setTimeout(apply,80);
+      new MutationObserver(function(){
+        clearTimeout(window.__q7dTimer);
+        window.__q7dTimer = setTimeout(apply, 80);
       }).observe(document.body, {childList:true, subtree:true, characterData:true, attributes:true});
     }catch(e){}
-  },500);
+  }, 500);
 })();
 </script>
 
