@@ -5754,10 +5754,23 @@ body:has(#loginPage:not(.hidden)) .menu{
 
 
 
-<style id="tiem-thuy-4q7b-role-lock-clean-css">
-/* 4Q.7B - Khóa quyền sạch: ẩn menu thật, không cảnh báo lặp */
+
+
+
+<style id="tiem-thuy-4q7c-sidebar-role-lock-css">
+/* 4Q.7C - Sidebar phân quyền sạch */
 .role-locked-hidden{display:none!important}
-.role-write-locked{opacity:.45!important;pointer-events:none!important;filter:grayscale(.2)}
+body.role-cashier .sidebar button:not(.cashier-allow),
+body.role-cashier aside button:not(.cashier-allow),
+body.role-accountant .sidebar button:not(.accountant-allow),
+body.role-accountant aside button:not(.accountant-allow){
+  display:none!important;
+}
+.role-write-locked{
+  opacity:.45!important;
+  pointer-events:none!important;
+  filter:grayscale(.25);
+}
 </style>
 
 </head>
@@ -20205,12 +20218,15 @@ setSyncStatus("ℹ️ Đăng nhập để đồng bộ Firebase", true);
 
 
 
-<script id="tiem-thuy-4q7b-role-lock-clean">
+
+
+
+<script id="tiem-thuy-4q7c-sidebar-role-lock">
 (function(){
   function getRole(){
     try{
       if(window.current && window.current.role) return String(window.current.role).toLowerCase();
-      const t=document.body.innerText||'';
+      const t = document.body.innerText || '';
       if(/Quyền:\s*Thu\s*Ngân/i.test(t)) return 'cashier';
       if(/Quyền:\s*Kế\s*Toán/i.test(t)) return 'accountant';
       if(/Quyền:\s*Admin/i.test(t)) return 'admin';
@@ -20219,73 +20235,63 @@ setSyncStatus("ℹ️ Đăng nhập để đồng bộ Firebase", true);
     return '';
   }
 
-  function cleanText(el){
+  function text(el){
     return String((el && el.textContent) || '').replace(/\s+/g,' ').trim().toLowerCase();
   }
 
-  const cashierAllowed = ['trang chủ','ca làm việc','bán hàng'];
-  const accountantAllowed = ['trang chủ','báo cáo ca','hóa đơn','thu chi'];
-
-  const allMenuNames = [
-    'trang chủ','ca làm việc','bán hàng','báo cáo ca','thực đơn','nhập nguyên liệu',
-    'in tem mã vạch a4','hóa đơn','thu chi','nhân viên','nhật ký','dữ liệu',
-    'tải backup hôm nay','backup firebase ngay','khôi phục backup firebase',
-    'chuyển khoản qr thanh toán','hồ sơ cửa hàng','tạo menu mẫu tiệm của thúy',
-    'xuất dữ liệu','nhập dữ liệu','khôi phục backup'
-  ];
-
-  function isMenuButton(el){
-    const t = cleanText(el);
-    if(!t) return false;
-    if(allMenuNames.some(x => t.includes(x))) return true;
-
-    // nhận diện thêm theo vùng sidebar bên trái
-    const rect = el.getBoundingClientRect ? el.getBoundingClientRect() : null;
-    if(rect && rect.left < 260 && rect.width < 260) return true;
-
-    return false;
+  function isLeftSidebarButton(btn){
+    const r = btn.getBoundingClientRect ? btn.getBoundingClientRect() : null;
+    if(!r) return false;
+    return r.left < 260 && r.width < 260 && r.height > 20;
   }
 
-  function isAllowed(role, text){
-    if(role === 'cashier') return cashierAllowed.some(x => text.includes(x));
-    if(role === 'accountant') return accountantAllowed.some(x => text.includes(x));
-    return true;
-  }
-
-  function hideMenus(){
+  function markSidebar(){
     const role = getRole();
+    document.body.classList.toggle('role-cashier', role === 'cashier');
+    document.body.classList.toggle('role-accountant', role === 'accountant');
+
     if(!['cashier','accountant'].includes(role)) return;
 
-    document.querySelectorAll('button, a, .menu-item, .nav-item, [onclick], .menu-dropdown').forEach(el=>{
-      if(!isMenuButton(el)) return;
-      const t = cleanText(el);
-      const ok = isAllowed(role, t);
-      el.classList.toggle('role-locked-hidden', !ok);
+    document.querySelectorAll('button').forEach(btn=>{
+      if(!isLeftSidebarButton(btn)) return;
+
+      const t = text(btn);
+      const cashierOK = t.includes('trang chủ') || t.includes('ca làm việc') || t.includes('bán hàng');
+      const accountantOK = t.includes('trang chủ') || t.includes('báo cáo ca') || t.includes('hóa đơn') || t.includes('thu chi');
+
+      btn.classList.remove('cashier-allow','accountant-allow','role-locked-hidden');
+
+      if(cashierOK) btn.classList.add('cashier-allow');
+      if(accountantOK) btn.classList.add('accountant-allow');
+
+      const ok = role === 'cashier' ? cashierOK : accountantOK;
       if(!ok){
-        el.setAttribute('aria-hidden','true');
-        el.tabIndex = -1;
+        btn.classList.add('role-locked-hidden');
+        btn.setAttribute('aria-hidden','true');
+        btn.tabIndex = -1;
       }
     });
 
-    // Nếu còn vùng menu con của Dữ liệu thì ẩn luôn
+    // Ẩn luôn các nhóm con của Dữ liệu nếu còn sót
     document.querySelectorAll('*').forEach(el=>{
-      const t = cleanText(el);
+      const t = text(el);
       if(['vận hành','danh mục','quản trị'].includes(t)){
         el.classList.add('role-locked-hidden');
       }
     });
   }
 
-  function lockDangerButtons(){
+  function blockDangerButtons(){
     const role = getRole();
     if(!['cashier','accountant'].includes(role)) return;
 
     document.querySelectorAll('button').forEach(btn=>{
-      const t = cleanText(btn);
-      const dangerous = /(xóa|sửa|khôi phục|backup|nhập dữ liệu|xuất dữ liệu|thêm nhân viên|xóa nhân viên|điều chỉnh|tạo phiếu nhập|xóa phiếu nhập|lưu)/i.test(t);
-      if(dangerous){
-        btn.classList.add('role-write-locked');
+      if(isLeftSidebarButton(btn)) return;
+      const t = text(btn);
+      const danger = /(xóa|sửa|khôi phục|backup|nhập dữ liệu|xuất dữ liệu|thêm nhân viên|xóa nhân viên|điều chỉnh|tạo phiếu nhập|xóa phiếu nhập|lưu|in tem)/i.test(t);
+      if(danger){
         btn.disabled = true;
+        btn.classList.add('role-write-locked');
         btn.title = role === 'cashier'
           ? 'Thu ngân không có quyền thao tác mục này'
           : 'Kế toán chỉ được xem, không được sửa/xóa dữ liệu';
@@ -20293,20 +20299,20 @@ setSyncStatus("ℹ️ Đăng nhập để đồng bộ Firebase", true);
     });
   }
 
-  function pageBlocked(role, name){
-    name=String(name||'').toLowerCase();
+  function blockedPage(role, page){
+    page = String(page || '').toLowerCase();
     if(role === 'cashier'){
-      return ['report','bill','money','staff','employee','log','backup','data','barcode','product','menu','import','stock','setting'].some(x=>name.includes(x));
+      return ['report','bill','money','staff','employee','log','backup','data','barcode','product','menu','import','stock','setting','invoice'].some(x=>page.includes(x));
     }
     if(role === 'accountant'){
-      return ['pos','sale','staff','employee','log','backup','data','barcode','product','menu','import','stock','shift','setting'].some(x=>name.includes(x));
+      return ['pos','sale','staff','employee','log','backup','data','barcode','product','menu','import','stock','shift','setting'].some(x=>page.includes(x));
     }
     return false;
   }
 
-  function patchNavigation(){
-    ['showPage','openPage','goPage','showSection','scrollToPage'].forEach(fn=>{
-      if(typeof window[fn] !== 'function' || window[fn].__roleLockClean) return;
+  function patchNav(){
+    ['showPage','openPage','goPage','showSection','scrollToPage','navigate'].forEach(fn=>{
+      if(typeof window[fn] !== 'function' || window[fn].__q7cLocked) return;
       const old = window[fn];
       window[fn] = function(){
         const role = getRole();
@@ -20314,52 +20320,56 @@ setSyncStatus("ℹ️ Đăng nhập để đồng bộ Firebase", true);
         for(let i=0;i<arguments.length;i++){
           if(typeof arguments[i] === 'string'){ page = arguments[i]; break; }
         }
-        if(pageBlocked(role, page)){
-          // Không alert nữa để tránh bấm OK 2 lần. Đưa về trang chủ an toàn.
+        if(blockedPage(role, page)){
+          // Không hiện popup, chỉ đưa về trang chủ an toàn
           try{return old.call(this, 'dashboard');}catch(e){return false;}
         }
         return old.apply(this, arguments);
       };
-      window[fn].__roleLockClean = true;
+      window[fn].__q7cLocked = true;
     });
   }
 
-  function applyRoleLock(){
-    patchNavigation();
-    hideMenus();
-    lockDangerButtons();
+  function interceptClick(){
+    document.addEventListener('click', function(e){
+      const role = getRole();
+      if(!['cashier','accountant'].includes(role)) return;
+      const btn = e.target.closest('button');
+      if(!btn || !isLeftSidebarButton(btn)) return;
+      const allowed = role === 'cashier' ? btn.classList.contains('cashier-allow') : btn.classList.contains('accountant-allow');
+      if(!allowed){
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        markSidebar();
+        return false;
+      }
+    }, true);
   }
 
-  // Chặn click còn sót, chỉ báo 1 lần nếu có nút bị lọt ra ngoài
-  document.addEventListener('click', function(e){
-    const role = getRole();
-    if(!['cashier','accountant'].includes(role)) return;
-    const el = e.target.closest('button,a,.menu-item,.nav-item,[onclick]');
-    if(!el || !isMenuButton(el)) return;
-    const t = cleanText(el);
-    if(!isAllowed(role,t)){
-      e.preventDefault();
-      e.stopImmediatePropagation();
-      applyRoleLock();
-      return false;
-    }
-  }, true);
+  function apply(){
+    patchNav();
+    markSidebar();
+    blockDangerButtons();
+  }
+
+  interceptClick();
 
   document.addEventListener('DOMContentLoaded', ()=>{
-    setTimeout(applyRoleLock,200);
-    setTimeout(applyRoleLock,800);
-    setTimeout(applyRoleLock,1800);
+    setTimeout(apply,100);
+    setTimeout(apply,500);
+    setTimeout(apply,1200);
+    setTimeout(apply,2500);
   });
-  document.addEventListener('click', ()=>setTimeout(applyRoleLock,80));
+  document.addEventListener('click', ()=>setTimeout(apply,80));
 
   setTimeout(()=>{
     try{
       new MutationObserver(()=>{
-        clearTimeout(window.__roleLockCleanTimer);
-        window.__roleLockCleanTimer=setTimeout(applyRoleLock,100);
-      }).observe(document.body,{childList:true,subtree:true,characterData:true});
+        clearTimeout(window.__q7cTimer);
+        window.__q7cTimer = setTimeout(apply,80);
+      }).observe(document.body, {childList:true, subtree:true, characterData:true, attributes:true});
     }catch(e){}
-  },600);
+  },500);
 })();
 </script>
 
