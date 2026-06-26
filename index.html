@@ -20253,7 +20253,7 @@ setSyncStatus("ℹ️ Đăng nhập để đồng bộ Firebase", true);
 
   function allowedFor(role, t){
     if(role === 'cashier'){
-      return t.includes('trang chủ') || t.includes('ca làm việc') || t.includes('bán hàng');
+      return t.includes('trang chủ') || t.includes('ca làm việc') || t.includes('bán hàng') || t.includes('hóa đơn');
     }
     if(role === 'accountant'){
       return t.includes('trang chủ') || t.includes('báo cáo ca') || t.includes('hóa đơn') || t.includes('thu chi');
@@ -20318,7 +20318,7 @@ setSyncStatus("ℹ️ Đăng nhập để đồng bộ Firebase", true);
   function blockedPage(role, p){
     p = String(p || '').toLowerCase();
     if(role === 'cashier'){
-      return ['report','bill','money','staff','employee','log','backup','data','barcode','product','menu','import','stock','setting','invoice','expense'].some(function(x){return p.includes(x)});
+      return ['report','money','staff','employee','log','backup','data','barcode','product','menu','import','stock','setting','expense'].some(function(x){return p.includes(x)});
     }
     if(role === 'accountant'){
       return ['pos','sale','staff','employee','log','backup','data','barcode','product','menu','import','stock','shift','setting'].some(function(x){return p.includes(x)});
