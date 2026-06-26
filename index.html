@@ -20256,6 +20256,160 @@ setSyncStatus("ℹ️ Đăng nhập để đồng bộ Firebase", true);
 })();
 </script>
 
+
+
+<!-- PATCH: HEADER XANH ĐẬM PRO - sửa thanh đăng nhập/đăng xuất bị nhỏ và hở trắng khi cuộn -->
+<style id="patch-header-xanh-dam-pro-20260626">
+@media (min-width:901px){
+  /* Giảm khoảng trống phía trên nội dung, chỉ chừa đúng chiều cao header */
+  #appPage:not(.hidden).app,
+  #appPage:not(.hidden){
+    padding-top:118px!important;
+  }
+
+  /* Lớp nền che phía sau header khi cuộn: đổi sang nền xanh nhạt, không còn mảng trắng xấu */
+  #appPage:not(.hidden)::before{
+    left:310px!important;
+    height:118px!important;
+    background:linear-gradient(180deg,rgba(236,253,245,.98) 0%,rgba(236,253,245,.92) 72%,rgba(236,253,245,0) 100%)!important;
+  }
+
+  /* Thanh ngang chính: xanh đậm giống mẫu */
+  #appPage:not(.hidden) .header{
+    position:fixed!important;
+    top:16px!important;
+    left:330px!important;
+    right:24px!important;
+    z-index:10000!important;
+
+    min-height:82px!important;
+    height:82px!important;
+    padding:12px 22px!important;
+
+    display:flex!important;
+    align-items:center!important;
+    justify-content:flex-end!important;
+    gap:14px!important;
+
+    background:linear-gradient(90deg,#003b2e 0%,#006b4a 52%,#004b39 100%)!important;
+    color:#fff!important;
+    border:1px solid rgba(255,255,255,.18)!important;
+    border-radius:18px!important;
+    box-shadow:0 12px 30px rgba(0,35,25,.28)!important;
+    backdrop-filter:none!important;
+    overflow:hidden!important;
+  }
+
+  /* Desktop đang có logo ở sidebar rồi, nên header chỉ giữ thông tin nhanh + đăng xuất */
+  #appPage:not(.hidden) .header .app-brand{
+    display:none!important;
+  }
+
+  #appPage:not(.hidden) .header,
+  #appPage:not(.hidden) .header *{
+    color:#fff!important;
+  }
+
+  #appPage:not(.hidden) .header > div:last-child{
+    width:100%!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:flex-end!important;
+    gap:12px!important;
+    flex-wrap:nowrap!important;
+    text-align:right!important;
+    white-space:nowrap!important;
+    font-size:14px!important;
+    font-weight:700!important;
+    line-height:1.25!important;
+  }
+
+  #appPage:not(.hidden) .header b{
+    color:#fff!important;
+    font-weight:900!important;
+  }
+
+  /* Badge đã lưu Firebase / tên tiệm */
+  #firebaseSyncStatus,
+  #currentStoreBadge{
+    display:inline-flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    min-height:30px!important;
+    padding:6px 13px!important;
+    border-radius:999px!important;
+    font-size:12px!important;
+    font-weight:900!important;
+    white-space:nowrap!important;
+    box-shadow:0 6px 16px rgba(0,0,0,.12)!important;
+  }
+
+  #firebaseSyncStatus{
+    background:rgba(34,197,94,.22)!important;
+    color:#dcfce7!important;
+    border:1px solid rgba(187,247,208,.45)!important;
+  }
+
+  #currentStoreBadge{
+    background:rgba(255,255,255,.13)!important;
+    color:#fff!important;
+    border:1px solid rgba(255,255,255,.28)!important;
+  }
+
+  /* Nút đăng xuất trắng nổi bật như hình mẫu */
+  #mainLogoutBtn,
+  #appPage:not(.hidden) .header .btn-gray{
+    min-width:118px!important;
+    height:46px!important;
+    margin-left:4px!important;
+    padding:0 18px!important;
+    border-radius:14px!important;
+    background:#ffffff!important;
+    color:#003b2e!important;
+    border:1px solid rgba(255,255,255,.75)!important;
+    box-shadow:0 8px 18px rgba(0,0,0,.18)!important;
+    font-size:14px!important;
+    font-weight:900!important;
+  }
+
+  #mainLogoutBtn:hover{
+    transform:translateY(-1px)!important;
+    filter:brightness(1.02)!important;
+  }
+
+  /* Menu trái giữ nguyên vị trí, hạ nhẹ cho đồng bộ với header mới */
+  #appPage:not(.hidden) .menu{
+    top:16px!important;
+    bottom:20px!important;
+  }
+}
+
+/* Màn hình laptop nhỏ: tránh chữ bị chen */
+@media (min-width:901px) and (max-width:1280px){
+  #appPage:not(.hidden) .header{
+    left:310px!important;
+    right:16px!important;
+    padding:10px 14px!important;
+  }
+  #appPage:not(.hidden) .header > div:last-child{
+    gap:8px!important;
+    font-size:12.5px!important;
+  }
+  #firebaseSyncStatus,
+  #currentStoreBadge{
+    padding:5px 9px!important;
+    font-size:11px!important;
+  }
+  #mainLogoutBtn,
+  #appPage:not(.hidden) .header .btn-gray{
+    min-width:102px!important;
+    height:42px!important;
+    padding:0 12px!important;
+    font-size:12.5px!important;
+  }
+}
+</style>
+
 </body>
 </html>
 <!-- GREEN MARKET CLEAN LOGS PATCH: bỏ chú thích nhật ký, tự động lọc, sửa ngày nhóm -->
