@@ -16579,9 +16579,12 @@ function renderBillHistory(visibleBills){
         <td>${escapeHTML(b.paymentMethod || 'Tiền mặt')}</td>
         <td>${itemCount || (b.items || []).length}</td>
         <td>
-          ${isBillReturned(b)
-            ? `<span class="bill-return-list-badge">↩ ${isBillFullyReturned(b) ? 'ĐÃ TRẢ HẾT' : 'TRẢ MỘT PHẦN'}</span><br><small class="muted">Doanh thu gốc: ${money(getBillOriginalTotal(b))}</small><br><small class="bill-return-money">Hoàn trả: ${money(getBillReturnedAmount(b))}</small><br><small class="muted">Doanh thu thực nhận: ${money(b.total)}</small>`
-            : `<b>${money(b.total)}</b><br><small class="muted">In lại: ${getBillReprintCount(b)} lần</small>`
+          ${isCashierUser()
+            ? `<b>${money(isBillReturned(b) ? getBillOriginalTotal(b) : b.total)}</b><br><small class="muted">In lại: ${getBillReprintCount(b)} lần</small>`
+            : (isBillReturned(b)
+                ? `<span class="bill-return-list-badge">↩ ${isBillFullyReturned(b) ? 'ĐÃ TRẢ HẾT' : 'TRẢ MỘT PHẦN'}</span><br><small class="muted">Doanh thu gốc: ${money(getBillOriginalTotal(b))}</small><br><small class="bill-return-money">Hoàn trả: ${money(getBillReturnedAmount(b))}</small><br><small class="muted">Doanh thu thực nhận: ${money(b.total)}</small>`
+                : `<b>${money(b.total)}</b><br><small class="muted">In lại: ${getBillReprintCount(b)} lần</small>`
+              )
           }
         </td>
         <td>
@@ -16670,8 +16673,13 @@ function returnFullBill(index){
     return;
   }
 
+  if(!canReturnBill()){
+    alert('Thu ngân không được hoàn/trả hàng. Vui lòng liên hệ Quản lý hoặc Admin.');
+    return;
+  }
+
   if(!canAccessBill(b)){
-    alert('Bạn chỉ được trả món đơn của chính mình.');
+    alert('Bạn không có quyền thao tác hóa đơn này.');
     return;
   }
 
@@ -16943,6 +16951,16 @@ function isAdminUser(){
   return ['admin','manager','accountant'].includes(normalizeRole(current?.role));
 }
 
+function isCashierUser(){
+  return normalizeRole(current?.role) === 'cashier';
+}
+
+function canReturnBill(){
+  // Chỉ Admin và Quản lý được xử lý hoàn/trả hàng.
+  // Thu ngân chỉ được xem hóa đơn của mình và in lại tối đa 1 lần.
+  return ['admin','manager'].includes(normalizeRole(current?.role));
+}
+
 function canAccessBill(bill){
   if(!current || !bill) return false;
   if(['admin','manager','accountant'].includes(normalizeRole(current.role))) return true;
@@ -16960,6 +16978,9 @@ function viewBillDetail(index){
   }
 
   const fullReturned = isBillFullyReturned(b);
+  const cashierView = isCashierUser();
+  const showReturnInfo = !cashierView;
+  const canDoReturn = canReturnBill() && canAccessBill(b);
   const rows = (b.items || []).map((it, i) => {
     const soldQty = Number(it.qty || 0);
     const returnedQty = getReturnedQtyForItem(b, i, it);
@@ -16969,17 +16990,17 @@ function viewBillDetail(index){
         <td>${i + 1}</td>
         <td>${escapeHTML(it.name || '')}</td>
         <td>${soldQty}</td>
-        <td>${returnedQty}</td>
-        <td><b>${remainQty}</b></td>
+        <td>${showReturnInfo ? returnedQty : '-'}</td>
+        <td><b>${showReturnInfo ? remainQty : '-'}</b></td>
         <td>${money(it.price)}</td>
         <td>${money(Number(it.total || soldQty * (it.price || 0)))}</td>
-        <td>${(!fullReturned && remainQty > 0) ? `<input id="returnQty_${index}_${i}" type="number" min="0" max="${remainQty}" value="0" style="width:90px;text-align:center">` : '-'}</td>
+        <td>${(canDoReturn && !fullReturned && remainQty > 0) ? `<input id="returnQty_${index}_${i}" type="number" min="0" max="${remainQty}" value="0" style="width:90px;text-align:center">` : '-'}</td>
       </tr>
     `;
   }).join('');
 
   const history = getBillReturnHistory(b);
-  const historyHtml = history.length ? `
+  const historyHtml = (showReturnInfo && history.length) ? `
     <div class="bill-return-note">
       <b>Lịch sử trả hàng:</b><br>
       ${history.map((r, i) => `${i + 1}. ${escapeHTML(r.time || '')} - ${escapeHTML(r.code || '')} - ${money(r.amount || 0)} - ${escapeHTML(r.reason || '')}`).join('<br>')}
@@ -16996,14 +17017,14 @@ function viewBillDetail(index){
           Nhân viên: ${escapeHTML(b.staff || '')}<br>
           Thanh toán: ${escapeHTML(b.paymentMethod || 'Tiền mặt')}<br>
           Số lần in lại: ${getBillReprintCount(b)} lần<br>
-          Trạng thái: ${isBillReturned(b) ? `<span class="bill-return-badge">${fullReturned ? 'ĐÃ TRẢ HẾT' : 'ĐÃ TRẢ MỘT PHẦN'}</span>` : '<b style="color:#16a34a">Đã bán</b>'}
-          ${isBillReturned(b) ? `<br>Mã phiếu trả gần nhất: <b>${escapeHTML(b.returnCode || getReturnCode(b, index))}</b><br>Ngày trả gần nhất: ${escapeHTML(b.returnTime || '')}<br>Người xử lý: ${escapeHTML(b.returnBy || '')}<br>Lý do gần nhất: ${escapeHTML(b.returnReason || '')}` : ''}
+          Trạng thái: ${showReturnInfo && isBillReturned(b) ? `<span class="bill-return-badge">${fullReturned ? 'ĐÃ TRẢ HẾT' : 'ĐÃ TRẢ MỘT PHẦN'}</span>` : '<b style="color:#16a34a">Đã bán</b>'}
+          ${showReturnInfo && isBillReturned(b) ? `<br>Mã phiếu trả gần nhất: <b>${escapeHTML(b.returnCode || getReturnCode(b, index))}</b><br>Ngày trả gần nhất: ${escapeHTML(b.returnTime || '')}<br>Người xử lý: ${escapeHTML(b.returnBy || '')}<br>Lý do gần nhất: ${escapeHTML(b.returnReason || '')}` : ''}
         </div>
       </div>
       <div class="bill-action-group">
-        ${isBillReturned(b) ? `<button class="btn-orange" onclick="printReturnReceiptByIndex(${index})">🖨️ In phiếu trả gần nhất</button>` : ''}
-        ${!fullReturned ? `<button class="btn-green" onclick="printBillReceiptByIndex(${index})">🖨️ In lại hóa đơn</button>` : ''}
-        ${canAccessBill(b) && !fullReturned ? `<button class="btn-red" onclick="returnSelectedBillItems(${index})">↩ Trả các món đã nhập SL</button><button class="btn-orange" onclick="returnFullBill(${index})">🔄 Trả toàn bộ phần còn lại</button>` : ''}
+        ${showReturnInfo && isBillReturned(b) ? `<button class="btn-orange" onclick="printReturnReceiptByIndex(${index})">🖨️ In phiếu trả gần nhất</button>` : ''}
+        ${(!fullReturned || cashierView) ? `<button class="btn-green" onclick="printBillReceiptByIndex(${index})">🖨️ In lại hóa đơn</button>` : ''}
+        ${canDoReturn && !fullReturned ? `<button class="btn-red" onclick="returnSelectedBillItems(${index})">↩ Trả các món đã nhập SL</button><button class="btn-orange" onclick="returnFullBill(${index})">🔄 Trả toàn bộ phần còn lại</button>` : ''}
         <button class="btn-gray" onclick="closeBillDetail()">Đóng</button>
       </div>
     </div>
@@ -17014,7 +17035,7 @@ function viewBillDetail(index){
       </table>
     </div>
     ${historyHtml}
-    ${isBillReturned(b)
+    ${showReturnInfo && isBillReturned(b)
       ? `<div class="bill-return-summary">
            <div><span>Tổng gốc</span>${money(getBillOriginalTotal(b))}</div>
            <div><span>Đã hoàn</span>${money(getBillReturnedAmount(b))}</div>
@@ -17022,7 +17043,7 @@ function viewBillDetail(index){
          </div>`
       : ''
     }
-    <div class="bill-total-line"><span>Tổng còn tính doanh thu:</span><span>${money(b.total)}</span></div>
+    <div class="bill-total-line"><span>${showReturnInfo ? 'Tổng còn tính doanh thu:' : 'Tổng hóa đơn:'}</span><span>${money(showReturnInfo ? b.total : (isBillReturned(b) ? getBillOriginalTotal(b) : b.total))}</span></div>
   `;
   box.scrollIntoView({behavior:'smooth', block:'nearest'});
 }
@@ -17049,8 +17070,12 @@ function printReturnReceiptByIndex(index){
     alert('Không tìm thấy hóa đơn để in phiếu trả hàng');
     return;
   }
+  if(!canReturnBill()){
+    alert('Thu ngân không được in phiếu trả hàng. Vui lòng liên hệ Quản lý hoặc Admin.');
+    return;
+  }
   if(!canAccessBill(b)){
-    alert('Bạn chỉ được in hóa đơn hoàn trả của chính mình.');
+    alert('Bạn không có quyền in phiếu trả hàng này.');
     return;
   }
   if(!isBillReturned(b)){
@@ -17144,7 +17169,7 @@ function printBillReceiptByIndex(index){
     return;
   }
 
-  if(isBillReturned(b)){
+  if(isBillReturned(b) && !isCashierUser()){
     printReturnReceiptByIndex(index);
     return;
   }
@@ -17230,7 +17255,7 @@ if(admin){
     <div>• Người in lại: ${escapeHTML(current?.name || '')}</div>
     <div>• Nhân viên bán: ${escapeHTML(b.staff || '')}</div>
     <div>• Thanh toán: ${escapeHTML(b.paymentMethod || 'Tiền mặt')}</div>
-    ${isBillReturned(b) ? `<div style="text-align:center;font-size:16px;font-weight:900;border:1px solid #000;margin:5px 0;padding:3px">HÓA ĐƠN ĐÃ TRẢ HÀNG</div><div>Mã phiếu trả: ${escapeHTML(b.returnCode || '')}</div>` : ''}
+    ${(!isCashierUser() && isBillReturned(b)) ? `<div style="text-align:center;font-size:16px;font-weight:900;border:1px solid #000;margin:5px 0;padding:3px">HÓA ĐƠN ĐÃ TRẢ HÀNG</div><div>Mã phiếu trả: ${escapeHTML(b.returnCode || '')}</div>` : ''}
     ${reason ? `<div>• Lý do: ${escapeHTML(reason)}</div>` : ''}
     <div class="receipt-line"></div>
 
@@ -17239,7 +17264,7 @@ if(admin){
     <div class="receipt-line"></div>
     <div class="receipt-total">
       <span>TỔNG:</span>
-      <span>${money(b.total)}</span>
+      <span>${money((isCashierUser() && isBillReturned(b)) ? getBillOriginalTotal(b) : b.total)}</span>
     </div>
 
     ${buildReceiptQrBlock()}
