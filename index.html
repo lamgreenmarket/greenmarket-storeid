@@ -469,7 +469,7 @@ tr:nth-child(even) td{
 .table-legend{display:flex;gap:8px;flex-wrap:wrap;color:#64748b;font-size:13px;font-weight:800}
 .table-map{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+  grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
   gap:10px;
 }
 .table-btn{
@@ -487,7 +487,7 @@ tr:nth-child(even) td{
   gap:4px;
 }
 .table-btn strong{font-size:18px;color:#064e3b}
-.table-btn small{font-size:12px;color:#64748b;font-weight:800}
+.table-btn small{font-size:11.5px;color:#64748b;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .table-btn.busy{
   background:linear-gradient(135deg,#fff7ed,#fffbeb)!important;
   border-color:#fed7aa!important;
@@ -524,6 +524,10 @@ tr:nth-child(even) td{
 }
 .table-action-row .btn-move-table{
   background:linear-gradient(135deg,#0ea5e9,#059669)!important;
+  color:#fff!important;
+}
+.table-action-row .btn-merge-table{
+  background:linear-gradient(135deg,#f59e0b,#059669)!important;
   color:#fff!important;
 }
 @media(max-width:768px){
@@ -6585,6 +6589,7 @@ body:has(#loginPage:not(.hidden)) .menu{
         <div id="tableMap" class="table-map"></div>
         <div class="table-action-row">
           <button type="button" class="btn-move-table" onclick="moveCurrentTableOrder()">🔄 Chuyển bàn</button>
+          <button type="button" class="btn-merge-table" onclick="mergeTableIntoCurrent()">🔗 Gộp bàn</button>
         </div>
       </div>
       <div id="currentOrderStrip" class="current-order-strip">🥤 Đang bán mang đi</div>
@@ -10941,7 +10946,7 @@ function moveCurrentTableOrder(){
 
   const targetOrder = tableOrders[targetTable.id];
   if(targetOrder && Array.isArray(targetOrder.items) && targetOrder.items.length){
-    alert(`${targetTable.name} đang có khách. Chức năng này chỉ chuyển sang bàn trống. Gộp bàn sẽ làm ở bước sau.`);
+    alert(`${targetTable.name} đang có khách. Nếu muốn cộng hóa đơn, hãy dùng nút Gộp bàn.`);
     return;
   }
 
@@ -10968,6 +10973,112 @@ function moveCurrentTableOrder(){
   addLog('Chuyển bàn', `Chuyển ${fromTable ? fromTable.name : 'bàn cũ'} sang ${targetTable.name}`);
   save();
   alert(`Đã chuyển sang ${targetTable.name}.`);
+  focusPosSearch();
+}
+
+
+function mergeCartItems(baseItems, addItems){
+  const result = Array.isArray(baseItems) ? baseItems.map(x => ({...x})) : [];
+  (Array.isArray(addItems) ? addItems : []).forEach(item => {
+    const keyBarcode = String(item.barcode || '').trim();
+    const found = result.find(x =>
+      (keyBarcode && String(x.barcode || '').trim() === keyBarcode) ||
+      (!keyBarcode && String(x.name || '') === String(item.name || '') && Number(x.price || 0) === Number(item.price || 0))
+    );
+    if(found){
+      found.qty = Number(found.qty || 0) + Number(item.qty || 0);
+      found.total = Number(found.qty || 0) * Number(found.price || 0);
+    }else{
+      result.push({...item});
+    }
+  });
+  return result;
+}
+
+function mergeTableIntoCurrent(){
+  if(saleMode !== 'dinein' || !currentTableId){
+    alert('Chọn bàn chính trước khi gộp bàn. Ví dụ: chọn Bàn 2, rồi gộp Bàn 5 vào Bàn 2.');
+    return;
+  }
+
+  saveActiveTableOrder();
+  loadTableOrders();
+
+  const currentOrder = tableOrders[currentTableId];
+  if(!currentOrder || !Array.isArray(currentOrder.items) || !currentOrder.items.length){
+    alert('Bàn đang chọn chưa có món. Hãy chọn bàn chính đang phục vụ trước khi gộp.');
+    return;
+  }
+
+  const fromTable = CAFE_TABLES.find(t => t.id === currentTableId);
+  const busyTables = CAFE_TABLES.filter(t => {
+    const o = tableOrders[t.id];
+    return t.id !== currentTableId && o && Array.isArray(o.items) && o.items.length;
+  });
+
+  if(!busyTables.length){
+    alert('Chưa có bàn nào khác đang phục vụ để gộp.');
+    return;
+  }
+
+  const listText = busyTables.map(t => {
+    const o = tableOrders[t.id];
+    const total = o.items.reduce((s,c)=>s+Number(c.total||0),0);
+    const count = o.items.reduce((s,c)=>s+Number(c.qty||0),0);
+    return `${t.name} (${count} món • ${money(total)})`;
+  }).join('\n');
+
+  const targetInput = prompt(`Gộp bàn nào vào ${fromTable ? fromTable.name : currentTableId}?\n\nCác bàn đang phục vụ:\n${listText}\n\nNhập số bàn, ví dụ: 5 hoặc Bàn 5 hoặc T5`);
+  if(targetInput === null) return;
+
+  const raw = String(targetInput || '').trim().toLowerCase();
+  if(!raw){
+    alert('Chưa nhập bàn cần gộp.');
+    return;
+  }
+
+  const numberMatch = raw.match(/\d+/);
+  const sourceId = numberMatch ? ('T' + Number(numberMatch[0])) : raw.toUpperCase();
+  const sourceTable = CAFE_TABLES.find(t => t.id === sourceId || t.name.toLowerCase() === raw);
+
+  if(!sourceTable){
+    alert('Không tìm thấy bàn cần gộp. Vui lòng nhập số bàn, ví dụ: 5.');
+    return;
+  }
+
+  if(sourceTable.id === currentTableId){
+    alert('Không thể gộp cùng một bàn.');
+    return;
+  }
+
+  const sourceOrder = tableOrders[sourceTable.id];
+  if(!sourceOrder || !Array.isArray(sourceOrder.items) || !sourceOrder.items.length){
+    alert(`${sourceTable.name} đang trống, không có món để gộp.`);
+    return;
+  }
+
+  const ok = confirm(`Xác nhận gộp toàn bộ món từ ${sourceTable.name} vào ${fromTable ? fromTable.name : currentTableId}?\n\nSau khi gộp, ${sourceTable.name} sẽ trở về Trống.`);
+  if(!ok) return;
+
+  const mergedItems = mergeCartItems(currentOrder.items, sourceOrder.items);
+  tableOrders[currentTableId] = {
+    ...currentOrder,
+    tableId: currentTableId,
+    tableName: fromTable ? fromTable.name : currentTableId,
+    items: mergedItems,
+    updatedAt: now(),
+    staff: current?.name || currentOrder.staff || ''
+  };
+  delete tableOrders[sourceTable.id];
+  saveTableOrders();
+
+  cart = mergedItems.map(x => ({...x}));
+  renderCart();
+  renderTableMap();
+  updateCurrentOrderStrip();
+  addLog('Gộp bàn', `Gộp ${sourceTable.name} vào ${fromTable ? fromTable.name : currentTableId}`);
+  save();
+  alert(`Đã gộp ${sourceTable.name} vào ${fromTable ? fromTable.name : currentTableId}.`);
   focusPosSearch();
 }
 
