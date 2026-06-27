@@ -11100,7 +11100,7 @@ function addTableOrderHistory(type, title, items = [], extra = {}){
   const t = CAFE_TABLES.find(x => x.id === currentTableId);
   if(!history.length && String(type || '').toLowerCase() !== 'open'){
     history.push({
-      time: now(),
+      time: new Date().toISOString(),
       staff: current?.name || '',
       type: 'open',
       title: `Mở ${t ? t.name : currentTableId}`,
@@ -11108,7 +11108,7 @@ function addTableOrderHistory(type, title, items = [], extra = {}){
     });
   }
   history.push({
-    time: now(),
+    time: new Date().toISOString(),
     staff: current?.name || '',
     type: String(type || 'order'),
     title: String(title || ''),
@@ -11120,13 +11120,24 @@ function addTableOrderHistory(type, title, items = [], extra = {}){
 }
 
 function formatHistoryTime(v){
-  const d = new Date(v || Date.now());
-  if(isNaN(d.getTime())) return '';
-  return d.toLocaleString('vi-VN',{
-    day:'2-digit',month:'2-digit',year:'numeric',
-    hour:'2-digit',minute:'2-digit',second:'2-digit',
-    hour12:false
-  });
+  // V2.5D: hiển thị đủ ngày/tháng/năm + giờ/phút/giây cho Nhật ký Order.
+  // Lý do: các bản cũ lưu time bằng toLocaleString('vi-VN'), Chrome có thể không parse lại được.
+  function pad2(n){ return String(n).padStart(2,'0'); }
+  function fmt(d){
+    return `${pad2(d.getDate())}/${pad2(d.getMonth()+1)}/${d.getFullYear()} ${pad2(d.getHours())}:${pad2(d.getMinutes())}:${pad2(d.getSeconds())}`;
+  }
+  if(!v) return fmt(new Date());
+  let d = new Date(v);
+  if(!isNaN(d.getTime())) return fmt(d);
+
+  const s = String(v || '').trim();
+  // Hỗ trợ chuỗi kiểu Việt Nam: 27/06/2026, 15:30:05 hoặc 27/6/2026 15:30
+  const m = s.match(/(\d{1,2})\/(\d{1,2})\/(\d{4}).*?(\d{1,2}):(\d{2})(?::(\d{2}))?/);
+  if(m){
+    d = new Date(Number(m[3]), Number(m[2])-1, Number(m[1]), Number(m[4]), Number(m[5]), Number(m[6] || 0));
+    if(!isNaN(d.getTime())) return fmt(d);
+  }
+  return 'Chưa rõ thời gian';
 }
 
 function getOrderHistoryTypeLabel(type){
@@ -11172,7 +11183,7 @@ function buildOrderHistoryHtml(history){
     const fromTo = h.fromTable || h.toTable ? `${h.fromTable ? 'Từ: ' + escapeHTML(h.fromTable) : ''}${h.fromTable && h.toTable ? ' • ' : ''}${h.toTable ? 'Đến: ' + escapeHTML(h.toTable) : ''}` : '';
     const meta = [staff, fromTo].filter(Boolean).join(' • ');
     return `<div class="order-history-modal-item type-${escapeHTML(info.cls)}">
-      <div class="order-history-modal-time">${escapeHTML(formatHistoryTime(h.time))}</div>
+      <div class="order-history-modal-time">🕒 ${escapeHTML(formatHistoryTime(h.time))}</div>
       <div class="order-history-modal-title">${info.icon} ${escapeHTML(h.title || info.label)}</div>
       ${meta ? `<div class="order-history-modal-meta">${meta}</div>` : ''}
       ${lines ? `<div class="order-history-modal-lines">${lines}</div>` : ''}
