@@ -510,6 +510,26 @@ tr:nth-child(even) td{
   font-weight:900;
   border:1px solid #bae6fd;
 }
+
+.table-action-row{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:12px;
+}
+.table-action-row button{
+  border-radius:999px!important;
+  padding:10px 16px!important;
+  width:auto!important;
+}
+.table-action-row .btn-move-table{
+  background:linear-gradient(135deg,#0ea5e9,#059669)!important;
+  color:#fff!important;
+}
+@media(max-width:768px){
+  .table-action-row{display:grid!important;grid-template-columns:1fr!important;}
+  .table-action-row button{width:100%!important;}
+}
 @media(max-width:768px){
   .sale-mode-panel{padding:12px!important;border-radius:18px!important}
   .sale-mode-buttons{display:grid!important;grid-template-columns:1fr!important}
@@ -6563,6 +6583,9 @@ body:has(#loginPage:not(.hidden)) .menu{
           <div class="table-legend"><span>🟢 Trống</span><span>🟡 Đang phục vụ</span></div>
         </div>
         <div id="tableMap" class="table-map"></div>
+        <div class="table-action-row">
+          <button type="button" class="btn-move-table" onclick="moveCurrentTableOrder()">🔄 Chuyển bàn</button>
+        </div>
       </div>
       <div id="currentOrderStrip" class="current-order-strip">🥤 Đang bán mang đi</div>
       <div id="deliveryPanel" class="delivery-panel hidden">
@@ -10865,6 +10888,86 @@ function selectCafeTable(tableId){
   renderCart();
   renderTableMap();
   updateCurrentOrderStrip();
+  focusPosSearch();
+}
+
+
+function moveCurrentTableOrder(){
+  if(saleMode !== 'dinein' || !currentTableId){
+    alert('Chọn bàn đang phục vụ trước khi chuyển bàn.');
+    return;
+  }
+
+  saveActiveTableOrder();
+  loadTableOrders();
+
+  const currentOrder = tableOrders[currentTableId];
+  if((!currentOrder || !Array.isArray(currentOrder.items) || !currentOrder.items.length) && (!cart || !cart.length)){
+    alert('Bàn hiện tại chưa có món để chuyển.');
+    return;
+  }
+
+  const fromTable = CAFE_TABLES.find(t => t.id === currentTableId);
+  const emptyTables = CAFE_TABLES.filter(t => t.id !== currentTableId && !(tableOrders[t.id] && Array.isArray(tableOrders[t.id].items) && tableOrders[t.id].items.length));
+
+  if(!emptyTables.length){
+    alert('Không còn bàn trống để chuyển.');
+    return;
+  }
+
+  const listText = emptyTables.map(t => `${t.name} (${t.id})`).join('\n');
+  const targetInput = prompt(`Chuyển từ ${fromTable ? fromTable.name : currentTableId} sang bàn nào?\n\nBàn trống hiện có:\n${listText}\n\nNhập số bàn, ví dụ: 7 hoặc Bàn 7 hoặc T7`);
+  if(targetInput === null) return;
+
+  const raw = String(targetInput || '').trim().toLowerCase();
+  if(!raw){
+    alert('Chưa nhập bàn cần chuyển.');
+    return;
+  }
+
+  const numberMatch = raw.match(/\d+/);
+  const targetId = numberMatch ? ('T' + Number(numberMatch[0])) : raw.toUpperCase();
+  const targetTable = CAFE_TABLES.find(t => t.id === targetId || t.name.toLowerCase() === raw);
+
+  if(!targetTable){
+    alert('Không tìm thấy bàn cần chuyển. Vui lòng nhập số bàn, ví dụ: 7.');
+    return;
+  }
+
+  if(targetTable.id === currentTableId){
+    alert('Bàn chuyển đến phải khác bàn hiện tại.');
+    return;
+  }
+
+  const targetOrder = tableOrders[targetTable.id];
+  if(targetOrder && Array.isArray(targetOrder.items) && targetOrder.items.length){
+    alert(`${targetTable.name} đang có khách. Chức năng này chỉ chuyển sang bàn trống. Gộp bàn sẽ làm ở bước sau.`);
+    return;
+  }
+
+  const ok = confirm(`Xác nhận chuyển toàn bộ món từ ${fromTable ? fromTable.name : currentTableId} sang ${targetTable.name}?`);
+  if(!ok) return;
+
+  const itemsToMove = currentOrder && Array.isArray(currentOrder.items) ? currentOrder.items.map(x => ({...x})) : cart.map(x => ({...x}));
+
+  tableOrders[targetTable.id] = {
+    tableId: targetTable.id,
+    tableName: targetTable.name,
+    items: itemsToMove,
+    updatedAt: now(),
+    staff: current?.name || ''
+  };
+  delete tableOrders[currentTableId];
+  saveTableOrders();
+
+  currentTableId = targetTable.id;
+  cart = itemsToMove.map(x => ({...x}));
+  renderCart();
+  renderTableMap();
+  updateCurrentOrderStrip();
+  addLog('Chuyển bàn', `Chuyển ${fromTable ? fromTable.name : 'bàn cũ'} sang ${targetTable.name}`);
+  save();
+  alert(`Đã chuyển sang ${targetTable.name}.`);
   focusPosSearch();
 }
 
