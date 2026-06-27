@@ -11092,6 +11092,10 @@ function getCurrentTableHistory(){
   return order && Array.isArray(order.history) ? order.history : [];
 }
 
+function orderHistoryTimestamp(){
+  return new Date().toISOString();
+}
+
 function addTableOrderHistory(type, title, items = [], extra = {}){
   if(saleMode !== 'dinein' || !currentTableId) return;
   loadTableOrders();
@@ -11100,7 +11104,7 @@ function addTableOrderHistory(type, title, items = [], extra = {}){
   const t = CAFE_TABLES.find(x => x.id === currentTableId);
   if(!history.length && String(type || '').toLowerCase() !== 'open'){
     history.push({
-      time: new Date().toISOString(),
+      time: orderHistoryTimestamp(),
       staff: current?.name || '',
       type: 'open',
       title: `Mở ${t ? t.name : currentTableId}`,
@@ -11108,7 +11112,7 @@ function addTableOrderHistory(type, title, items = [], extra = {}){
     });
   }
   history.push({
-    time: new Date().toISOString(),
+    time: orderHistoryTimestamp(),
     staff: current?.name || '',
     type: String(type || 'order'),
     title: String(title || ''),
@@ -11119,25 +11123,45 @@ function addTableOrderHistory(type, title, items = [], extra = {}){
   saveTableOrders();
 }
 
-function formatHistoryTime(v){
-  // V2.5D: hiển thị đủ ngày/tháng/năm + giờ/phút/giây cho Nhật ký Order.
-  // Lý do: các bản cũ lưu time bằng toLocaleString('vi-VN'), Chrome có thể không parse lại được.
-  function pad2(n){ return String(n).padStart(2,'0'); }
-  function fmt(d){
-    return `${pad2(d.getDate())}/${pad2(d.getMonth()+1)}/${d.getFullYear()} ${pad2(d.getHours())}:${pad2(d.getMinutes())}:${pad2(d.getSeconds())}`;
-  }
-  if(!v) return fmt(new Date());
-  let d = new Date(v);
-  if(!isNaN(d.getTime())) return fmt(d);
-
+function getHistoryDateObject(v){
+  if(v instanceof Date && !isNaN(v.getTime())) return v;
+  if(v === undefined || v === null || v === '') return null;
   const s = String(v || '').trim();
-  // Hỗ trợ chuỗi kiểu Việt Nam: 27/06/2026, 15:30:05 hoặc 27/6/2026 15:30
-  const m = s.match(/(\d{1,2})\/(\d{1,2})\/(\d{4}).*?(\d{1,2}):(\d{2})(?::(\d{2}))?/);
+  if(!s || s.toLowerCase() === 'undefined' || s.toLowerCase() === 'null') return null;
+
+  let d = new Date(s);
+  if(!isNaN(d.getTime())) return d;
+
+  // Hỗ trợ: 27/06/2026 15:30:05 hoặc 27/06/2026, 15:30:05
+  let m = s.match(/(\d{1,2})\/(\d{1,2})\/(\d{4}).*?(\d{1,2}):(\d{2})(?::(\d{2}))?/);
   if(m){
     d = new Date(Number(m[3]), Number(m[2])-1, Number(m[1]), Number(m[4]), Number(m[5]), Number(m[6] || 0));
-    if(!isNaN(d.getTime())) return fmt(d);
+    if(!isNaN(d.getTime())) return d;
   }
-  return 'Chưa rõ thời gian';
+
+  // Hỗ trợ toLocaleString('vi-VN') của một số trình duyệt: 15:30:05 27/06/2026
+  m = s.match(/(\d{1,2}):(\d{2})(?::(\d{2}))?.*?(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+  if(m){
+    d = new Date(Number(m[6]), Number(m[5])-1, Number(m[4]), Number(m[1]), Number(m[2]), Number(m[3] || 0));
+    if(!isNaN(d.getTime())) return d;
+  }
+
+  // Hỗ trợ timestamp số nếu có
+  const n = Number(s);
+  if(Number.isFinite(n) && n > 0){
+    d = new Date(n);
+    if(!isNaN(d.getTime())) return d;
+  }
+  return null;
+}
+
+function formatHistoryTime(v){
+  // V2.5E: chuẩn hóa lại ngày giờ Nhật ký Order.
+  // Từ bản này trở đi, lịch sử mới lưu ISO; bản cũ vẫn cố đọc các kiểu ngày giờ Việt Nam.
+  function pad2(n){ return String(n).padStart(2,'0'); }
+  const d = getHistoryDateObject(v);
+  if(!d) return 'Thời gian cũ chưa lưu';
+  return `${pad2(d.getDate())}/${pad2(d.getMonth()+1)}/${d.getFullYear()} ${pad2(d.getHours())}:${pad2(d.getMinutes())}:${pad2(d.getSeconds())}`;
 }
 
 function getOrderHistoryTypeLabel(type){
@@ -11159,7 +11183,8 @@ function getOrderHistoryStats(history){
     if(counts[t] !== undefined) counts[t]++;
   });
   const firstTime = arr.length ? arr.reduce((min,h) => {
-    const t = new Date(h.time || 0).getTime();
+    const d = getHistoryDateObject(h.time);
+    const t = d ? d.getTime() : 0;
     return t && t < min ? t : min;
   }, Date.now()) : null;
   let served = '—';
@@ -11174,7 +11199,11 @@ function getOrderHistoryStats(history){
 function buildOrderHistoryHtml(history){
   const arr = Array.isArray(history) ? [...history] : [];
   if(!arr.length) return '<div class="order-history-empty">Chưa có lịch sử order cho bàn này.</div>';
-  arr.sort((a,b) => new Date(b.time || 0) - new Date(a.time || 0));
+  arr.sort((a,b) => {
+    const da = getHistoryDateObject(a.time);
+    const db = getHistoryDateObject(b.time);
+    return (db ? db.getTime() : 0) - (da ? da.getTime() : 0);
+  });
   return arr.map(h => {
     const info = getOrderHistoryTypeLabel(h.type);
     const items = normalizeHistoryItems(h.items);
@@ -11418,7 +11447,7 @@ function moveCurrentTableOrder(){
 
   const moveHistory = Array.isArray(currentOrder?.history) ? currentOrder.history : [];
   moveHistory.push({
-    time: now(),
+    time: orderHistoryTimestamp(),
     staff: current?.name || '',
     type: 'move',
     title: `Chuyển từ ${fromTable ? fromTable.name : 'bàn cũ'} sang ${targetTable.name}`,
@@ -11532,7 +11561,7 @@ function mergeTableIntoCurrent(){
 
   const mergedItems = mergeCartItems(currentOrder.items, sourceOrder.items);
   const mergeHistory = Array.isArray(currentOrder.history) ? [...currentOrder.history] : [];
-  const mergeTime = now();
+  const mergeTime = orderHistoryTimestamp();
 
   // Nhật ký gộp bàn phải ghi rõ nguồn bàn để khi khách thắc mắc có thể đối chiếu.
   // Không biến món từ bàn khác thành "gọi thêm tại bàn hiện tại".
@@ -11549,6 +11578,8 @@ function mergeTableIntoCurrent(){
   if(Array.isArray(sourceOrder.history) && sourceOrder.history.length){
     sourceOrder.history.forEach(h => mergeHistory.push({
       ...h,
+      time: h.time || mergeTime,
+      originalTimeMissing: !h.time,
       type: 'source',
       sourceTable: sourceTable.name,
       title: `[${sourceTable.name}] ${h.title || h.type || 'Order trước khi gộp'}`
