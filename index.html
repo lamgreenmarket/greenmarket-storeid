@@ -5758,6 +5758,345 @@ body:has(#loginPage:not(.hidden)) .menu{
 }
 </style>
 
+
+
+<style id="gm-chot-giao-dien-final-no-image">
+/* =========================================================
+   CHỐT GIAO DIỆN FINAL - Header full ngang + Sidebar nằm dưới
+   - Header phủ toàn bộ chiều ngang, cùng bề rộng với cả sidebar + nội dung
+   - Logo Tiệm của Thúy hòa trên nền xanh, không khung trắng
+   - Sidebar bắt đầu dưới header, không nhô lên
+   - Nội dung đẩy xuống, không bị header che khi cuộn
+   - Chỉ chỉnh giao diện desktop, không đụng logic bán hàng/kho/in/Firebase
+   ========================================================= */
+@media (min-width:901px){
+  :root{
+    --tt-sidebar-w:250px;
+    --gm-topbar-h:136px;
+    --gm-content-gap:26px;
+    --gm-scrollbar-safe:17px;
+  }
+
+  html,body{
+    overflow-x:hidden!important;
+  }
+
+  #appPage.app:not(.hidden),
+  #appPage:not(.hidden).app,
+  .app{
+    padding-top:calc(var(--gm-topbar-h) + var(--gm-content-gap))!important;
+    padding-left:calc(var(--tt-sidebar-w) + 28px)!important;
+    padding-right:var(--gm-scrollbar-safe)!important;
+    padding-bottom:28px!important;
+  }
+
+  #appPage::before{
+    display:none!important;
+  }
+
+  .header{
+    position:fixed!important;
+    top:0!important;
+    left:0!important;
+    right:var(--gm-scrollbar-safe)!important;
+    width:auto!important;
+    height:var(--gm-topbar-h)!important;
+    min-height:var(--gm-topbar-h)!important;
+    margin:0!important;
+    padding:0 44px!important;
+    border-radius:0!important;
+    border:0!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:space-between!important;
+    gap:28px!important;
+    background:
+      radial-gradient(circle at 22% 8%,rgba(16,185,129,.22),transparent 34%),
+      linear-gradient(90deg,#003b2e 0%,#006b4a 52%,#003b2e 100%)!important;
+    color:#fff!important;
+    box-shadow:0 12px 32px rgba(0,0,0,.20)!important;
+    z-index:10020!important;
+    overflow:hidden!important;
+  }
+
+  .header::after{
+    content:"";
+    position:absolute;
+    left:0;right:0;bottom:0;
+    height:1px;
+    background:rgba(255,255,255,.16);
+    pointer-events:none;
+  }
+
+  .header .app-brand{
+    position:relative!important;
+    left:auto!important;
+    top:auto!important;
+    transform:none!important;
+    width:auto!important;
+    min-width:0!important;
+    max-width:none!important;
+    min-height:0!important;
+    margin:0!important;
+    padding:0!important;
+    border:0!important;
+    border-radius:0!important;
+    background:transparent!important;
+    box-shadow:none!important;
+    color:#fff!important;
+    display:flex!important;
+    align-items:center!important;
+    gap:16px!important;
+    z-index:2!important;
+    flex:1 1 auto!important;
+  }
+
+  .header .app-brand,
+  .header .app-brand *{
+    background:transparent!important;
+    box-shadow:none!important;
+    border:none!important;
+  }
+
+  .header-logo-mark,
+  .header-store-card-cup{
+    display:inline-grid!important;
+    place-items:center!important;
+    width:58px!important;
+    height:58px!important;
+    min-width:58px!important;
+    margin:0 8px 0 0!important;
+    border-radius:0!important;
+    background:transparent!important;
+    color:#fff!important;
+    box-shadow:none!important;
+    font-size:42px!important;
+    line-height:1!important;
+    filter:drop-shadow(0 4px 8px rgba(0,0,0,.28));
+  }
+
+  #headerBrandTitle,
+  .header-store-card-name,
+  .app-brand h1#headerBrandTitle{
+    color:#fff!important;
+    font-family:"Segoe Script","Brush Script MT","Lucida Handwriting",cursive!important;
+    font-size:42px!important;
+    line-height:.96!important;
+    font-weight:700!important;
+    letter-spacing:.2px!important;
+    text-transform:none!important;
+    margin:0 0 8px!important;
+    padding:0!important;
+    text-shadow:0 4px 12px rgba(0,0,0,.28)!important;
+    white-space:nowrap!important;
+  }
+
+  #headerBrandSlogan,
+  #headerBrandSlogan.cafe-header-3line,
+  .header-store-card-sub,
+  .header-store-card-tiny{
+    display:block!important;
+    color:#a7f3d0!important;
+    font-family:Inter,Arial,sans-serif!important;
+    font-size:14px!important;
+    line-height:1.18!important;
+    font-weight:900!important;
+    letter-spacing:.75px!important;
+    text-transform:uppercase!important;
+    margin:0!important;
+    padding:0!important;
+    text-shadow:none!important;
+    white-space:nowrap!important;
+  }
+
+  #headerBrandSlogan .brand-industry-line{
+    display:block!important;
+    color:#a7f3d0!important;
+    font-size:15px!important;
+    line-height:1.15!important;
+    font-weight:900!important;
+    letter-spacing:.8px!important;
+    margin:0!important;
+    white-space:nowrap!important;
+  }
+
+  #headerBrandSlogan .brand-slogan-line,
+  .header-store-card-tiny{
+    display:none!important;
+  }
+
+  #headerPoweredBy,
+  .header-store-card-powered{
+    display:none!important;
+  }
+
+  .header > div:last-child{
+    position:relative!important;
+    z-index:3!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:flex-end!important;
+    flex:0 0 auto!important;
+    gap:18px!important;
+    margin:0!important;
+    color:#fff!important;
+    font-size:15px!important;
+    font-weight:800!important;
+    white-space:nowrap!important;
+  }
+
+  .header > div:last-child b,
+  .header > div:last-child span{
+    color:inherit!important;
+  }
+
+  #firebaseSyncStatus,
+  #currentStoreBadge{
+    display:inline-flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    height:48px!important;
+    min-width:152px!important;
+    padding:0 22px!important;
+    margin-left:0!important;
+    border-radius:999px!important;
+    background:rgba(255,255,255,.12)!important;
+    border:1px solid rgba(255,255,255,.24)!important;
+    color:#fff!important;
+    font-size:14px!important;
+    font-weight:900!important;
+    box-shadow:none!important;
+    backdrop-filter:blur(8px);
+  }
+
+  #firebaseSyncStatus{
+    background:linear-gradient(135deg,#10b981,#059669)!important;
+    border-color:rgba(255,255,255,.16)!important;
+  }
+
+  #mainLogoutBtn{
+    display:inline-flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    min-width:138px!important;
+    height:52px!important;
+    min-height:52px!important;
+    margin:0!important;
+    padding:0 22px!important;
+    border-radius:18px!important;
+    background:#fff!important;
+    color:#064e3b!important;
+    font-size:15px!important;
+    font-weight:900!important;
+    box-shadow:0 10px 24px rgba(0,0,0,.14)!important;
+  }
+
+  .menu{
+    position:fixed!important;
+    top:var(--gm-topbar-h)!important;
+    left:0!important;
+    bottom:0!important;
+    width:var(--tt-sidebar-w)!important;
+    height:calc(100vh - var(--gm-topbar-h))!important;
+    margin:0!important;
+    padding:26px 16px 22px!important;
+    border-radius:0!important;
+    border:0!important;
+    background:linear-gradient(180deg,#003b2e 0%,#064e3b 46%,#002f24 100%)!important;
+    box-shadow:10px 0 28px rgba(0,0,0,.13)!important;
+    display:flex!important;
+    flex-direction:column!important;
+    flex-wrap:nowrap!important;
+    gap:10px!important;
+    overflow-y:auto!important;
+    overflow-x:hidden!important;
+    z-index:10010!important;
+  }
+
+  .menu > .sidebar-brand-card,
+  .menu > .sidebar-brand,
+  .menu > .menu-brand-card,
+  .menu > .brand-card,
+  .menu > div:not(.menu-dropdown){
+    display:none!important;
+    visibility:hidden!important;
+    height:0!important;
+    min-height:0!important;
+    margin:0!important;
+    padding:0!important;
+    overflow:hidden!important;
+  }
+
+  .menu button,
+  .menu-dropdown .menu-btn{
+    width:100%!important;
+    min-height:48px!important;
+    height:48px!important;
+    padding:0 18px!important;
+    justify-content:flex-start!important;
+    text-align:left!important;
+    border-radius:14px!important;
+    background:rgba(255,255,255,.06)!important;
+    color:#fff!important;
+    box-shadow:none!important;
+    border:1px solid rgba(255,255,255,.08)!important;
+    font-size:15px!important;
+    font-weight:850!important;
+  }
+
+  .menu button.menu-active,
+  .menu button.active,
+  .menu button:hover,
+  .menu-dropdown .menu-btn:hover{
+    background:linear-gradient(135deg,#10b981,#059669)!important;
+    color:#fff!important;
+    transform:none!important;
+    box-shadow:0 12px 24px rgba(16,185,129,.22)!important;
+  }
+
+  .menu button.menu-active:after{
+    display:none!important;
+  }
+
+  .menu-dropdown{
+    width:100%!important;
+  }
+
+  .dropdown-content{
+    left:calc(var(--tt-sidebar-w) + 8px)!important;
+    right:auto!important;
+    top:auto!important;
+    bottom:22px!important;
+    min-width:250px!important;
+    z-index:10050!important;
+  }
+
+  .dashboard-title,
+  .page{
+    scroll-margin-top:calc(var(--gm-topbar-h) + 20px)!important;
+  }
+
+  .dashboard-title{
+    margin-top:0!important;
+  }
+}
+
+@media (min-width:901px) and (max-width:1320px){
+  :root{
+    --tt-sidebar-w:230px;
+    --gm-topbar-h:126px;
+  }
+  .header{padding:0 28px!important;gap:18px!important;}
+  #headerBrandTitle,.header-store-card-name,.app-brand h1#headerBrandTitle{font-size:34px!important;}
+  .header-logo-mark,.header-store-card-cup{width:50px!important;height:50px!important;min-width:50px!important;font-size:34px!important;}
+  #headerBrandSlogan .brand-industry-line,.header-store-card-sub{font-size:12.5px!important;}
+  .header > div:last-child{font-size:13px!important;gap:10px!important;}
+  #firebaseSyncStatus,#currentStoreBadge{height:42px!important;min-width:126px!important;padding:0 14px!important;font-size:12px!important;}
+  #mainLogoutBtn{height:46px!important;min-height:46px!important;min-width:112px!important;font-size:13px!important;}
+  .menu button,.menu-dropdown .menu-btn{font-size:13.5px!important;min-height:44px!important;height:44px!important;}
+}
+</style>
+
 </head>
 <body>
 <!-- =========================================================
@@ -8791,6 +9130,345 @@ ${'<scr' + 'ipt src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcod
     padding-left:6px!important;
     padding-right:6px!important;
   }
+}
+</style>
+
+
+
+<style id="gm-chot-giao-dien-final-no-image">
+/* =========================================================
+   CHỐT GIAO DIỆN FINAL - Header full ngang + Sidebar nằm dưới
+   - Header phủ toàn bộ chiều ngang, cùng bề rộng với cả sidebar + nội dung
+   - Logo Tiệm của Thúy hòa trên nền xanh, không khung trắng
+   - Sidebar bắt đầu dưới header, không nhô lên
+   - Nội dung đẩy xuống, không bị header che khi cuộn
+   - Chỉ chỉnh giao diện desktop, không đụng logic bán hàng/kho/in/Firebase
+   ========================================================= */
+@media (min-width:901px){
+  :root{
+    --tt-sidebar-w:250px;
+    --gm-topbar-h:136px;
+    --gm-content-gap:26px;
+    --gm-scrollbar-safe:17px;
+  }
+
+  html,body{
+    overflow-x:hidden!important;
+  }
+
+  #appPage.app:not(.hidden),
+  #appPage:not(.hidden).app,
+  .app{
+    padding-top:calc(var(--gm-topbar-h) + var(--gm-content-gap))!important;
+    padding-left:calc(var(--tt-sidebar-w) + 28px)!important;
+    padding-right:var(--gm-scrollbar-safe)!important;
+    padding-bottom:28px!important;
+  }
+
+  #appPage::before{
+    display:none!important;
+  }
+
+  .header{
+    position:fixed!important;
+    top:0!important;
+    left:0!important;
+    right:var(--gm-scrollbar-safe)!important;
+    width:auto!important;
+    height:var(--gm-topbar-h)!important;
+    min-height:var(--gm-topbar-h)!important;
+    margin:0!important;
+    padding:0 44px!important;
+    border-radius:0!important;
+    border:0!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:space-between!important;
+    gap:28px!important;
+    background:
+      radial-gradient(circle at 22% 8%,rgba(16,185,129,.22),transparent 34%),
+      linear-gradient(90deg,#003b2e 0%,#006b4a 52%,#003b2e 100%)!important;
+    color:#fff!important;
+    box-shadow:0 12px 32px rgba(0,0,0,.20)!important;
+    z-index:10020!important;
+    overflow:hidden!important;
+  }
+
+  .header::after{
+    content:"";
+    position:absolute;
+    left:0;right:0;bottom:0;
+    height:1px;
+    background:rgba(255,255,255,.16);
+    pointer-events:none;
+  }
+
+  .header .app-brand{
+    position:relative!important;
+    left:auto!important;
+    top:auto!important;
+    transform:none!important;
+    width:auto!important;
+    min-width:0!important;
+    max-width:none!important;
+    min-height:0!important;
+    margin:0!important;
+    padding:0!important;
+    border:0!important;
+    border-radius:0!important;
+    background:transparent!important;
+    box-shadow:none!important;
+    color:#fff!important;
+    display:flex!important;
+    align-items:center!important;
+    gap:16px!important;
+    z-index:2!important;
+    flex:1 1 auto!important;
+  }
+
+  .header .app-brand,
+  .header .app-brand *{
+    background:transparent!important;
+    box-shadow:none!important;
+    border:none!important;
+  }
+
+  .header-logo-mark,
+  .header-store-card-cup{
+    display:inline-grid!important;
+    place-items:center!important;
+    width:58px!important;
+    height:58px!important;
+    min-width:58px!important;
+    margin:0 8px 0 0!important;
+    border-radius:0!important;
+    background:transparent!important;
+    color:#fff!important;
+    box-shadow:none!important;
+    font-size:42px!important;
+    line-height:1!important;
+    filter:drop-shadow(0 4px 8px rgba(0,0,0,.28));
+  }
+
+  #headerBrandTitle,
+  .header-store-card-name,
+  .app-brand h1#headerBrandTitle{
+    color:#fff!important;
+    font-family:"Segoe Script","Brush Script MT","Lucida Handwriting",cursive!important;
+    font-size:42px!important;
+    line-height:.96!important;
+    font-weight:700!important;
+    letter-spacing:.2px!important;
+    text-transform:none!important;
+    margin:0 0 8px!important;
+    padding:0!important;
+    text-shadow:0 4px 12px rgba(0,0,0,.28)!important;
+    white-space:nowrap!important;
+  }
+
+  #headerBrandSlogan,
+  #headerBrandSlogan.cafe-header-3line,
+  .header-store-card-sub,
+  .header-store-card-tiny{
+    display:block!important;
+    color:#a7f3d0!important;
+    font-family:Inter,Arial,sans-serif!important;
+    font-size:14px!important;
+    line-height:1.18!important;
+    font-weight:900!important;
+    letter-spacing:.75px!important;
+    text-transform:uppercase!important;
+    margin:0!important;
+    padding:0!important;
+    text-shadow:none!important;
+    white-space:nowrap!important;
+  }
+
+  #headerBrandSlogan .brand-industry-line{
+    display:block!important;
+    color:#a7f3d0!important;
+    font-size:15px!important;
+    line-height:1.15!important;
+    font-weight:900!important;
+    letter-spacing:.8px!important;
+    margin:0!important;
+    white-space:nowrap!important;
+  }
+
+  #headerBrandSlogan .brand-slogan-line,
+  .header-store-card-tiny{
+    display:none!important;
+  }
+
+  #headerPoweredBy,
+  .header-store-card-powered{
+    display:none!important;
+  }
+
+  .header > div:last-child{
+    position:relative!important;
+    z-index:3!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:flex-end!important;
+    flex:0 0 auto!important;
+    gap:18px!important;
+    margin:0!important;
+    color:#fff!important;
+    font-size:15px!important;
+    font-weight:800!important;
+    white-space:nowrap!important;
+  }
+
+  .header > div:last-child b,
+  .header > div:last-child span{
+    color:inherit!important;
+  }
+
+  #firebaseSyncStatus,
+  #currentStoreBadge{
+    display:inline-flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    height:48px!important;
+    min-width:152px!important;
+    padding:0 22px!important;
+    margin-left:0!important;
+    border-radius:999px!important;
+    background:rgba(255,255,255,.12)!important;
+    border:1px solid rgba(255,255,255,.24)!important;
+    color:#fff!important;
+    font-size:14px!important;
+    font-weight:900!important;
+    box-shadow:none!important;
+    backdrop-filter:blur(8px);
+  }
+
+  #firebaseSyncStatus{
+    background:linear-gradient(135deg,#10b981,#059669)!important;
+    border-color:rgba(255,255,255,.16)!important;
+  }
+
+  #mainLogoutBtn{
+    display:inline-flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    min-width:138px!important;
+    height:52px!important;
+    min-height:52px!important;
+    margin:0!important;
+    padding:0 22px!important;
+    border-radius:18px!important;
+    background:#fff!important;
+    color:#064e3b!important;
+    font-size:15px!important;
+    font-weight:900!important;
+    box-shadow:0 10px 24px rgba(0,0,0,.14)!important;
+  }
+
+  .menu{
+    position:fixed!important;
+    top:var(--gm-topbar-h)!important;
+    left:0!important;
+    bottom:0!important;
+    width:var(--tt-sidebar-w)!important;
+    height:calc(100vh - var(--gm-topbar-h))!important;
+    margin:0!important;
+    padding:26px 16px 22px!important;
+    border-radius:0!important;
+    border:0!important;
+    background:linear-gradient(180deg,#003b2e 0%,#064e3b 46%,#002f24 100%)!important;
+    box-shadow:10px 0 28px rgba(0,0,0,.13)!important;
+    display:flex!important;
+    flex-direction:column!important;
+    flex-wrap:nowrap!important;
+    gap:10px!important;
+    overflow-y:auto!important;
+    overflow-x:hidden!important;
+    z-index:10010!important;
+  }
+
+  .menu > .sidebar-brand-card,
+  .menu > .sidebar-brand,
+  .menu > .menu-brand-card,
+  .menu > .brand-card,
+  .menu > div:not(.menu-dropdown){
+    display:none!important;
+    visibility:hidden!important;
+    height:0!important;
+    min-height:0!important;
+    margin:0!important;
+    padding:0!important;
+    overflow:hidden!important;
+  }
+
+  .menu button,
+  .menu-dropdown .menu-btn{
+    width:100%!important;
+    min-height:48px!important;
+    height:48px!important;
+    padding:0 18px!important;
+    justify-content:flex-start!important;
+    text-align:left!important;
+    border-radius:14px!important;
+    background:rgba(255,255,255,.06)!important;
+    color:#fff!important;
+    box-shadow:none!important;
+    border:1px solid rgba(255,255,255,.08)!important;
+    font-size:15px!important;
+    font-weight:850!important;
+  }
+
+  .menu button.menu-active,
+  .menu button.active,
+  .menu button:hover,
+  .menu-dropdown .menu-btn:hover{
+    background:linear-gradient(135deg,#10b981,#059669)!important;
+    color:#fff!important;
+    transform:none!important;
+    box-shadow:0 12px 24px rgba(16,185,129,.22)!important;
+  }
+
+  .menu button.menu-active:after{
+    display:none!important;
+  }
+
+  .menu-dropdown{
+    width:100%!important;
+  }
+
+  .dropdown-content{
+    left:calc(var(--tt-sidebar-w) + 8px)!important;
+    right:auto!important;
+    top:auto!important;
+    bottom:22px!important;
+    min-width:250px!important;
+    z-index:10050!important;
+  }
+
+  .dashboard-title,
+  .page{
+    scroll-margin-top:calc(var(--gm-topbar-h) + 20px)!important;
+  }
+
+  .dashboard-title{
+    margin-top:0!important;
+  }
+}
+
+@media (min-width:901px) and (max-width:1320px){
+  :root{
+    --tt-sidebar-w:230px;
+    --gm-topbar-h:126px;
+  }
+  .header{padding:0 28px!important;gap:18px!important;}
+  #headerBrandTitle,.header-store-card-name,.app-brand h1#headerBrandTitle{font-size:34px!important;}
+  .header-logo-mark,.header-store-card-cup{width:50px!important;height:50px!important;min-width:50px!important;font-size:34px!important;}
+  #headerBrandSlogan .brand-industry-line,.header-store-card-sub{font-size:12.5px!important;}
+  .header > div:last-child{font-size:13px!important;gap:10px!important;}
+  #firebaseSyncStatus,#currentStoreBadge{height:42px!important;min-width:126px!important;padding:0 14px!important;font-size:12px!important;}
+  #mainLogoutBtn{height:46px!important;min-height:46px!important;min-width:112px!important;font-size:13px!important;}
+  .menu button,.menu-dropdown .menu-btn{font-size:13.5px!important;min-height:44px!important;height:44px!important;}
 }
 </style>
 
@@ -12606,6 +13284,345 @@ function buildImportReceiptPrintHtml(data){
 }
 </style>
 
+
+
+<style id="gm-chot-giao-dien-final-no-image">
+/* =========================================================
+   CHỐT GIAO DIỆN FINAL - Header full ngang + Sidebar nằm dưới
+   - Header phủ toàn bộ chiều ngang, cùng bề rộng với cả sidebar + nội dung
+   - Logo Tiệm của Thúy hòa trên nền xanh, không khung trắng
+   - Sidebar bắt đầu dưới header, không nhô lên
+   - Nội dung đẩy xuống, không bị header che khi cuộn
+   - Chỉ chỉnh giao diện desktop, không đụng logic bán hàng/kho/in/Firebase
+   ========================================================= */
+@media (min-width:901px){
+  :root{
+    --tt-sidebar-w:250px;
+    --gm-topbar-h:136px;
+    --gm-content-gap:26px;
+    --gm-scrollbar-safe:17px;
+  }
+
+  html,body{
+    overflow-x:hidden!important;
+  }
+
+  #appPage.app:not(.hidden),
+  #appPage:not(.hidden).app,
+  .app{
+    padding-top:calc(var(--gm-topbar-h) + var(--gm-content-gap))!important;
+    padding-left:calc(var(--tt-sidebar-w) + 28px)!important;
+    padding-right:var(--gm-scrollbar-safe)!important;
+    padding-bottom:28px!important;
+  }
+
+  #appPage::before{
+    display:none!important;
+  }
+
+  .header{
+    position:fixed!important;
+    top:0!important;
+    left:0!important;
+    right:var(--gm-scrollbar-safe)!important;
+    width:auto!important;
+    height:var(--gm-topbar-h)!important;
+    min-height:var(--gm-topbar-h)!important;
+    margin:0!important;
+    padding:0 44px!important;
+    border-radius:0!important;
+    border:0!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:space-between!important;
+    gap:28px!important;
+    background:
+      radial-gradient(circle at 22% 8%,rgba(16,185,129,.22),transparent 34%),
+      linear-gradient(90deg,#003b2e 0%,#006b4a 52%,#003b2e 100%)!important;
+    color:#fff!important;
+    box-shadow:0 12px 32px rgba(0,0,0,.20)!important;
+    z-index:10020!important;
+    overflow:hidden!important;
+  }
+
+  .header::after{
+    content:"";
+    position:absolute;
+    left:0;right:0;bottom:0;
+    height:1px;
+    background:rgba(255,255,255,.16);
+    pointer-events:none;
+  }
+
+  .header .app-brand{
+    position:relative!important;
+    left:auto!important;
+    top:auto!important;
+    transform:none!important;
+    width:auto!important;
+    min-width:0!important;
+    max-width:none!important;
+    min-height:0!important;
+    margin:0!important;
+    padding:0!important;
+    border:0!important;
+    border-radius:0!important;
+    background:transparent!important;
+    box-shadow:none!important;
+    color:#fff!important;
+    display:flex!important;
+    align-items:center!important;
+    gap:16px!important;
+    z-index:2!important;
+    flex:1 1 auto!important;
+  }
+
+  .header .app-brand,
+  .header .app-brand *{
+    background:transparent!important;
+    box-shadow:none!important;
+    border:none!important;
+  }
+
+  .header-logo-mark,
+  .header-store-card-cup{
+    display:inline-grid!important;
+    place-items:center!important;
+    width:58px!important;
+    height:58px!important;
+    min-width:58px!important;
+    margin:0 8px 0 0!important;
+    border-radius:0!important;
+    background:transparent!important;
+    color:#fff!important;
+    box-shadow:none!important;
+    font-size:42px!important;
+    line-height:1!important;
+    filter:drop-shadow(0 4px 8px rgba(0,0,0,.28));
+  }
+
+  #headerBrandTitle,
+  .header-store-card-name,
+  .app-brand h1#headerBrandTitle{
+    color:#fff!important;
+    font-family:"Segoe Script","Brush Script MT","Lucida Handwriting",cursive!important;
+    font-size:42px!important;
+    line-height:.96!important;
+    font-weight:700!important;
+    letter-spacing:.2px!important;
+    text-transform:none!important;
+    margin:0 0 8px!important;
+    padding:0!important;
+    text-shadow:0 4px 12px rgba(0,0,0,.28)!important;
+    white-space:nowrap!important;
+  }
+
+  #headerBrandSlogan,
+  #headerBrandSlogan.cafe-header-3line,
+  .header-store-card-sub,
+  .header-store-card-tiny{
+    display:block!important;
+    color:#a7f3d0!important;
+    font-family:Inter,Arial,sans-serif!important;
+    font-size:14px!important;
+    line-height:1.18!important;
+    font-weight:900!important;
+    letter-spacing:.75px!important;
+    text-transform:uppercase!important;
+    margin:0!important;
+    padding:0!important;
+    text-shadow:none!important;
+    white-space:nowrap!important;
+  }
+
+  #headerBrandSlogan .brand-industry-line{
+    display:block!important;
+    color:#a7f3d0!important;
+    font-size:15px!important;
+    line-height:1.15!important;
+    font-weight:900!important;
+    letter-spacing:.8px!important;
+    margin:0!important;
+    white-space:nowrap!important;
+  }
+
+  #headerBrandSlogan .brand-slogan-line,
+  .header-store-card-tiny{
+    display:none!important;
+  }
+
+  #headerPoweredBy,
+  .header-store-card-powered{
+    display:none!important;
+  }
+
+  .header > div:last-child{
+    position:relative!important;
+    z-index:3!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:flex-end!important;
+    flex:0 0 auto!important;
+    gap:18px!important;
+    margin:0!important;
+    color:#fff!important;
+    font-size:15px!important;
+    font-weight:800!important;
+    white-space:nowrap!important;
+  }
+
+  .header > div:last-child b,
+  .header > div:last-child span{
+    color:inherit!important;
+  }
+
+  #firebaseSyncStatus,
+  #currentStoreBadge{
+    display:inline-flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    height:48px!important;
+    min-width:152px!important;
+    padding:0 22px!important;
+    margin-left:0!important;
+    border-radius:999px!important;
+    background:rgba(255,255,255,.12)!important;
+    border:1px solid rgba(255,255,255,.24)!important;
+    color:#fff!important;
+    font-size:14px!important;
+    font-weight:900!important;
+    box-shadow:none!important;
+    backdrop-filter:blur(8px);
+  }
+
+  #firebaseSyncStatus{
+    background:linear-gradient(135deg,#10b981,#059669)!important;
+    border-color:rgba(255,255,255,.16)!important;
+  }
+
+  #mainLogoutBtn{
+    display:inline-flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    min-width:138px!important;
+    height:52px!important;
+    min-height:52px!important;
+    margin:0!important;
+    padding:0 22px!important;
+    border-radius:18px!important;
+    background:#fff!important;
+    color:#064e3b!important;
+    font-size:15px!important;
+    font-weight:900!important;
+    box-shadow:0 10px 24px rgba(0,0,0,.14)!important;
+  }
+
+  .menu{
+    position:fixed!important;
+    top:var(--gm-topbar-h)!important;
+    left:0!important;
+    bottom:0!important;
+    width:var(--tt-sidebar-w)!important;
+    height:calc(100vh - var(--gm-topbar-h))!important;
+    margin:0!important;
+    padding:26px 16px 22px!important;
+    border-radius:0!important;
+    border:0!important;
+    background:linear-gradient(180deg,#003b2e 0%,#064e3b 46%,#002f24 100%)!important;
+    box-shadow:10px 0 28px rgba(0,0,0,.13)!important;
+    display:flex!important;
+    flex-direction:column!important;
+    flex-wrap:nowrap!important;
+    gap:10px!important;
+    overflow-y:auto!important;
+    overflow-x:hidden!important;
+    z-index:10010!important;
+  }
+
+  .menu > .sidebar-brand-card,
+  .menu > .sidebar-brand,
+  .menu > .menu-brand-card,
+  .menu > .brand-card,
+  .menu > div:not(.menu-dropdown){
+    display:none!important;
+    visibility:hidden!important;
+    height:0!important;
+    min-height:0!important;
+    margin:0!important;
+    padding:0!important;
+    overflow:hidden!important;
+  }
+
+  .menu button,
+  .menu-dropdown .menu-btn{
+    width:100%!important;
+    min-height:48px!important;
+    height:48px!important;
+    padding:0 18px!important;
+    justify-content:flex-start!important;
+    text-align:left!important;
+    border-radius:14px!important;
+    background:rgba(255,255,255,.06)!important;
+    color:#fff!important;
+    box-shadow:none!important;
+    border:1px solid rgba(255,255,255,.08)!important;
+    font-size:15px!important;
+    font-weight:850!important;
+  }
+
+  .menu button.menu-active,
+  .menu button.active,
+  .menu button:hover,
+  .menu-dropdown .menu-btn:hover{
+    background:linear-gradient(135deg,#10b981,#059669)!important;
+    color:#fff!important;
+    transform:none!important;
+    box-shadow:0 12px 24px rgba(16,185,129,.22)!important;
+  }
+
+  .menu button.menu-active:after{
+    display:none!important;
+  }
+
+  .menu-dropdown{
+    width:100%!important;
+  }
+
+  .dropdown-content{
+    left:calc(var(--tt-sidebar-w) + 8px)!important;
+    right:auto!important;
+    top:auto!important;
+    bottom:22px!important;
+    min-width:250px!important;
+    z-index:10050!important;
+  }
+
+  .dashboard-title,
+  .page{
+    scroll-margin-top:calc(var(--gm-topbar-h) + 20px)!important;
+  }
+
+  .dashboard-title{
+    margin-top:0!important;
+  }
+}
+
+@media (min-width:901px) and (max-width:1320px){
+  :root{
+    --tt-sidebar-w:230px;
+    --gm-topbar-h:126px;
+  }
+  .header{padding:0 28px!important;gap:18px!important;}
+  #headerBrandTitle,.header-store-card-name,.app-brand h1#headerBrandTitle{font-size:34px!important;}
+  .header-logo-mark,.header-store-card-cup{width:50px!important;height:50px!important;min-width:50px!important;font-size:34px!important;}
+  #headerBrandSlogan .brand-industry-line,.header-store-card-sub{font-size:12.5px!important;}
+  .header > div:last-child{font-size:13px!important;gap:10px!important;}
+  #firebaseSyncStatus,#currentStoreBadge{height:42px!important;min-width:126px!important;padding:0 14px!important;font-size:12px!important;}
+  #mainLogoutBtn{height:46px!important;min-height:46px!important;min-width:112px!important;font-size:13px!important;}
+  .menu button,.menu-dropdown .menu-btn{font-size:13.5px!important;min-height:44px!important;height:44px!important;}
+}
+</style>
+
 </head>
 <body>
 <div class="print-actions"><button class="btn" onclick="window.print()">🖨️ In</button><button class="btn2" onclick="window.close()">Đóng</button></div>
@@ -13824,6 +14841,345 @@ function buildDailyImportReportPrintHtml(selected, list){
     padding-left:6px!important;
     padding-right:6px!important;
   }
+}
+</style>
+
+
+
+<style id="gm-chot-giao-dien-final-no-image">
+/* =========================================================
+   CHỐT GIAO DIỆN FINAL - Header full ngang + Sidebar nằm dưới
+   - Header phủ toàn bộ chiều ngang, cùng bề rộng với cả sidebar + nội dung
+   - Logo Tiệm của Thúy hòa trên nền xanh, không khung trắng
+   - Sidebar bắt đầu dưới header, không nhô lên
+   - Nội dung đẩy xuống, không bị header che khi cuộn
+   - Chỉ chỉnh giao diện desktop, không đụng logic bán hàng/kho/in/Firebase
+   ========================================================= */
+@media (min-width:901px){
+  :root{
+    --tt-sidebar-w:250px;
+    --gm-topbar-h:136px;
+    --gm-content-gap:26px;
+    --gm-scrollbar-safe:17px;
+  }
+
+  html,body{
+    overflow-x:hidden!important;
+  }
+
+  #appPage.app:not(.hidden),
+  #appPage:not(.hidden).app,
+  .app{
+    padding-top:calc(var(--gm-topbar-h) + var(--gm-content-gap))!important;
+    padding-left:calc(var(--tt-sidebar-w) + 28px)!important;
+    padding-right:var(--gm-scrollbar-safe)!important;
+    padding-bottom:28px!important;
+  }
+
+  #appPage::before{
+    display:none!important;
+  }
+
+  .header{
+    position:fixed!important;
+    top:0!important;
+    left:0!important;
+    right:var(--gm-scrollbar-safe)!important;
+    width:auto!important;
+    height:var(--gm-topbar-h)!important;
+    min-height:var(--gm-topbar-h)!important;
+    margin:0!important;
+    padding:0 44px!important;
+    border-radius:0!important;
+    border:0!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:space-between!important;
+    gap:28px!important;
+    background:
+      radial-gradient(circle at 22% 8%,rgba(16,185,129,.22),transparent 34%),
+      linear-gradient(90deg,#003b2e 0%,#006b4a 52%,#003b2e 100%)!important;
+    color:#fff!important;
+    box-shadow:0 12px 32px rgba(0,0,0,.20)!important;
+    z-index:10020!important;
+    overflow:hidden!important;
+  }
+
+  .header::after{
+    content:"";
+    position:absolute;
+    left:0;right:0;bottom:0;
+    height:1px;
+    background:rgba(255,255,255,.16);
+    pointer-events:none;
+  }
+
+  .header .app-brand{
+    position:relative!important;
+    left:auto!important;
+    top:auto!important;
+    transform:none!important;
+    width:auto!important;
+    min-width:0!important;
+    max-width:none!important;
+    min-height:0!important;
+    margin:0!important;
+    padding:0!important;
+    border:0!important;
+    border-radius:0!important;
+    background:transparent!important;
+    box-shadow:none!important;
+    color:#fff!important;
+    display:flex!important;
+    align-items:center!important;
+    gap:16px!important;
+    z-index:2!important;
+    flex:1 1 auto!important;
+  }
+
+  .header .app-brand,
+  .header .app-brand *{
+    background:transparent!important;
+    box-shadow:none!important;
+    border:none!important;
+  }
+
+  .header-logo-mark,
+  .header-store-card-cup{
+    display:inline-grid!important;
+    place-items:center!important;
+    width:58px!important;
+    height:58px!important;
+    min-width:58px!important;
+    margin:0 8px 0 0!important;
+    border-radius:0!important;
+    background:transparent!important;
+    color:#fff!important;
+    box-shadow:none!important;
+    font-size:42px!important;
+    line-height:1!important;
+    filter:drop-shadow(0 4px 8px rgba(0,0,0,.28));
+  }
+
+  #headerBrandTitle,
+  .header-store-card-name,
+  .app-brand h1#headerBrandTitle{
+    color:#fff!important;
+    font-family:"Segoe Script","Brush Script MT","Lucida Handwriting",cursive!important;
+    font-size:42px!important;
+    line-height:.96!important;
+    font-weight:700!important;
+    letter-spacing:.2px!important;
+    text-transform:none!important;
+    margin:0 0 8px!important;
+    padding:0!important;
+    text-shadow:0 4px 12px rgba(0,0,0,.28)!important;
+    white-space:nowrap!important;
+  }
+
+  #headerBrandSlogan,
+  #headerBrandSlogan.cafe-header-3line,
+  .header-store-card-sub,
+  .header-store-card-tiny{
+    display:block!important;
+    color:#a7f3d0!important;
+    font-family:Inter,Arial,sans-serif!important;
+    font-size:14px!important;
+    line-height:1.18!important;
+    font-weight:900!important;
+    letter-spacing:.75px!important;
+    text-transform:uppercase!important;
+    margin:0!important;
+    padding:0!important;
+    text-shadow:none!important;
+    white-space:nowrap!important;
+  }
+
+  #headerBrandSlogan .brand-industry-line{
+    display:block!important;
+    color:#a7f3d0!important;
+    font-size:15px!important;
+    line-height:1.15!important;
+    font-weight:900!important;
+    letter-spacing:.8px!important;
+    margin:0!important;
+    white-space:nowrap!important;
+  }
+
+  #headerBrandSlogan .brand-slogan-line,
+  .header-store-card-tiny{
+    display:none!important;
+  }
+
+  #headerPoweredBy,
+  .header-store-card-powered{
+    display:none!important;
+  }
+
+  .header > div:last-child{
+    position:relative!important;
+    z-index:3!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:flex-end!important;
+    flex:0 0 auto!important;
+    gap:18px!important;
+    margin:0!important;
+    color:#fff!important;
+    font-size:15px!important;
+    font-weight:800!important;
+    white-space:nowrap!important;
+  }
+
+  .header > div:last-child b,
+  .header > div:last-child span{
+    color:inherit!important;
+  }
+
+  #firebaseSyncStatus,
+  #currentStoreBadge{
+    display:inline-flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    height:48px!important;
+    min-width:152px!important;
+    padding:0 22px!important;
+    margin-left:0!important;
+    border-radius:999px!important;
+    background:rgba(255,255,255,.12)!important;
+    border:1px solid rgba(255,255,255,.24)!important;
+    color:#fff!important;
+    font-size:14px!important;
+    font-weight:900!important;
+    box-shadow:none!important;
+    backdrop-filter:blur(8px);
+  }
+
+  #firebaseSyncStatus{
+    background:linear-gradient(135deg,#10b981,#059669)!important;
+    border-color:rgba(255,255,255,.16)!important;
+  }
+
+  #mainLogoutBtn{
+    display:inline-flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    min-width:138px!important;
+    height:52px!important;
+    min-height:52px!important;
+    margin:0!important;
+    padding:0 22px!important;
+    border-radius:18px!important;
+    background:#fff!important;
+    color:#064e3b!important;
+    font-size:15px!important;
+    font-weight:900!important;
+    box-shadow:0 10px 24px rgba(0,0,0,.14)!important;
+  }
+
+  .menu{
+    position:fixed!important;
+    top:var(--gm-topbar-h)!important;
+    left:0!important;
+    bottom:0!important;
+    width:var(--tt-sidebar-w)!important;
+    height:calc(100vh - var(--gm-topbar-h))!important;
+    margin:0!important;
+    padding:26px 16px 22px!important;
+    border-radius:0!important;
+    border:0!important;
+    background:linear-gradient(180deg,#003b2e 0%,#064e3b 46%,#002f24 100%)!important;
+    box-shadow:10px 0 28px rgba(0,0,0,.13)!important;
+    display:flex!important;
+    flex-direction:column!important;
+    flex-wrap:nowrap!important;
+    gap:10px!important;
+    overflow-y:auto!important;
+    overflow-x:hidden!important;
+    z-index:10010!important;
+  }
+
+  .menu > .sidebar-brand-card,
+  .menu > .sidebar-brand,
+  .menu > .menu-brand-card,
+  .menu > .brand-card,
+  .menu > div:not(.menu-dropdown){
+    display:none!important;
+    visibility:hidden!important;
+    height:0!important;
+    min-height:0!important;
+    margin:0!important;
+    padding:0!important;
+    overflow:hidden!important;
+  }
+
+  .menu button,
+  .menu-dropdown .menu-btn{
+    width:100%!important;
+    min-height:48px!important;
+    height:48px!important;
+    padding:0 18px!important;
+    justify-content:flex-start!important;
+    text-align:left!important;
+    border-radius:14px!important;
+    background:rgba(255,255,255,.06)!important;
+    color:#fff!important;
+    box-shadow:none!important;
+    border:1px solid rgba(255,255,255,.08)!important;
+    font-size:15px!important;
+    font-weight:850!important;
+  }
+
+  .menu button.menu-active,
+  .menu button.active,
+  .menu button:hover,
+  .menu-dropdown .menu-btn:hover{
+    background:linear-gradient(135deg,#10b981,#059669)!important;
+    color:#fff!important;
+    transform:none!important;
+    box-shadow:0 12px 24px rgba(16,185,129,.22)!important;
+  }
+
+  .menu button.menu-active:after{
+    display:none!important;
+  }
+
+  .menu-dropdown{
+    width:100%!important;
+  }
+
+  .dropdown-content{
+    left:calc(var(--tt-sidebar-w) + 8px)!important;
+    right:auto!important;
+    top:auto!important;
+    bottom:22px!important;
+    min-width:250px!important;
+    z-index:10050!important;
+  }
+
+  .dashboard-title,
+  .page{
+    scroll-margin-top:calc(var(--gm-topbar-h) + 20px)!important;
+  }
+
+  .dashboard-title{
+    margin-top:0!important;
+  }
+}
+
+@media (min-width:901px) and (max-width:1320px){
+  :root{
+    --tt-sidebar-w:230px;
+    --gm-topbar-h:126px;
+  }
+  .header{padding:0 28px!important;gap:18px!important;}
+  #headerBrandTitle,.header-store-card-name,.app-brand h1#headerBrandTitle{font-size:34px!important;}
+  .header-logo-mark,.header-store-card-cup{width:50px!important;height:50px!important;min-width:50px!important;font-size:34px!important;}
+  #headerBrandSlogan .brand-industry-line,.header-store-card-sub{font-size:12.5px!important;}
+  .header > div:last-child{font-size:13px!important;gap:10px!important;}
+  #firebaseSyncStatus,#currentStoreBadge{height:42px!important;min-width:126px!important;padding:0 14px!important;font-size:12px!important;}
+  #mainLogoutBtn{height:46px!important;min-height:46px!important;min-width:112px!important;font-size:13px!important;}
+  .menu button,.menu-dropdown .menu-btn{font-size:13.5px!important;min-height:44px!important;height:44px!important;}
 }
 </style>
 
