@@ -3222,6 +3222,63 @@ body > .print-actions{display:none!important;}
   .order-history-modal-list{max-height:62vh;padding:10px;}
 }
 
+
+/* =========================================================
+   V2.6 - NHẬT KÝ ORDER PRO
+   STT sự kiện, màu loại sự kiện, nút in và lưu theo hóa đơn
+   ========================================================= */
+.order-history-modal-actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+}
+.order-history-modal-print{
+  background:linear-gradient(135deg,#0ea5e9,#059669)!important;
+  color:#fff!important;
+  min-width:118px;
+  border-radius:999px!important;
+  box-shadow:none!important;
+}
+.order-history-event-no{
+  display:inline-block;
+  min-width:52px;
+  padding:3px 8px;
+  margin-right:8px;
+  border-radius:999px;
+  background:#e0f2fe;
+  color:#075985;
+  font-weight:900;
+  font-size:12px;
+  text-align:center;
+}
+.order-history-modal-item.type-add{border-left-color:#a855f7;background:#faf5ff;}
+.order-history-modal-item.type-move{border-left-color:#eab308;background:#fefce8;}
+.order-history-modal-item.type-payment{border-left-color:#059669;background:#ecfdf5;}
+.order-history-modal-item.type-cancel{border-left-color:#ef4444;background:#fff1f2;}
+@media print{
+  body.order-history-printing *{visibility:hidden!important;}
+  body.order-history-printing #orderHistoryModal,
+  body.order-history-printing #orderHistoryModal *{visibility:visible!important;}
+  body.order-history-printing #orderHistoryModal{
+    position:absolute!important;
+    inset:0!important;
+    background:#fff!important;
+    padding:0!important;
+    display:block!important;
+  }
+  body.order-history-printing .order-history-modal-card{
+    width:100%!important;
+    max-height:none!important;
+    box-shadow:none!important;
+    border:none!important;
+    border-radius:0!important;
+  }
+  body.order-history-printing .order-history-modal-actions,
+  body.order-history-printing .order-history-modal-close,
+  body.order-history-printing .order-history-modal-print{display:none!important;}
+  body.order-history-printing .order-history-modal-list{max-height:none!important;overflow:visible!important;}
+}
 </style>
 
 <style id="greenmarket-pos-logo-final-v2">
@@ -6797,7 +6854,10 @@ body:has(#loginPage:not(.hidden)) .menu{
               <h3 id="orderHistoryModalTitle">📜 Lịch sử Order</h3>
               <p id="orderHistoryModalSub">Theo dõi mở bàn, gọi món, gọi thêm, chuyển bàn và gộp bàn.</p>
             </div>
-            <button type="button" class="order-history-modal-close" onclick="closeOrderHistoryModal()">Đóng</button>
+            <div class="order-history-modal-actions">
+              <button type="button" class="order-history-modal-print" onclick="printOrderHistoryModal()">🖨 In lịch sử</button>
+              <button type="button" class="order-history-modal-close" onclick="closeOrderHistoryModal()">Đóng</button>
+            </div>
           </div>
           <div id="orderHistoryModalSummary" class="order-history-summary"></div>
           <div id="orderHistoryModalList" class="order-history-modal-list"></div>
@@ -11172,12 +11232,14 @@ function getOrderHistoryTypeLabel(type){
   if(type === 'merge') return {icon:'🔗', label:'Gộp bàn', cls:'merge'};
   if(type === 'source') return {icon:'📌', label:'Lịch sử nguồn', cls:'source'};
   if(type === 'move') return {icon:'↔️', label:'Chuyển bàn', cls:'move'};
+  if(type === 'payment') return {icon:'💳', label:'Thanh toán', cls:'payment'};
+  if(type === 'cancel') return {icon:'🔴', label:'Hủy món', cls:'cancel'};
   return {icon:'🧾', label:'Order', cls:'order'};
 }
 
 function getOrderHistoryStats(history){
   const arr = Array.isArray(history) ? history : [];
-  const counts = {open:0, first:0, add:0, merge:0, move:0};
+  const counts = {open:0, first:0, add:0, merge:0, move:0, payment:0, cancel:0};
   arr.forEach(h => {
     const t = String(h.type || '').toLowerCase();
     if(counts[t] !== undefined) counts[t]++;
@@ -11199,20 +11261,28 @@ function getOrderHistoryStats(history){
 function buildOrderHistoryHtml(history){
   const arr = Array.isArray(history) ? [...history] : [];
   if(!arr.length) return '<div class="order-history-empty">Chưa có lịch sử order cho bàn này.</div>';
-  arr.sort((a,b) => {
+
+  const chronological = [...arr].sort((a,b) => {
     const da = getHistoryDateObject(a.time);
     const db = getHistoryDateObject(b.time);
-    return (db ? db.getTime() : 0) - (da ? da.getTime() : 0);
+    return (da ? da.getTime() : 0) - (db ? db.getTime() : 0);
   });
-  return arr.map(h => {
+  const eventNoMap = new Map();
+  chronological.forEach((h, idx) => eventNoMap.set(h, idx + 1));
+
+  const newestFirst = [...chronological].reverse();
+
+  return newestFirst.map(h => {
     const info = getOrderHistoryTypeLabel(h.type);
+    const eventNo = eventNoMap.get(h) || 0;
     const items = normalizeHistoryItems(h.items);
     const lines = items.map(it => `• ${Number(it.qty)} ${escapeHTML(it.name)}${it.price ? ' — ' + money(it.total || it.qty * it.price) : ''}`).join('<br>');
     const staff = h.staff ? `Nhân viên: ${escapeHTML(h.staff)}` : '';
     const fromTo = h.fromTable || h.toTable ? `${h.fromTable ? 'Từ: ' + escapeHTML(h.fromTable) : ''}${h.fromTable && h.toTable ? ' • ' : ''}${h.toTable ? 'Đến: ' + escapeHTML(h.toTable) : ''}` : '';
-    const meta = [staff, fromTo].filter(Boolean).join(' • ');
+    const paid = h.total ? `Tổng thanh toán: ${money(Number(h.total || 0))}${h.paymentMethod ? ' • ' + escapeHTML(h.paymentMethod) : ''}` : '';
+    const meta = [staff, fromTo, paid].filter(Boolean).join(' • ');
     return `<div class="order-history-modal-item type-${escapeHTML(info.cls)}">
-      <div class="order-history-modal-time">🕒 ${escapeHTML(formatHistoryTime(h.time))}</div>
+      <div class="order-history-modal-time"><span class="order-history-event-no">#${String(eventNo).padStart(3,'0')}</span>🕒 ${escapeHTML(formatHistoryTime(h.time))}</div>
       <div class="order-history-modal-title">${info.icon} ${escapeHTML(h.title || info.label)}</div>
       ${meta ? `<div class="order-history-modal-meta">${meta}</div>` : ''}
       ${lines ? `<div class="order-history-modal-lines">${lines}</div>` : ''}
@@ -11255,8 +11325,10 @@ function openOrderHistoryModal(){
     <div><span>Đang có</span>${qty} món</div>
     <div><span>Tạm tính</span>${money(total)}</div>
     <div><span>Đã phục vụ</span>${escapeHTML(stats.served)}</div>
+    <div><span>Gọi món lần đầu</span>${stats.first} lần</div>
     <div><span>Gọi thêm</span>${stats.add} lần</div>
     <div><span>Gộp bàn</span>${stats.merge} lần</div>
+    <div><span>Chuyển bàn</span>${stats.move} lần</div>
   `;
   if(list) list.innerHTML = buildOrderHistoryHtml(history);
   if(modal) modal.classList.remove('hidden');
@@ -11266,6 +11338,19 @@ function closeOrderHistoryModal(ev){
   if(ev && ev.target && ev.currentTarget && ev.target !== ev.currentTarget) return;
   const modal = document.getElementById('orderHistoryModal');
   if(modal) modal.classList.add('hidden');
+}
+
+function printOrderHistoryModal(){
+  const modal = document.getElementById('orderHistoryModal');
+  if(!modal || modal.classList.contains('hidden')){
+    alert('Mở lịch sử Order trước khi in.');
+    return;
+  }
+  document.body.classList.add('order-history-printing');
+  setTimeout(() => {
+    window.print();
+    setTimeout(() => document.body.classList.remove('order-history-printing'), 400);
+  }, 80);
 }
 
 function toggleOrderHistory(){
@@ -12159,6 +12244,17 @@ function checkout(){
   const serviceLabel = getCurrentServiceLabel();
   const deliveryInfo = serviceMode === 'delivery' ? getDeliveryInfo() : null;
 
+  if(serviceMode === 'dinein' && currentTableId){
+    addTableOrderHistory('payment', `Thanh toán ${serviceLabel}`, [], {
+      total,
+      paymentMethod: getPaymentText()
+    });
+    loadTableOrders();
+  }
+  const orderHistorySnapshot = (serviceMode === 'dinein' && currentTableId && tableOrders[currentTableId] && Array.isArray(tableOrders[currentTableId].history))
+    ? tableOrders[currentTableId].history.map(h => ({...h, items: normalizeHistoryItems(h.items)}))
+    : [];
+
   bills.push({
     code: makeBillCode(),
     time: now(),
@@ -12171,7 +12267,7 @@ function checkout(){
     serviceLabel,
     tableId: currentTableId || '',
     deliveryInfo,
-    orderHistory: (serviceMode === 'dinein' && currentTableId && tableOrders[currentTableId] && Array.isArray(tableOrders[currentTableId].history)) ? tableOrders[currentTableId].history : [],
+    orderHistory: orderHistorySnapshot,
     items: [...cart],
     reprintCount: 0,
     reprintLogs: []
