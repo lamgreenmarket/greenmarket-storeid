@@ -20450,6 +20450,267 @@ setSyncStatus("ℹ️ Đăng nhập để đồng bộ Firebase", true);
 }
 </style>
 
+
+
+<style id="gm-header-logo-tren-thanh-v5-final">
+/* =========================================================
+   V5 - Đưa cụm logo Tiệm của Thúy lên thanh header
+   - Không đưa Doanh thu/Lợi nhuận/24 món lên header
+   - Ẩn logo lặp trong sidebar
+   - Tăng khoảng đệm trên để Tổng quan vận hành không bị che
+   ========================================================= */
+@media (min-width:901px){
+  :root{
+    --tt-sidebar-w:238px;
+    --gm-topbar-h:112px;
+  }
+
+  .app{
+    padding-left:calc(var(--tt-sidebar-w) + 26px)!important;
+    padding-top:calc(var(--gm-topbar-h) + 34px)!important;
+    padding-right:22px!important;
+    padding-bottom:34px!important;
+  }
+
+  #appPage::before{
+    content:""!important;
+    position:fixed!important;
+    left:0!important;
+    right:0!important;
+    top:0!important;
+    height:calc(var(--gm-topbar-h) + 30px)!important;
+    z-index:9998!important;
+    background:linear-gradient(180deg,#eafff7 0%,rgba(234,255,247,.98) 72%,rgba(234,255,247,.72) 100%)!important;
+    pointer-events:none!important;
+  }
+
+  .header{
+    position:fixed!important;
+    top:0!important;
+    left:0!important;
+    right:0!important;
+    height:var(--gm-topbar-h)!important;
+    min-height:var(--gm-topbar-h)!important;
+    padding:0 34px!important;
+    margin:0!important;
+    border-radius:0 0 22px 22px!important;
+    border:0!important;
+    background:linear-gradient(90deg,#003b2e 0%,#006b4a 52%,#003b2e 100%)!important;
+    box-shadow:0 14px 34px rgba(0,0,0,.25)!important;
+    color:#fff!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:space-between!important;
+    gap:26px!important;
+    z-index:10020!important;
+    backdrop-filter:none!important;
+    overflow:hidden!important;
+  }
+
+  /* CỤM LOGO + TÊN TIỆM TRÊN HEADER */
+  .header .app-brand{
+    display:grid!important;
+    visibility:visible!important;
+    opacity:1!important;
+    width:auto!important;
+    height:auto!important;
+    overflow:visible!important;
+    grid-template-columns:58px auto!important;
+    grid-template-areas:
+      "icon title"
+      "icon industry"
+      "icon powered"!important;
+    column-gap:14px!important;
+    row-gap:2px!important;
+    align-items:center!important;
+    justify-content:start!important;
+    flex:0 0 auto!important;
+    min-width:360px!important;
+    max-width:520px!important;
+    margin:0!important;
+    padding:0!important;
+    text-align:left!important;
+    color:#fff!important;
+  }
+
+  .header .header-logo-mark{
+    grid-area:icon!important;
+    width:56px!important;
+    height:56px!important;
+    min-width:56px!important;
+    border-radius:18px!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    margin:0!important;
+    background:linear-gradient(135deg,#10b981,#047857)!important;
+    color:#fff!important;
+    box-shadow:0 9px 20px rgba(0,0,0,.22)!important;
+    font-size:28px!important;
+    line-height:1!important;
+  }
+
+  .header .app-brand h1#headerBrandTitle{
+    grid-area:title!important;
+    display:flex!important;
+    align-items:center!important;
+    margin:0!important;
+    padding:0!important;
+    color:#fff!important;
+    font-size:25px!important;
+    line-height:1.05!important;
+    font-weight:900!important;
+    letter-spacing:.1px!important;
+    text-shadow:none!important;
+    white-space:nowrap!important;
+  }
+
+  .header .app-brand p,
+  .header .app-brand .cafe-header-3line,
+  #headerBrandSlogan{
+    display:contents!important;
+    margin:0!important;
+    padding:0!important;
+    background:transparent!important;
+    box-shadow:none!important;
+  }
+
+  #headerBrandSlogan .brand-industry-line{
+    grid-area:industry!important;
+    display:block!important;
+    color:#eafff7!important;
+    font-size:12.5px!important;
+    line-height:1.15!important;
+    font-weight:900!important;
+    letter-spacing:.45px!important;
+    text-transform:uppercase!important;
+    white-space:nowrap!important;
+  }
+
+  #headerBrandSlogan .brand-slogan-line{
+    display:none!important;
+  }
+
+  #headerPoweredBy{
+    grid-area:powered!important;
+    display:block!important;
+    color:rgba(255,255,255,.72)!important;
+    font-size:9px!important;
+    line-height:1.1!important;
+    margin:2px 0 0!important;
+    font-weight:700!important;
+  }
+
+  /* CỤM TÀI KHOẢN BÊN PHẢI */
+  .header > div:last-child{
+    display:flex!important;
+    align-items:center!important;
+    justify-content:flex-end!important;
+    gap:10px!important;
+    flex:1 1 auto!important;
+    width:auto!important;
+    min-width:0!important;
+    max-width:none!important;
+    margin:0!important;
+    padding:0!important;
+    color:#fff!important;
+    font-size:14px!important;
+    line-height:1.25!important;
+    font-weight:800!important;
+    white-space:nowrap!important;
+    text-align:right!important;
+  }
+
+  .header > div:last-child b,
+  .header > div:last-child span:not(#firebaseSyncStatus):not(#currentStoreBadge){
+    color:#fff!important;
+  }
+
+  #firebaseSyncStatus,
+  #currentStoreBadge{
+    display:inline-flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    height:36px!important;
+    padding:0 15px!important;
+    margin-left:4px!important;
+    border-radius:999px!important;
+    color:#fff!important;
+    background:rgba(255,255,255,.14)!important;
+    border:1px solid rgba(255,255,255,.20)!important;
+    font-size:12px!important;
+    font-weight:900!important;
+    box-shadow:none!important;
+    backdrop-filter:blur(6px)!important;
+  }
+
+  #firebaseSyncStatus{
+    background:linear-gradient(135deg,rgba(16,185,129,.86),rgba(5,150,105,.78))!important;
+  }
+
+  #mainLogoutBtn{
+    height:44px!important;
+    min-height:44px!important;
+    min-width:112px!important;
+    margin-left:6px!important;
+    padding:0 18px!important;
+    border-radius:16px!important;
+    background:#fff!important;
+    color:#003b2e!important;
+    font-weight:900!important;
+    box-shadow:0 9px 20px rgba(0,0,0,.20)!important;
+  }
+
+  /* Sidebar bắt đầu dưới header, không lặp logo trong sidebar */
+  .menu{
+    top:var(--gm-topbar-h)!important;
+    height:calc(100vh - var(--gm-topbar-h))!important;
+    min-height:0!important;
+    padding-top:16px!important;
+    z-index:10001!important;
+  }
+
+  .menu .sidebar-brand,
+  .menu .sidebar-brand-card{
+    display:none!important;
+  }
+
+  .page,
+  .dashboard-title,
+  #homePage{
+    scroll-margin-top:calc(var(--gm-topbar-h) + 28px)!important;
+  }
+
+  body.menu-scrolled .header{
+    box-shadow:0 14px 34px rgba(0,0,0,.25)!important;
+  }
+}
+
+@media (max-width:900px){
+  .header{
+    background:linear-gradient(90deg,#003b2e 0%,#006b4a 52%,#003b2e 100%)!important;
+    color:#fff!important;
+  }
+  .header .app-brand{display:block!important;visibility:visible!important;}
+  .header *{color:#fff!important;}
+  #mainLogoutBtn{background:#fff!important;color:#003b2e!important;}
+}
+</style>
+
+<script id="gm-header-logo-tren-thanh-v5-js">
+/* Xóa thẻ logo lặp ở sidebar nếu các bản cũ còn chèn bằng JS */
+document.addEventListener('DOMContentLoaded', function(){
+  function cleanSidebarBrand(){
+    try{
+      document.querySelectorAll('.menu .sidebar-brand, .menu .sidebar-brand-card').forEach(function(el){ el.remove(); });
+    }catch(e){}
+  }
+  cleanSidebarBrand();
+  setTimeout(cleanSidebarBrand, 300);
+  setTimeout(cleanSidebarBrand, 1000);
+});
+</script>
+
 </body>
 </html>
 <!-- GREEN MARKET CLEAN LOGS PATCH: bỏ chú thích nhật ký, tự động lọc, sửa ngày nhóm -->
