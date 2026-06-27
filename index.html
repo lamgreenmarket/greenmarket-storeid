@@ -6678,7 +6678,7 @@ body:has(#loginPage:not(.hidden)) .menu{
           <div><label>Giá bán</label><input id="sellPrice" readonly></div>
           <div><label>Tạm tính</label><input id="sellTotal" readonly></div>
         </div>
-        <button class="btn-blue full" onclick="addToCart()">➕ Thêm món vào hóa đơn khách</button>
+        <button id="addToCartBtn" class="btn-blue full" onclick="addToCart()">➕ Thêm món vào hóa đơn khách</button>
         <div class="table-wrap">
           <table>
             <thead><tr><th>STT</th><th>Món / đồ uống</th><th>SL</th><th>Đơn giá</th><th>Thành tiền</th><th>Thao tác</th></tr></thead>
@@ -10847,6 +10847,41 @@ function getCurrentServiceLabel(){
   return 'Mang đi';
 }
 
+
+function updateAddToCartButton(){
+  const btn = document.getElementById('addToCartBtn');
+  if(!btn) return;
+  if(saleMode === 'dinein'){
+    if(currentTableId){
+      const t = CAFE_TABLES.find(x => x.id === currentTableId);
+      const name = t ? t.name : currentTableId;
+      btn.innerHTML = `➕ Gọi thêm món vào ${escapeHTML(name)}`;
+      btn.title = `Thêm món mới vào hóa đơn đang phục vụ của ${name}`;
+      btn.disabled = false;
+      btn.style.opacity = '1';
+      btn.style.cursor = 'pointer';
+    }else{
+      btn.innerHTML = '🍽️ Chọn bàn trước khi gọi món';
+      btn.title = 'Vui lòng chọn Bàn 1, Bàn 2... trước khi thêm món tại quán';
+      btn.disabled = false;
+      btn.style.opacity = '.92';
+      btn.style.cursor = 'pointer';
+    }
+  }else if(saleMode === 'delivery'){
+    btn.innerHTML = '➕ Thêm món vào đơn giao hàng';
+    btn.title = 'Thêm món vào đơn giao hàng hiện tại';
+    btn.disabled = false;
+    btn.style.opacity = '1';
+    btn.style.cursor = 'pointer';
+  }else{
+    btn.innerHTML = '➕ Thêm món vào đơn mang đi';
+    btn.title = 'Thêm món vào đơn mang đi';
+    btn.disabled = false;
+    btn.style.opacity = '1';
+    btn.style.cursor = 'pointer';
+  }
+}
+
 function saveActiveTableOrder(){
   if(saleMode !== 'dinein' || !currentTableId) return;
   loadTableOrders();
@@ -10867,13 +10902,14 @@ function saveActiveTableOrder(){
 }
 
 function updateCurrentOrderStrip(){
+  updateAddToCartButton();
   const el = document.getElementById('currentOrderStrip');
   if(!el) return;
   const itemTotal = typeof getCartTotal === 'function' ? getCartTotal() : 0;
   const total = typeof getPayableTotal === 'function' ? getPayableTotal() : itemTotal;
   if(saleMode === 'dinein'){
     el.innerHTML = currentTableId
-      ? `🍽️ Đang phục vụ <b>${escapeHTML(getCurrentServiceLabel())}</b> • ${cart.length} dòng món • ${money(total)}`
+      ? `🍽️ Đang phục vụ <b>${escapeHTML(getCurrentServiceLabel())}</b> • ${cart.length} dòng món • ${money(total)} • Chọn món để gọi thêm`
       : '🍽️ Chọn một bàn để bắt đầu order tại quán';
   }else if(saleMode === 'delivery'){
     const d = getDeliveryInfo();
@@ -11283,6 +11319,11 @@ function ensureOpenShift(clearCartWhenFail = false){
 }
 
 function addToCart(){
+  if(saleMode === 'dinein' && !currentTableId){
+    alert('Bạn đang chọn Tại quán. Vui lòng chọn Bàn 1, Bàn 2... trước khi gọi món.');
+    return;
+  }
+
   const qty = Number(sellQty.value || 0);
   const ok = addProductToCartById(sellProduct.value, qty);
 
@@ -11295,6 +11336,7 @@ function addToCart(){
       input.focus();
     }
     renderPosProducts();
+    updateAddToCartButton();
   }
 }
 
@@ -11336,6 +11378,7 @@ function renderCart(){
   updatePaymentBox();
   saveActiveTableOrder();
   updateCurrentOrderStrip();
+  updateAddToCartButton();
 }
 
 function getCartTotal(){
