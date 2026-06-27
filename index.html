@@ -17878,7 +17878,7 @@ function renderBillHistory(visibleBills){
         <td><b>${escapeHTML(getBillCode(b, x.globalIndex))}</b></td>
         <td>${escapeHTML(b.time || '')}</td>
         <td>${escapeHTML(b.staff || '')}</td>
-        <td>${escapeHTML(b.paymentMethod || 'Tiền mặt')}${b.serviceLabel ? `<br><small class="muted">${escapeHTML(b.serviceLabel)}</small>` : ''}</td>
+        <td>${escapeHTML(b.paymentMethod || 'Tiền mặt')}${b.serviceLabel ? `<br><small class="muted">${escapeHTML(b.serviceLabel)}</small>` : ''}${Array.isArray(b.orderHistory) && b.orderHistory.length ? `<br><small class="muted">📜 Có lịch sử phục vụ</small>` : ''}</td>
         <td>${itemCount || (b.items || []).length}</td>
         <td>
           ${isCashierUser()
@@ -18327,6 +18327,7 @@ function viewBillDetail(index){
       </div>
       <div class="bill-action-group">
         ${showReturnInfo && isBillReturned(b) ? `<button class="btn-orange" onclick="printReturnReceiptByIndex(${index})">🖨️ In phiếu trả gần nhất</button>` : ''}
+        ${Array.isArray(b.orderHistory) && b.orderHistory.length ? `<button class="btn-blue" onclick="openSavedBillOrderHistory(${index})">📜 Lịch sử phục vụ</button>` : ''}
         ${(!fullReturned || cashierView) ? `<button class="btn-green" onclick="printBillReceiptByIndex(${index})">🖨️ In lại hóa đơn</button>` : ''}
         ${canDoReturn && !fullReturned ? `<button class="btn-red" onclick="returnSelectedBillItems(${index})">↩ Trả các món đã nhập SL</button><button class="btn-orange" onclick="returnFullBill(${index})">🔄 Trả toàn bộ phần còn lại</button>` : ''}
         <button class="btn-gray" onclick="closeBillDetail()">Đóng</button>
@@ -18350,6 +18351,49 @@ function viewBillDetail(index){
     <div class="bill-total-line"><span>${showReturnInfo ? 'Tổng còn tính doanh thu:' : 'Tổng hóa đơn:'}</span><span>${money(showReturnInfo ? b.total : (isBillReturned(b) ? getBillOriginalTotal(b) : b.total))}</span></div>
   `;
   box.scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+
+function openSavedBillOrderHistory(index){
+  const b = bills[index];
+  if(!b){
+    alert('Không tìm thấy hóa đơn.');
+    return;
+  }
+  if(!canAccessBill(b)){
+    alert('Bạn không có quyền xem lịch sử phục vụ của hóa đơn này.');
+    return;
+  }
+  const history = Array.isArray(b.orderHistory) ? b.orderHistory : [];
+  if(!history.length){
+    alert('Hóa đơn này chưa có lịch sử phục vụ được lưu. Các hóa đơn cũ trước bản V26 có thể chưa lưu phần này.');
+    return;
+  }
+
+  const billCode = getBillCode(b, index);
+  const qty = (b.items || []).reduce((s,c)=>s+Number(c.qty||0),0);
+  const stats = getOrderHistoryStats(history);
+  const title = document.getElementById('orderHistoryModalTitle');
+  const sub = document.getElementById('orderHistoryModalSub');
+  const summary = document.getElementById('orderHistoryModalSummary');
+  const list = document.getElementById('orderHistoryModalList');
+  const modal = document.getElementById('orderHistoryModal');
+
+  if(title) title.innerHTML = `📜 Lịch sử phục vụ - ${escapeHTML(billCode)}`;
+  if(sub) sub.innerHTML = `Lưu theo hóa đơn đã thanh toán để đối chiếu sau bán hàng.`;
+  if(summary) summary.innerHTML = `
+    <div><span>Hóa đơn</span>${escapeHTML(billCode)}</div>
+    <div><span>Phục vụ</span>${escapeHTML(b.serviceLabel || b.serviceMode || '')}</div>
+    <div><span>Tổng món</span>${qty} món</div>
+    <div><span>Tổng tiền</span>${money(b.total)}</div>
+    <div><span>Ngày thanh toán</span>${escapeHTML(b.time || '')}</div>
+    <div><span>Nhân viên</span>${escapeHTML(b.staff || '')}</div>
+    <div><span>Gọi món lần đầu</span>${stats.first} lần</div>
+    <div><span>Gọi thêm</span>${stats.add} lần</div>
+    <div><span>Gộp bàn</span>${stats.merge} lần</div>
+    <div><span>Chuyển bàn</span>${stats.move} lần</div>
+  `;
+  if(list) list.innerHTML = buildOrderHistoryHtml(history);
+  if(modal) modal.classList.remove('hidden');
 }
 
 function closeBillDetail(){
