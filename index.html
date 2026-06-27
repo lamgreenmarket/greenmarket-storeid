@@ -18353,6 +18353,34 @@ function viewBillDetail(index){
   box.scrollIntoView({behavior:'smooth', block:'nearest'});
 }
 
+function ensureSavedOrderHistoryModal(){
+  let modal = document.getElementById('savedOrderHistoryModal');
+  if(modal) return modal;
+
+  modal = document.createElement('div');
+  modal.id = 'savedOrderHistoryModal';
+  modal.className = 'order-history-modal hidden';
+  modal.setAttribute('onclick', 'closeSavedOrderHistoryModal(event)');
+  modal.innerHTML = `
+    <div class="order-history-modal-card" onclick="event.stopPropagation()">
+      <div class="order-history-modal-head">
+        <div>
+          <h3 id="savedOrderHistoryModalTitle">📜 Lịch sử phục vụ</h3>
+          <p id="savedOrderHistoryModalSub">Lưu theo hóa đơn đã thanh toán để đối chiếu sau bán hàng.</p>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button type="button" class="order-history-modal-print" onclick="printSavedOrderHistoryModal()">🖨 In lịch sử</button>
+          <button type="button" class="order-history-modal-close" onclick="closeSavedOrderHistoryModal()">Đóng</button>
+        </div>
+      </div>
+      <div id="savedOrderHistoryModalSummary" class="order-history-summary"></div>
+      <div id="savedOrderHistoryModalList" class="order-history-modal-list"></div>
+    </div>
+  `;
+  document.body.appendChild(modal);
+  return modal;
+}
+
 function openSavedBillOrderHistory(index){
   const b = bills[index];
   if(!b){
@@ -18369,14 +18397,14 @@ function openSavedBillOrderHistory(index){
     return;
   }
 
+  const modal = ensureSavedOrderHistoryModal();
   const billCode = getBillCode(b, index);
   const qty = (b.items || []).reduce((s,c)=>s+Number(c.qty||0),0);
   const stats = getOrderHistoryStats(history);
-  const title = document.getElementById('orderHistoryModalTitle');
-  const sub = document.getElementById('orderHistoryModalSub');
-  const summary = document.getElementById('orderHistoryModalSummary');
-  const list = document.getElementById('orderHistoryModalList');
-  const modal = document.getElementById('orderHistoryModal');
+  const title = document.getElementById('savedOrderHistoryModalTitle');
+  const sub = document.getElementById('savedOrderHistoryModalSub');
+  const summary = document.getElementById('savedOrderHistoryModalSummary');
+  const list = document.getElementById('savedOrderHistoryModalList');
 
   if(title) title.innerHTML = `📜 Lịch sử phục vụ - ${escapeHTML(billCode)}`;
   if(sub) sub.innerHTML = `Lưu theo hóa đơn đã thanh toán để đối chiếu sau bán hàng.`;
@@ -18393,7 +18421,26 @@ function openSavedBillOrderHistory(index){
     <div><span>Chuyển bàn</span>${stats.move} lần</div>
   `;
   if(list) list.innerHTML = buildOrderHistoryHtml(history);
-  if(modal) modal.classList.remove('hidden');
+  modal.classList.remove('hidden');
+}
+
+function closeSavedOrderHistoryModal(ev){
+  if(ev && ev.target && ev.currentTarget && ev.target !== ev.currentTarget) return;
+  const modal = document.getElementById('savedOrderHistoryModal');
+  if(modal) modal.classList.add('hidden');
+}
+
+function printSavedOrderHistoryModal(){
+  const modal = document.getElementById('savedOrderHistoryModal');
+  if(!modal || modal.classList.contains('hidden')){
+    alert('Mở lịch sử phục vụ trước khi in.');
+    return;
+  }
+  document.body.classList.add('order-history-printing');
+  setTimeout(() => {
+    window.print();
+    setTimeout(() => document.body.classList.remove('order-history-printing'), 400);
+  }, 80);
 }
 
 function closeBillDetail(){
