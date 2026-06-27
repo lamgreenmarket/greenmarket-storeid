@@ -3116,6 +3116,112 @@ body > .print-actions{display:none!important;}
   background:#eff6ff!important;
 }
 
+
+/* FIX V2.5C: Nhật ký Order chuyển sang popup, không chiếm màn hình bán hàng */
+.order-history-box{display:none!important;}
+.btn-order-history{
+  background:linear-gradient(135deg,#0ea5e9,#059669)!important;
+  color:#fff!important;
+  border-radius:999px!important;
+  padding:10px 16px!important;
+  box-shadow:0 8px 18px rgba(5,150,105,.20)!important;
+}
+.order-history-modal{
+  position:fixed;
+  inset:0;
+  z-index:30000;
+  background:rgba(0,0,0,.45);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:18px;
+}
+.order-history-modal.hidden{display:none!important;}
+.order-history-modal-card{
+  width:min(820px, calc(100vw - 28px));
+  max-height:86vh;
+  background:#fff;
+  border-radius:24px;
+  box-shadow:0 28px 80px rgba(0,0,0,.30);
+  overflow:hidden;
+  border:1px solid rgba(14,165,233,.18);
+}
+.order-history-modal-head{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+  padding:18px 20px;
+  background:linear-gradient(135deg,#064e3b,#059669);
+  color:#fff;
+}
+.order-history-modal-head h3{margin:0;font-size:21px;color:#fff!important;}
+.order-history-modal-head p{margin:5px 0 0;font-size:13px;opacity:.92;font-weight:700;}
+.order-history-modal-close{
+  background:#fff!important;
+  color:#064e3b!important;
+  min-width:86px;
+  border-radius:999px!important;
+  box-shadow:none!important;
+}
+.order-history-summary{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  gap:10px;
+  padding:14px 18px;
+  background:#f0fdf4;
+  border-bottom:1px solid #d7e7f5;
+}
+.order-history-summary div{
+  background:#fff;
+  border:1px solid #d7e7f5;
+  border-radius:14px;
+  padding:10px;
+  font-weight:900;
+  color:#064e3b;
+}
+.order-history-summary span{
+  display:block;
+  font-size:12px;
+  color:#64748b;
+  margin-bottom:4px;
+}
+.order-history-modal-list{
+  max-height:58vh;
+  overflow:auto;
+  padding:14px 18px 18px;
+  background:#f8fcff;
+}
+.order-history-modal-item{
+  background:#fff;
+  border:1px solid #e2e8f0;
+  border-left:6px solid #94a3b8;
+  border-radius:16px;
+  padding:12px 14px;
+  margin-bottom:10px;
+  box-shadow:0 8px 18px rgba(15,76,129,.06);
+}
+.order-history-modal-item.type-open{border-left-color:#22c55e;background:#f0fdf4;}
+.order-history-modal-item.type-first{border-left-color:#0ea5e9;background:#eff6ff;}
+.order-history-modal-item.type-add{border-left-color:#10b981;}
+.order-history-modal-item.type-merge{border-left-color:#f59e0b;background:#fff7ed;}
+.order-history-modal-item.type-source{border-left-color:#8b5cf6;background:#f5f3ff;}
+.order-history-modal-item.type-move{border-left-color:#ef4444;background:#fff1f2;}
+.order-history-modal-time{font-size:13px;color:#075985;font-weight:900;margin-bottom:4px;}
+.order-history-modal-title{font-size:16px;color:#064e3b;font-weight:900;}
+.order-history-modal-meta{font-size:12px;color:#64748b;font-weight:800;margin-top:2px;}
+.order-history-modal-lines{margin-top:8px;color:#334155;font-weight:800;line-height:1.55;}
+.order-history-empty{padding:18px;background:#fff;border:1px dashed #bae6fd;border-radius:16px;color:#64748b;font-weight:800;}
+@media(max-width:768px){
+  .order-history-modal{padding:10px;align-items:flex-end;}
+  .order-history-modal-card{max-height:92vh;border-radius:22px 22px 0 0;}
+  .order-history-modal-head{padding:14px;}
+  .order-history-modal-head h3{font-size:18px;}
+  .order-history-modal-close{min-width:70px!important;width:auto!important;}
+  .order-history-summary{grid-template-columns:1fr 1fr;padding:10px;}
+  .order-history-modal-list{max-height:62vh;padding:10px;}
+}
+
 </style>
 
 <style id="greenmarket-pos-logo-final-v2">
@@ -6673,6 +6779,7 @@ body:has(#loginPage:not(.hidden)) .menu{
         <div class="table-action-row">
           <button type="button" class="btn-move-table" onclick="moveCurrentTableOrder()">🔄 Chuyển bàn</button>
           <button type="button" class="btn-merge-table" onclick="mergeTableIntoCurrent()">🔗 Gộp bàn</button>
+          <button type="button" class="btn-order-history" onclick="openOrderHistoryModal()">📜 Lịch sử Order</button>
         </div>
       </div>
       <div id="currentOrderStrip" class="current-order-strip">🥤 Đang bán mang đi</div>
@@ -6682,6 +6789,19 @@ body:has(#loginPage:not(.hidden)) .menu{
           <button type="button" onclick="toggleOrderHistory()">Xem / ẩn lịch sử</button>
         </div>
         <div id="orderHistoryList" class="order-history-list"></div>
+      </div>
+      <div id="orderHistoryModal" class="order-history-modal hidden" onclick="closeOrderHistoryModal(event)">
+        <div class="order-history-modal-card" onclick="event.stopPropagation()">
+          <div class="order-history-modal-head">
+            <div>
+              <h3 id="orderHistoryModalTitle">📜 Lịch sử Order</h3>
+              <p id="orderHistoryModalSub">Theo dõi mở bàn, gọi món, gọi thêm, chuyển bàn và gộp bàn.</p>
+            </div>
+            <button type="button" class="order-history-modal-close" onclick="closeOrderHistoryModal()">Đóng</button>
+          </div>
+          <div id="orderHistoryModalSummary" class="order-history-summary"></div>
+          <div id="orderHistoryModalList" class="order-history-modal-list"></div>
+        </div>
       </div>
       <div id="deliveryPanel" class="delivery-panel hidden">
         <h4>🛵 Thông tin giao hàng</h4>
@@ -10977,6 +11097,16 @@ function addTableOrderHistory(type, title, items = [], extra = {}){
   loadTableOrders();
   const existing = tableOrders[currentTableId] || {tableId: currentTableId, tableName: getCurrentServiceLabel(), items: []};
   const history = Array.isArray(existing.history) ? existing.history : [];
+  const t = CAFE_TABLES.find(x => x.id === currentTableId);
+  if(!history.length && String(type || '').toLowerCase() !== 'open'){
+    history.push({
+      time: now(),
+      staff: current?.name || '',
+      type: 'open',
+      title: `Mở ${t ? t.name : currentTableId}`,
+      items: []
+    });
+  }
   history.push({
     time: now(),
     staff: current?.name || '',
@@ -10992,47 +11122,114 @@ function addTableOrderHistory(type, title, items = [], extra = {}){
 function formatHistoryTime(v){
   const d = new Date(v || Date.now());
   if(isNaN(d.getTime())) return '';
-  return d.toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit'});
+  return d.toLocaleString('vi-VN',{
+    day:'2-digit',month:'2-digit',year:'numeric',
+    hour:'2-digit',minute:'2-digit',second:'2-digit',
+    hour12:false
+  });
 }
 
-function renderOrderHistoryPanel(){
-  const box = document.getElementById('orderHistoryBox');
-  const list = document.getElementById('orderHistoryList');
-  if(!box || !list) return;
-  if(saleMode !== 'dinein' || !currentTableId){
-    box.classList.add('hidden');
-    list.innerHTML = '';
-    return;
+function getOrderHistoryTypeLabel(type){
+  type = String(type || '').toLowerCase();
+  if(type === 'open') return {icon:'🟢', label:'Mở bàn', cls:'open'};
+  if(type === 'first') return {icon:'🍽️', label:'Gọi món lần đầu', cls:'first'};
+  if(type === 'add') return {icon:'➕', label:'Gọi thêm', cls:'add'};
+  if(type === 'merge') return {icon:'🔗', label:'Gộp bàn', cls:'merge'};
+  if(type === 'source') return {icon:'📌', label:'Lịch sử nguồn', cls:'source'};
+  if(type === 'move') return {icon:'↔️', label:'Chuyển bàn', cls:'move'};
+  return {icon:'🧾', label:'Order', cls:'order'};
+}
+
+function getOrderHistoryStats(history){
+  const arr = Array.isArray(history) ? history : [];
+  const counts = {open:0, first:0, add:0, merge:0, move:0};
+  arr.forEach(h => {
+    const t = String(h.type || '').toLowerCase();
+    if(counts[t] !== undefined) counts[t]++;
+  });
+  const firstTime = arr.length ? arr.reduce((min,h) => {
+    const t = new Date(h.time || 0).getTime();
+    return t && t < min ? t : min;
+  }, Date.now()) : null;
+  let served = '—';
+  if(firstTime){
+    const diff = Math.max(0, Date.now() - firstTime);
+    const mins = Math.floor(diff / 60000);
+    served = mins >= 60 ? `${Math.floor(mins/60)} giờ ${mins%60} phút` : `${mins} phút`;
   }
-  const history = getCurrentTableHistory();
-  box.classList.remove('hidden');
-  if(!history.length){
-    list.innerHTML = '<div class="order-history-item muted">Chưa có lịch sử gọi món cho bàn này.</div>';
-    return;
-  }
-  const viewHistory = [...history].reverse();
-  list.innerHTML = viewHistory.map(h => {
-    const lines = normalizeHistoryItems(h.items).map(it => `+ ${Number(it.qty)} ${escapeHTML(it.name)}${it.price ? ' • ' + money(it.total || it.qty * it.price) : ''}`).join('<br>');
-    const staff = h.staff ? ` • ${escapeHTML(h.staff)}` : '';
-    const type = String(h.type || '').toLowerCase();
-    let icon = '🧾';
-    if(type === 'merge') icon = '🔗';
-    if(type === 'source') icon = '📌';
-    if(type === 'move') icon = '↔️';
-    if(type === 'add') icon = '➕';
-    return `<div class="order-history-item ${type ? 'order-history-' + escapeHTML(type) : ''}">
-      <span class="order-history-time">${escapeHTML(formatHistoryTime(h.time))}</span>
-      <span class="order-history-title">${icon} ${escapeHTML(h.title || h.type || 'Order')}</span>${staff}
-      ${lines ? `<div class="order-history-lines">${lines}</div>` : ''}
+  return {...counts, served};
+}
+
+function buildOrderHistoryHtml(history){
+  const arr = Array.isArray(history) ? [...history] : [];
+  if(!arr.length) return '<div class="order-history-empty">Chưa có lịch sử order cho bàn này.</div>';
+  arr.sort((a,b) => new Date(b.time || 0) - new Date(a.time || 0));
+  return arr.map(h => {
+    const info = getOrderHistoryTypeLabel(h.type);
+    const items = normalizeHistoryItems(h.items);
+    const lines = items.map(it => `• ${Number(it.qty)} ${escapeHTML(it.name)}${it.price ? ' — ' + money(it.total || it.qty * it.price) : ''}`).join('<br>');
+    const staff = h.staff ? `Nhân viên: ${escapeHTML(h.staff)}` : '';
+    const fromTo = h.fromTable || h.toTable ? `${h.fromTable ? 'Từ: ' + escapeHTML(h.fromTable) : ''}${h.fromTable && h.toTable ? ' • ' : ''}${h.toTable ? 'Đến: ' + escapeHTML(h.toTable) : ''}` : '';
+    const meta = [staff, fromTo].filter(Boolean).join(' • ');
+    return `<div class="order-history-modal-item type-${escapeHTML(info.cls)}">
+      <div class="order-history-modal-time">${escapeHTML(formatHistoryTime(h.time))}</div>
+      <div class="order-history-modal-title">${info.icon} ${escapeHTML(h.title || info.label)}</div>
+      ${meta ? `<div class="order-history-modal-meta">${meta}</div>` : ''}
+      ${lines ? `<div class="order-history-modal-lines">${lines}</div>` : ''}
     </div>`;
   }).join('');
 }
 
-function toggleOrderHistory(){
+function renderOrderHistoryPanel(){
+  // V2.5C: Không hiển thị nhật ký cố định trên màn hình bán hàng nữa.
+  // Nhật ký được mở bằng popup để không đẩy quầy thu ngân xuống dưới.
   const box = document.getElementById('orderHistoryBox');
-  if(!box) return;
-  box.classList.toggle('open');
-  renderOrderHistoryPanel();
+  const list = document.getElementById('orderHistoryList');
+  if(box) box.classList.add('hidden');
+  if(list) list.innerHTML = '';
+}
+
+function openOrderHistoryModal(){
+  if(saleMode !== 'dinein' || !currentTableId){
+    alert('Chọn bàn đang phục vụ trước khi xem lịch sử Order.');
+    return;
+  }
+  saveActiveTableOrder();
+  const tableName = getCurrentServiceLabel();
+  const history = getCurrentTableHistory();
+  const order = tableOrders[currentTableId] || {};
+  const items = Array.isArray(order.items) ? order.items : cart;
+  const qty = items.reduce((s,c)=>s+Number(c.qty||0),0);
+  const total = items.reduce((s,c)=>s+Number(c.total||0),0);
+  const stats = getOrderHistoryStats(history);
+
+  const title = document.getElementById('orderHistoryModalTitle');
+  const sub = document.getElementById('orderHistoryModalSub');
+  const summary = document.getElementById('orderHistoryModalSummary');
+  const list = document.getElementById('orderHistoryModalList');
+  const modal = document.getElementById('orderHistoryModal');
+  if(title) title.innerHTML = `📜 Lịch sử Order - ${escapeHTML(tableName)}`;
+  if(sub) sub.innerHTML = `Đầy đủ ngày giờ để đối chiếu khi gọi thêm, chuyển bàn hoặc gộp bàn.`;
+  if(summary) summary.innerHTML = `
+    <div><span>Bàn</span>${escapeHTML(tableName)}</div>
+    <div><span>Đang có</span>${qty} món</div>
+    <div><span>Tạm tính</span>${money(total)}</div>
+    <div><span>Đã phục vụ</span>${escapeHTML(stats.served)}</div>
+    <div><span>Gọi thêm</span>${stats.add} lần</div>
+    <div><span>Gộp bàn</span>${stats.merge} lần</div>
+  `;
+  if(list) list.innerHTML = buildOrderHistoryHtml(history);
+  if(modal) modal.classList.remove('hidden');
+}
+
+function closeOrderHistoryModal(ev){
+  if(ev && ev.target && ev.currentTarget && ev.target !== ev.currentTarget) return;
+  const modal = document.getElementById('orderHistoryModal');
+  if(modal) modal.classList.add('hidden');
+}
+
+function toggleOrderHistory(){
+  openOrderHistoryModal();
 }
 
 function saveActiveTableOrder(){
@@ -11343,7 +11540,7 @@ function mergeTableIntoCurrent(){
       ...h,
       type: 'source',
       sourceTable: sourceTable.name,
-      title: `Lịch sử nguồn ${sourceTable.name}: ${h.title || h.type || 'Order trước khi gộp'}`
+      title: `[${sourceTable.name}] ${h.title || h.type || 'Order trước khi gộp'}`
     }));
   }
   tableOrders[currentTableId] = {
@@ -11510,8 +11707,17 @@ function ensureOpenShift(clearCartWhenFail = false){
   }
 
   if(saleMode === 'dinein' && currentTableId){
+    loadTableOrders();
     const t = CAFE_TABLES.find(x => x.id === currentTableId);
-    addTableOrderHistory('add', `Gọi thêm tại ${t ? t.name : currentTableId}`, [{name:p.name, qty, price:p.sellPrice, total:qty * p.sellPrice}]);
+    const oldOrder = tableOrders[currentTableId];
+    const oldQty = oldOrder && Array.isArray(oldOrder.items) ? oldOrder.items.reduce((s,c)=>s+Number(c.qty||0),0) : 0;
+    const oldHistory = oldOrder && Array.isArray(oldOrder.history) ? oldOrder.history : [];
+    const isFirstOrder = oldQty <= 0 && oldHistory.filter(h => String(h.type||'').toLowerCase() !== 'open').length === 0;
+    addTableOrderHistory(
+      isFirstOrder ? 'first' : 'add',
+      `${isFirstOrder ? 'Gọi món lần đầu' : 'Gọi thêm'} tại ${t ? t.name : currentTableId}`,
+      [{name:p.name, qty, price:p.sellPrice, total:qty * p.sellPrice}]
+    );
   }
 
   renderCart();
@@ -23604,6 +23810,17 @@ body{
   else applyFinalBrand();
   var n=0;
   var t=setInterval(function(){applyFinalBrand(); if(++n>20) clearInterval(t);},300);
+})();
+</script>
+
+<script id="gm-order-history-modal-keyboard-v25c">
+(function(){
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape'){
+      var m = document.getElementById('orderHistoryModal');
+      if(m) m.classList.add('hidden');
+    }
+  });
 })();
 </script>
 
