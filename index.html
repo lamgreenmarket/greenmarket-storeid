@@ -17712,7 +17712,18 @@ function renderAll(){
     </tr>
   `).join('');
 
-  staffBody.innerHTML = users.map((u, i) => {
+  const staffAllowedUsers = ['admin','ketoan','thungan1','thungan2','admin@tiemcuathuy.com','ketoan@tiemcuathuy.com','thungan1@tiemcuathuy.com','thungan2@tiemcuathuy.com'];
+  const normalizeStaffUserText = (value) => String(value || '')
+    .replace(/admin_tiemcuathuy/g, 'admin')
+    .replace(/ketoan_tiemcuathuy/g, 'ketoan')
+    .replace(/thungan1_tiemcuathuy/g, 'thungan1')
+    .replace(/thungan2_tiemcuathuy/g, 'thungan2')
+    .replace(/@tiemcuathuy\.com/g, '');
+  const staffList = users
+    .filter(u => staffAllowedUsers.includes(String(u.user || '').toLowerCase()))
+    .map(u => ({...u, userDisplay: normalizeStaffUserText(u.user)}));
+
+  staffBody.innerHTML = staffList.map((u, i) => {
     const staffAction = normalizeRole(current?.role) === 'admin'
       ? `<button class="btn-red" onclick="delStaff('${u.user}')">Xóa nhân viên</button>`
       : '<span class="muted"><b>Chỉ xem</b></span>';
@@ -17720,7 +17731,7 @@ function renderAll(){
       <tr>
         <td>${i + 1}</td>
         <td>${u.name}</td>
-        <td>${u.user}</td>
+        <td>${u.userDisplay}</td>
         <td>${roleLabel(u.role)}</td>
         <td>${staffAction}</td>
       </tr>
@@ -21494,64 +21505,8 @@ setSyncStatus("ℹ️ Đăng nhập để đồng bộ Firebase", true);
 
 
 
-<script id="tiem-thuy-4q6-clean-old-employees">
-(function(){
-  const allowed = ['admin@tiemcuathuy.com','thungan1@tiemcuathuy.com','thungan2@tiemcuathuy.com','ketoan@tiemcuathuy.com'];
-  function cleanEmployeeTable(){
-    document.querySelectorAll('table').forEach(table=>{
-      const txt=(table.innerText||'').toLowerCase();
-      if(!txt.includes('tài khoản') || !txt.includes('quyền')) return;
-      table.querySelectorAll('tbody tr').forEach(row=>{
-        const r=(row.innerText||'').toLowerCase();
-        const ok=allowed.some(e=>r.includes(e));
-        const old=r.includes('admin lâm')||r.includes('hiếu thảo')||r.includes('greenmarket')||r.includes('lamnguyenthanh272')||r.includes('quanly')||r.includes('quản lý');
-        if(!ok && old) row.remove();
-      });
-      Array.from(table.querySelectorAll('tbody tr')).forEach((row,i)=>{
-        const td=row.querySelector('td'); if(td) td.textContent=String(i+1);
-      });
-    });
-  }
-  document.addEventListener('DOMContentLoaded',()=>{setTimeout(cleanEmployeeTable,400);setTimeout(cleanEmployeeTable,1200);});
-  document.addEventListener('click',()=>setTimeout(cleanEmployeeTable,300));
-})();
-</script>
 
 
-<script id="tiem-thuy-4q6a-normalize-employee-usernames">
-(function(){
-  function normalizeUsernameText(s){
-    return String(s || '')
-      .replace(/admin_tiemcuathuy/g, 'admin')
-      .replace(/ketoan_tiemcuathuy/g, 'ketoan')
-      .replace(/thungan1_tiemcuathuy/g, 'thungan1')
-      .replace(/thungan2_tiemcuathuy/g, 'thungan2')
-      .replace(/@tiemcuathuy\.com/g, '');
-  }
-
-  function normalizeEmployeeTable(){
-    document.querySelectorAll('table').forEach(table => {
-      const text = (table.innerText || '').toLowerCase();
-      if(!text.includes('tài khoản') || !text.includes('quyền')) return;
-
-      table.querySelectorAll('td').forEach(td => {
-        const before = td.textContent || '';
-        const after = normalizeUsernameText(before);
-        if(before !== after) td.textContent = after;
-      });
-    });
-  }
-
-  document.addEventListener('DOMContentLoaded', function(){
-    setTimeout(normalizeEmployeeTable, 300);
-    setTimeout(normalizeEmployeeTable, 1000);
-  });
-
-  document.addEventListener('click', function(){
-    setTimeout(normalizeEmployeeTable, 250);
-  });
-})();
-</script>
 
 
 <script id="tiem-thuy-4q7K-core-permission-refresh">
