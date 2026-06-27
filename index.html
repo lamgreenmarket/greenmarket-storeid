@@ -10901,22 +10901,27 @@ function saveActiveTableOrder(){
   updateCurrentOrderStrip();
 }
 
+function getCartItemQty(){
+  return Array.isArray(cart) ? cart.reduce((sum, item) => sum + Number(item.qty || item.quantity || 0), 0) : 0;
+}
+
 function updateCurrentOrderStrip(){
   updateAddToCartButton();
   const el = document.getElementById('currentOrderStrip');
   if(!el) return;
   const itemTotal = typeof getCartTotal === 'function' ? getCartTotal() : 0;
   const total = typeof getPayableTotal === 'function' ? getPayableTotal() : itemTotal;
+  const qtyTotal = getCartItemQty();
   if(saleMode === 'dinein'){
     el.innerHTML = currentTableId
-      ? `🍽️ Đang phục vụ <b>${escapeHTML(getCurrentServiceLabel())}</b> • ${cart.length} dòng món • ${money(total)} • Chọn món để gọi thêm`
+      ? `🍽️ Đang phục vụ <b>${escapeHTML(getCurrentServiceLabel())}</b> • ${qtyTotal} món • ${money(total)} • Chọn món để gọi thêm`
       : '🍽️ Chọn một bàn để bắt đầu order tại quán';
   }else if(saleMode === 'delivery'){
     const d = getDeliveryInfo();
     const info = d.customer ? ` cho <b>${escapeHTML(d.customer)}</b>${d.phone ? ' • ' + escapeHTML(d.phone) : ''}` : '';
-    el.innerHTML = `🛵 Đang tạo đơn giao hàng${info} • ${cart.length} dòng món • ${money(total)}`;
+    el.innerHTML = `🛵 Đang tạo đơn giao hàng${info} • ${qtyTotal} món • ${money(total)}`;
   }else{
-    el.innerHTML = `🥤 Đang bán mang đi • ${cart.length} dòng món • ${money(total)}`;
+    el.innerHTML = `🥤 Đang bán mang đi • ${qtyTotal} món • ${money(total)}`;
   }
 }
 
@@ -11371,7 +11376,7 @@ function renderCart(){
   }
 
   if(document.getElementById('posItemCount')){
-    posItemCount.textContent = cart.length + ' dòng';
+    posItemCount.textContent = getCartItemQty() + ' món';
   }
 
   renderPaymentQr();
