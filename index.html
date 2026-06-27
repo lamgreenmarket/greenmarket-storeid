@@ -419,6 +419,105 @@ tr:nth-child(even) td{
 }
 
 
+
+/* =========================================================
+   TIỆM CỦA THÚY V2 - SƠ ĐỒ BÀN / HÌNH THỨC BÁN
+   Chỉ thêm lớp giao diện quản lý bàn, không đụng kho/nhập/xuất.
+   ========================================================= */
+.sale-mode-panel{
+  background:linear-gradient(135deg,#ffffff,#f0fdf4);
+  border:1px solid rgba(14,165,233,.16);
+  border-radius:22px;
+  padding:16px;
+  margin:0 0 18px;
+  box-shadow:0 12px 30px rgba(15,76,129,.08);
+}
+.sale-mode-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:12px;
+  flex-wrap:wrap;
+  margin-bottom:12px;
+}
+.sale-mode-head h3{margin:0;color:#064e3b;font-size:20px}
+.sale-mode-head p{margin:5px 0 0;color:#64748b;font-weight:700;font-size:13px}
+.sale-mode-buttons{display:flex;gap:10px;flex-wrap:wrap}
+.sale-mode-buttons button{
+  border-radius:999px;
+  padding:10px 16px;
+  background:#eef7ff!important;
+  color:#075985!important;
+  box-shadow:none!important;
+  border:1px solid #d7e7f5!important;
+}
+.sale-mode-buttons button.active-sale-mode{
+  background:linear-gradient(135deg,#0ea5e9,#059669)!important;
+  color:#fff!important;
+  border-color:transparent!important;
+  box-shadow:0 10px 22px rgba(5,150,105,.20)!important;
+}
+.table-zone-title{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  margin:8px 0 10px;
+  color:#064e3b;
+  font-weight:900;
+}
+.table-legend{display:flex;gap:8px;flex-wrap:wrap;color:#64748b;font-size:13px;font-weight:800}
+.table-map{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+  gap:10px;
+}
+.table-btn{
+  min-height:76px;
+  border-radius:18px!important;
+  padding:10px!important;
+  text-align:left;
+  background:linear-gradient(135deg,#ecfdf5,#ffffff)!important;
+  color:#064e3b!important;
+  border:1px solid #bbf7d0!important;
+  box-shadow:0 8px 18px rgba(15,76,129,.07)!important;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  gap:4px;
+}
+.table-btn strong{font-size:18px;color:#064e3b}
+.table-btn small{font-size:12px;color:#64748b;font-weight:800}
+.table-btn.busy{
+  background:linear-gradient(135deg,#fff7ed,#fffbeb)!important;
+  border-color:#fed7aa!important;
+  color:#92400e!important;
+}
+.table-btn.busy strong{color:#92400e}
+.table-btn.active-table{
+  background:linear-gradient(135deg,#0ea5e9,#059669)!important;
+  color:#fff!important;
+  border-color:transparent!important;
+  box-shadow:0 14px 28px rgba(5,150,105,.26)!important;
+}
+.table-btn.active-table strong,.table-btn.active-table small{color:#fff!important}
+.current-order-strip{
+  margin-top:12px;
+  padding:10px 14px;
+  border-radius:16px;
+  background:#ecfeff;
+  color:#075985;
+  font-weight:900;
+  border:1px solid #bae6fd;
+}
+@media(max-width:768px){
+  .sale-mode-panel{padding:12px!important;border-radius:18px!important}
+  .sale-mode-buttons{display:grid!important;grid-template-columns:1fr!important}
+  .sale-mode-buttons button{width:100%!important}
+  .table-map{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important}
+  .table-btn{min-height:68px!important}
+}
+
 /* =========================================================
    POS BÁN HÀNG - GIAO DIỆN MÁY THU NGÂN
    ========================================================= */
@@ -5626,7 +5725,7 @@ body:has(#loginPage:not(.hidden)) .menu{
 <style id="tiem-thuy-4q5a-employees-polish">
 /* =========================================================
    4Q.5A - POLISH TRANG QUẢN LÝ NHÂN VIÊN
-   - Nhân viên: giữ đúng nút Xóa nhân viên, không vá chữ sau render
+   - Xóa món -> Xóa nhân viên
    - Mật khẩu Firebase Auth -> Mật khẩu đăng nhập
    - Hàng input thoáng hơn
    - Bảng nhân viên dễ đọc hơn
@@ -6401,6 +6500,29 @@ body:has(#loginPage:not(.hidden)) .menu{
      ========================================================= -->
   <section id="sell" class="page hidden card pos-page">
     <h2>☕ Quầy order & thanh toán</h2>
+
+    <div class="sale-mode-panel" id="saleModePanel">
+      <div class="sale-mode-head">
+        <div>
+          <h3>🪑 Sơ đồ bàn & hình thức bán</h3>
+          <p>Chọn Mang đi nếu khách mua đem đi, hoặc chọn bàn khi khách ngồi tại quán.</p>
+        </div>
+        <div class="sale-mode-buttons">
+          <button id="modeTakeawayBtn" type="button" class="active-sale-mode" onclick="setSaleMode('takeaway')">🥤 Mang đi</button>
+          <button id="modeDineinBtn" type="button" onclick="setSaleMode('dinein')">🍽️ Tại quán</button>
+          <button id="modeDeliveryBtn" type="button" onclick="setSaleMode('delivery')">🛵 Giao hàng</button>
+        </div>
+      </div>
+      <div id="tablePanel">
+        <div class="table-zone-title">
+          <span>☕ Khu phục vụ tại quán</span>
+          <div class="table-legend"><span>🟢 Trống</span><span>🟡 Đang phục vụ</span></div>
+        </div>
+        <div id="tableMap" class="table-map"></div>
+      </div>
+      <div id="currentOrderStrip" class="current-order-strip">🥤 Đang bán mang đi</div>
+    </div>
+
     <div class="pos-shell">
       <div class="pos-panel">
         <div class="pos-title"><h3>☕ Thực đơn tại quầy</h3><span class="muted">Menu Tiệm của Thúy</span></div>
@@ -6967,6 +7089,17 @@ let idleLogoutTimer = null;
 let sessionHeartbeatTimer = null;
 let sessionWatchStopper = null;
 let cart = [];
+
+// =========================================================
+// TIỆM CỦA THÚY V2 - QUẢN LÝ BÀN CƠ BẢN
+// Mục tiêu bước 1: chọn bàn, giữ hóa đơn theo bàn, thanh toán xong trả bàn về trống.
+// =========================================================
+const KTABLE_ORDERS = 'v2_table_orders_tiem_thuy';
+const CAFE_TABLES = Array.from({length: 12}, (_, i) => ({id:'T' + (i + 1), name:'Bàn ' + (i + 1)}));
+let saleMode = 'takeaway'; // takeaway | dinein | delivery
+let currentTableId = null;
+let tableOrders = {};
+
 let paymentMethod = 'cash';
 let stockFilter = 'all';
 let chart;
@@ -10488,6 +10621,134 @@ function renderStock(){
 /* =========================================================
    22. BÁN HÀNG / GIỎ HÀNG
    ========================================================= */
+
+function loadTableOrders(){
+  try{
+    tableOrders = JSON.parse(localStorage.getItem(KTABLE_ORDERS) || '{}') || {};
+  }catch(e){
+    tableOrders = {};
+  }
+  return tableOrders;
+}
+
+function saveTableOrders(){
+  try{
+    localStorage.setItem(KTABLE_ORDERS, JSON.stringify(tableOrders || {}));
+    if(typeof window.greenMarketScheduleFirebaseSave === 'function'){
+      window.greenMarketScheduleFirebaseSave('table_orders');
+    }
+  }catch(e){ console.warn('Không lưu được sơ đồ bàn', e); }
+}
+
+function getCurrentServiceLabel(){
+  if(saleMode === 'dinein' && currentTableId){
+    const t = CAFE_TABLES.find(x => x.id === currentTableId);
+    return t ? t.name : currentTableId;
+  }
+  if(saleMode === 'delivery') return 'Giao hàng';
+  return 'Mang đi';
+}
+
+function saveActiveTableOrder(){
+  if(saleMode !== 'dinein' || !currentTableId) return;
+  loadTableOrders();
+  if(cart && cart.length){
+    tableOrders[currentTableId] = {
+      tableId: currentTableId,
+      tableName: getCurrentServiceLabel(),
+      items: cart.map(x => ({...x})),
+      updatedAt: now(),
+      staff: current?.name || ''
+    };
+  }else{
+    delete tableOrders[currentTableId];
+  }
+  saveTableOrders();
+  renderTableMap();
+  updateCurrentOrderStrip();
+}
+
+function updateCurrentOrderStrip(){
+  const el = document.getElementById('currentOrderStrip');
+  if(!el) return;
+  const total = typeof getCartTotal === 'function' ? getCartTotal() : 0;
+  if(saleMode === 'dinein'){
+    el.innerHTML = currentTableId
+      ? `🍽️ Đang phục vụ <b>${escapeHTML(getCurrentServiceLabel())}</b> • ${cart.length} dòng món • ${money(total)}`
+      : '🍽️ Chọn một bàn để bắt đầu order tại quán';
+  }else if(saleMode === 'delivery'){
+    el.innerHTML = `🛵 Đang tạo đơn giao hàng • ${cart.length} dòng món • ${money(total)}`;
+  }else{
+    el.innerHTML = `🥤 Đang bán mang đi • ${cart.length} dòng món • ${money(total)}`;
+  }
+}
+
+function renderTableMap(){
+  const box = document.getElementById('tableMap');
+  if(!box) return;
+  loadTableOrders();
+  box.innerHTML = CAFE_TABLES.map(t => {
+    const order = tableOrders[t.id];
+    const busy = !!(order && Array.isArray(order.items) && order.items.length);
+    const total = busy ? order.items.reduce((s,c)=>s+Number(c.total||0),0) : 0;
+    const count = busy ? order.items.reduce((s,c)=>s+Number(c.qty||0),0) : 0;
+    const cls = ['table-btn', busy ? 'busy' : '', currentTableId === t.id ? 'active-table' : ''].join(' ');
+    return `<button type="button" class="${cls}" onclick="selectCafeTable('${t.id}')">
+      <strong>${busy ? '🟡' : '🟢'} ${escapeHTML(t.name)}</strong>
+      <small>${busy ? `${count} món • ${money(total)}` : 'Trống'}</small>
+    </button>`;
+  }).join('');
+}
+
+function setSaleMode(mode){
+  if(mode === saleMode && mode !== 'dinein') return;
+  saveActiveTableOrder();
+  saleMode = mode || 'takeaway';
+
+  document.getElementById('modeTakeawayBtn')?.classList.toggle('active-sale-mode', saleMode === 'takeaway');
+  document.getElementById('modeDineinBtn')?.classList.toggle('active-sale-mode', saleMode === 'dinein');
+  document.getElementById('modeDeliveryBtn')?.classList.toggle('active-sale-mode', saleMode === 'delivery');
+
+  const tablePanel = document.getElementById('tablePanel');
+  if(tablePanel) tablePanel.style.display = saleMode === 'dinein' ? 'block' : 'none';
+
+  if(saleMode !== 'dinein'){
+    currentTableId = null;
+    cart = [];
+    if(document.getElementById('customerCash')) customerCash.value = '';
+    renderCart();
+  }else{
+    renderTableMap();
+  }
+  updateCurrentOrderStrip();
+  focusPosSearch();
+}
+
+function selectCafeTable(tableId){
+  saveActiveTableOrder();
+  saleMode = 'dinein';
+  currentTableId = tableId;
+  loadTableOrders();
+  const order = tableOrders[tableId];
+  cart = order && Array.isArray(order.items) ? order.items.map(x => ({...x})) : [];
+  if(document.getElementById('customerCash')) customerCash.value = '';
+  document.getElementById('modeTakeawayBtn')?.classList.remove('active-sale-mode');
+  document.getElementById('modeDineinBtn')?.classList.add('active-sale-mode');
+  document.getElementById('modeDeliveryBtn')?.classList.remove('active-sale-mode');
+  const tablePanel = document.getElementById('tablePanel');
+  if(tablePanel) tablePanel.style.display = 'block';
+  renderCart();
+  renderTableMap();
+  updateCurrentOrderStrip();
+  focusPosSearch();
+}
+
+function initTableMode(){
+  loadTableOrders();
+  renderTableMap();
+  setSaleMode('takeaway');
+}
+
 function fillSell(){
   const p = products.find(x => x.id == sellProduct.value);
 
@@ -10677,6 +10938,8 @@ function renderCart(){
 
   renderPaymentQr();
   updatePaymentBox();
+  saveActiveTableOrder();
+  updateCurrentOrderStrip();
 }
 
 function getCartTotal(){
@@ -10900,8 +11163,14 @@ function quickAddProduct(id){
 
 function clearCart(){
   cart = [];
+  if(saleMode === 'dinein' && currentTableId){
+    loadTableOrders();
+    delete tableOrders[currentTableId];
+    saveTableOrders();
+  }
   if(document.getElementById('customerCash')) customerCash.value = '';
   renderCart();
+  renderTableMap();
   renderPosProducts();
   focusPosSearch();
 }
@@ -10985,12 +11254,18 @@ function checkout(){
     p.qty -= c.qty;
   });
 
+  const serviceLabel = getCurrentServiceLabel();
+  const serviceMode = saleMode;
+
   bills.push({
     code: makeBillCode(),
     time: now(),
     staff: current.name,
     total,
     paymentMethod: getPaymentText(),
+    serviceMode,
+    serviceLabel,
+    tableId: currentTableId || '',
     items: [...cart],
     reprintCount: 0,
     reprintLogs: []
@@ -11004,14 +11279,24 @@ function checkout(){
     paymentMethod: getPaymentText()
   });
 
-  addLog('Bán hàng', 'Thanh toán ' + money(total) + ' - ' + getPaymentText());
+  addLog('Bán hàng', 'Thanh toán ' + money(total) + ' - ' + getPaymentText() + ' - ' + serviceLabel);
   save();
   addToShift(total);
   printReceipt(total, getPaymentText());
+
+  if(serviceMode === 'dinein' && currentTableId){
+    loadTableOrders();
+    delete tableOrders[currentTableId];
+    saveTableOrders();
+  }
+
   cart = [];
+  currentTableId = null;
   if(document.getElementById('customerCash')) customerCash.value = '';
   setPaymentMethod('cash');
+  setSaleMode('takeaway');
   renderAll();
+  renderTableMap();
   setTimeout(() => document.getElementById('posSearch')?.focus(), 300);
 }
 
@@ -11029,7 +11314,7 @@ function initReceiptCopiesSetting(){
   el.value = saved === '2' ? '2' : '1';
 }
 
-document.addEventListener('DOMContentLoaded', () => { initReceiptCopiesSetting(); renderPaymentQr(); });
+document.addEventListener('DOMContentLoaded', () => { initReceiptCopiesSetting(); renderPaymentQr(); initTableMode(); });
 
 /* =========================================================
    23. IN HÓA ĐƠN
@@ -11055,6 +11340,7 @@ function printReceipt(total, paymentText = 'Tiền mặt'){
       <div>• Ngày: ${escapeHTML(printedAt.date)}</div>
       <div>• Giờ: ${escapeHTML(printedAt.time)}</div>
       <div>• Nhân viên: ${staffName}</div>
+      <div>• Phục vụ: ${escapeHTML(getCurrentServiceLabel())}</div>
       <div>• Thanh toán: ${escapeHTML(paymentText)}</div>
       <div class="receipt-line"></div>
 
@@ -17712,18 +17998,7 @@ function renderAll(){
     </tr>
   `).join('');
 
-  const staffAllowedUsers = ['admin','ketoan','thungan1','thungan2','admin@tiemcuathuy.com','ketoan@tiemcuathuy.com','thungan1@tiemcuathuy.com','thungan2@tiemcuathuy.com'];
-  const normalizeStaffUserText = (value) => String(value || '')
-    .replace(/admin_tiemcuathuy/g, 'admin')
-    .replace(/ketoan_tiemcuathuy/g, 'ketoan')
-    .replace(/thungan1_tiemcuathuy/g, 'thungan1')
-    .replace(/thungan2_tiemcuathuy/g, 'thungan2')
-    .replace(/@tiemcuathuy\.com/g, '');
-  const staffList = users
-    .filter(u => staffAllowedUsers.includes(String(u.user || '').toLowerCase()))
-    .map(u => ({...u, userDisplay: normalizeStaffUserText(u.user)}));
-
-  staffBody.innerHTML = staffList.map((u, i) => {
+  staffBody.innerHTML = users.map((u, i) => {
     const staffAction = normalizeRole(current?.role) === 'admin'
       ? `<button class="btn-red" onclick="delStaff('${u.user}')">Xóa nhân viên</button>`
       : '<span class="muted"><b>Chỉ xem</b></span>';
@@ -17731,7 +18006,7 @@ function renderAll(){
       <tr>
         <td>${i + 1}</td>
         <td>${u.name}</td>
-        <td>${u.userDisplay}</td>
+        <td>${u.user}</td>
         <td>${roleLabel(u.role)}</td>
         <td>${staffAction}</td>
       </tr>
@@ -18991,6 +19266,7 @@ const CLOUD_KEYS = [
   "v2_logs",
   "v2_import_history",
   "shifts",
+  "v2_table_orders_tiem_thuy",
   "green_market_backup_latest",
   "greenmarket_store_settings"
 ];
@@ -21503,10 +21779,106 @@ setSyncStatus("ℹ️ Đăng nhập để đồng bộ Firebase", true);
 </script>
 
 
+<script id="tiem-thuy-4q5a-employees-text-fix">
+(function(){
+  function fixEmployeePageText(){
+    // Sửa toàn bộ text node/nút "Xóa món" thành "Xóa nhân viên"
+    document.querySelectorAll('button').forEach(function(btn){
+      var t = (btn.textContent || '').trim();
+      if(t === 'Xóa món' || t === '🗑 Xóa món' || t.includes('Xóa món')){
+        btn.textContent = t.replace('Xóa món', 'Xóa nhân viên');
+        btn.title = 'Xóa nhân viên';
+      }
+      if(t === 'Thêm nhân viên'){
+        btn.textContent = '➕ Thêm nhân viên';
+      }
+    });
+
+    // Placeholder thân thiện hơn
+    document.querySelectorAll('input').forEach(function(inp){
+      var ph = inp.getAttribute('placeholder') || '';
+      if(ph === 'Tên nhân viên') inp.setAttribute('placeholder','Nhập tên nhân viên');
+      if(ph === 'Tên đăng nhập') inp.setAttribute('placeholder','Nhập tài khoản đăng nhập');
+      if(ph.includes('Firebase Auth')) inp.setAttribute('placeholder','Mật khẩu đăng nhập');
+    });
+
+    // Header bảng: Tên -> Tên nhân viên
+    document.querySelectorAll('th').forEach(function(th){
+      if((th.textContent || '').trim() === 'Tên') th.textContent = 'Tên nhân viên';
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){
+    setTimeout(fixEmployeePageText, 300);
+    setTimeout(fixEmployeePageText, 1000);
+  });
+
+  // Khi chuyển tab/trang trong app thì sửa lại text nếu module render lại
+  document.addEventListener('click', function(){
+    setTimeout(fixEmployeePageText, 250);
+  });
+})();
+</script>
 
 
+<script id="tiem-thuy-4q6-clean-old-employees">
+(function(){
+  const allowed = ['admin@tiemcuathuy.com','thungan1@tiemcuathuy.com','thungan2@tiemcuathuy.com','ketoan@tiemcuathuy.com'];
+  function cleanEmployeeTable(){
+    document.querySelectorAll('table').forEach(table=>{
+      const txt=(table.innerText||'').toLowerCase();
+      if(!txt.includes('tài khoản') || !txt.includes('quyền')) return;
+      table.querySelectorAll('tbody tr').forEach(row=>{
+        const r=(row.innerText||'').toLowerCase();
+        const ok=allowed.some(e=>r.includes(e));
+        const old=r.includes('admin lâm')||r.includes('hiếu thảo')||r.includes('greenmarket')||r.includes('lamnguyenthanh272')||r.includes('quanly')||r.includes('quản lý');
+        if(!ok && old) row.remove();
+      });
+      Array.from(table.querySelectorAll('tbody tr')).forEach((row,i)=>{
+        const td=row.querySelector('td'); if(td) td.textContent=String(i+1);
+      });
+    });
+  }
+  document.addEventListener('DOMContentLoaded',()=>{setTimeout(cleanEmployeeTable,400);setTimeout(cleanEmployeeTable,1200);});
+  document.addEventListener('click',()=>setTimeout(cleanEmployeeTable,300));
+})();
+</script>
 
 
+<script id="tiem-thuy-4q6a-normalize-employee-usernames">
+(function(){
+  function normalizeUsernameText(s){
+    return String(s || '')
+      .replace(/admin_tiemcuathuy/g, 'admin')
+      .replace(/ketoan_tiemcuathuy/g, 'ketoan')
+      .replace(/thungan1_tiemcuathuy/g, 'thungan1')
+      .replace(/thungan2_tiemcuathuy/g, 'thungan2')
+      .replace(/@tiemcuathuy\.com/g, '');
+  }
+
+  function normalizeEmployeeTable(){
+    document.querySelectorAll('table').forEach(table => {
+      const text = (table.innerText || '').toLowerCase();
+      if(!text.includes('tài khoản') || !text.includes('quyền')) return;
+
+      table.querySelectorAll('td').forEach(td => {
+        const before = td.textContent || '';
+        const after = normalizeUsernameText(before);
+        if(before !== after) td.textContent = after;
+      });
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){
+    setTimeout(normalizeEmployeeTable, 300);
+    setTimeout(normalizeEmployeeTable, 1000);
+  });
+
+  document.addEventListener('click', function(){
+    setTimeout(normalizeEmployeeTable, 250);
+  });
+})();
+</script>
 
 
 <script id="tiem-thuy-4q7K-core-permission-refresh">
@@ -21525,6 +21897,32 @@ setSyncStatus("ℹ️ Đăng nhập để đồng bộ Firebase", true);
 </script>
 
 
+<script id="tiem-thuy-4q7o-fix-stock-delete-label-only">
+(function(){
+  function fixStockDeleteLabel(){
+    try{
+      const stock = document.getElementById('stock');
+      if(!stock) return;
+      stock.querySelectorAll('button').forEach(function(btn){
+        const onclick = btn.getAttribute('onclick') || '';
+        if(onclick.includes('delProduct(')){
+          btn.textContent = 'Xóa món';
+        }
+      });
+    }catch(e){}
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){
+    fixStockDeleteLabel();
+    setTimeout(fixStockDeleteLabel, 300);
+    setTimeout(fixStockDeleteLabel, 1000);
+  });
+  document.addEventListener('click', function(){
+    setTimeout(fixStockDeleteLabel, 80);
+  });
+  setInterval(fixStockDeleteLabel, 700);
+})();
+</script>
 
 
 
