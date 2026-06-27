@@ -518,6 +518,50 @@ tr:nth-child(even) td{
   .table-btn{min-height:68px!important}
 }
 
+
+/* =========================================================
+   TIỆM CỦA THÚY V2 - THÔNG TIN GIAO HÀNG
+   ========================================================= */
+.delivery-panel{
+  margin-top:12px;
+  padding:14px;
+  border-radius:18px;
+  background:linear-gradient(135deg,#ffffff,#ecfeff);
+  border:1px solid #bae6fd;
+  box-shadow:0 10px 24px rgba(15,76,129,.08);
+}
+.delivery-panel h4{
+  margin:0 0 10px;
+  color:#064e3b;
+  font-size:17px;
+}
+.delivery-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr 1.4fr 1fr;
+  gap:10px;
+  align-items:end;
+}
+.delivery-grid-full{
+  grid-column:1/-1;
+}
+.delivery-panel label{
+  margin:6px 0 5px!important;
+  font-size:13px;
+}
+.delivery-panel textarea{
+  width:100%;
+  min-height:44px;
+  resize:vertical;
+  padding:12px;
+  border:1px solid #c9d6e6;
+  border-radius:14px;
+  font-size:15px;
+  font-family:Arial,sans-serif;
+}
+@media(max-width:900px){
+  .delivery-grid{grid-template-columns:1fr!important;}
+}
+
 /* =========================================================
    POS BÁN HÀNG - GIAO DIỆN MÁY THU NGÂN
    ========================================================= */
@@ -6521,6 +6565,37 @@ body:has(#loginPage:not(.hidden)) .menu{
         <div id="tableMap" class="table-map"></div>
       </div>
       <div id="currentOrderStrip" class="current-order-strip">🥤 Đang bán mang đi</div>
+      <div id="deliveryPanel" class="delivery-panel hidden">
+        <h4>🛵 Thông tin giao hàng</h4>
+        <div class="delivery-grid">
+          <div>
+            <label>Tên khách</label>
+            <input id="deliveryCustomer" placeholder="VD: Chị Lan, Anh Minh...">
+          </div>
+          <div>
+            <label>Số điện thoại</label>
+            <input id="deliveryPhone" placeholder="VD: 09...">
+          </div>
+          <div>
+            <label>Địa chỉ giao</label>
+            <input id="deliveryAddress" placeholder="Số nhà, đường, khu vực...">
+          </div>
+          <div>
+            <label>Đơn vị giao</label>
+            <select id="deliveryPartner">
+              <option>Nhân viên quán</option>
+              <option>Grab</option>
+              <option>ShopeeFood</option>
+              <option>BeFood</option>
+              <option>Khách tự đặt ship</option>
+            </select>
+          </div>
+          <div class="delivery-grid-full">
+            <label>Ghi chú giao hàng</label>
+            <textarea id="deliveryNote" placeholder="VD: ít đá, giao trước 8h, gọi khách trước khi tới..."></textarea>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="pos-shell">
@@ -10640,12 +10715,54 @@ function saveTableOrders(){
   }catch(e){ console.warn('Không lưu được sơ đồ bàn', e); }
 }
 
+function getDeliveryInfo(){
+  return {
+    customer: cleanText(document.getElementById('deliveryCustomer')?.value || ''),
+    phone: cleanText(document.getElementById('deliveryPhone')?.value || ''),
+    address: cleanText(document.getElementById('deliveryAddress')?.value || ''),
+    partner: cleanText(document.getElementById('deliveryPartner')?.value || 'Nhân viên quán'),
+    note: cleanText(document.getElementById('deliveryNote')?.value || '')
+  };
+}
+
+function getSavedDeliveryInfoHtml(info){
+  if(!info) return '';
+  const rows = [];
+  if(info.customer) rows.push('Khách giao: ' + escapeHTML(info.customer));
+  if(info.phone) rows.push('SĐT: ' + escapeHTML(info.phone));
+  if(info.address) rows.push('Địa chỉ: ' + escapeHTML(info.address));
+  if(info.partner) rows.push('Đơn vị giao: ' + escapeHTML(info.partner));
+  if(info.note) rows.push('Ghi chú: ' + escapeHTML(info.note));
+  return rows.length ? rows.join('<br>') : '';
+}
+
+function clearDeliveryInfo(){
+  ['deliveryCustomer','deliveryPhone','deliveryAddress','deliveryNote'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.value = '';
+  });
+  const partner = document.getElementById('deliveryPartner');
+  if(partner) partner.value = 'Nhân viên quán';
+}
+
+function validateDeliveryInfo(){
+  if(saleMode !== 'delivery') return true;
+  const d = getDeliveryInfo();
+  if(!d.customer){ alert('Nhập tên khách giao hàng'); document.getElementById('deliveryCustomer')?.focus(); return false; }
+  if(!d.phone){ alert('Nhập số điện thoại khách giao hàng'); document.getElementById('deliveryPhone')?.focus(); return false; }
+  if(!d.address){ alert('Nhập địa chỉ giao hàng'); document.getElementById('deliveryAddress')?.focus(); return false; }
+  return true;
+}
+
 function getCurrentServiceLabel(){
   if(saleMode === 'dinein' && currentTableId){
     const t = CAFE_TABLES.find(x => x.id === currentTableId);
     return t ? t.name : currentTableId;
   }
-  if(saleMode === 'delivery') return 'Giao hàng';
+  if(saleMode === 'delivery'){
+    const d = getDeliveryInfo();
+    return d.customer ? ('Giao hàng - ' + d.customer) : 'Giao hàng';
+  }
   return 'Mang đi';
 }
 
@@ -10677,7 +10794,9 @@ function updateCurrentOrderStrip(){
       ? `🍽️ Đang phục vụ <b>${escapeHTML(getCurrentServiceLabel())}</b> • ${cart.length} dòng món • ${money(total)}`
       : '🍽️ Chọn một bàn để bắt đầu order tại quán';
   }else if(saleMode === 'delivery'){
-    el.innerHTML = `🛵 Đang tạo đơn giao hàng • ${cart.length} dòng món • ${money(total)}`;
+    const d = getDeliveryInfo();
+    const info = d.customer ? ` cho <b>${escapeHTML(d.customer)}</b>${d.phone ? ' • ' + escapeHTML(d.phone) : ''}` : '';
+    el.innerHTML = `🛵 Đang tạo đơn giao hàng${info} • ${cart.length} dòng món • ${money(total)}`;
   }else{
     el.innerHTML = `🥤 Đang bán mang đi • ${cart.length} dòng món • ${money(total)}`;
   }
@@ -10711,6 +10830,9 @@ function setSaleMode(mode){
 
   const tablePanel = document.getElementById('tablePanel');
   if(tablePanel) tablePanel.style.display = saleMode === 'dinein' ? 'block' : 'none';
+  const deliveryPanel = document.getElementById('deliveryPanel');
+  if(deliveryPanel) deliveryPanel.classList.toggle('hidden', saleMode !== 'delivery');
+  if(saleMode !== 'delivery') clearDeliveryInfo();
 
   if(saleMode !== 'dinein'){
     currentTableId = null;
@@ -10737,6 +10859,9 @@ function selectCafeTable(tableId){
   document.getElementById('modeDeliveryBtn')?.classList.remove('active-sale-mode');
   const tablePanel = document.getElementById('tablePanel');
   if(tablePanel) tablePanel.style.display = 'block';
+  const deliveryPanel = document.getElementById('deliveryPanel');
+  if(deliveryPanel) deliveryPanel.classList.add('hidden');
+  clearDeliveryInfo();
   renderCart();
   renderTableMap();
   updateCurrentOrderStrip();
@@ -10747,6 +10872,11 @@ function initTableMode(){
   loadTableOrders();
   renderTableMap();
   setSaleMode('takeaway');
+  ['deliveryCustomer','deliveryPhone','deliveryAddress','deliveryPartner','deliveryNote'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.addEventListener('input', updateCurrentOrderStrip);
+    if(el && el.tagName === 'SELECT') el.addEventListener('change', updateCurrentOrderStrip);
+  });
 }
 
 function fillSell(){
@@ -11223,6 +11353,10 @@ function checkout(){
     return;
   }
 
+  if(!validateDeliveryInfo()){
+    return;
+  }
+
   for(const c of cart){
     const p = products.find(x => x.id === c.id);
 
@@ -11256,6 +11390,7 @@ function checkout(){
 
   const serviceLabel = getCurrentServiceLabel();
   const serviceMode = saleMode;
+  const deliveryInfo = serviceMode === 'delivery' ? getDeliveryInfo() : null;
 
   bills.push({
     code: makeBillCode(),
@@ -11266,6 +11401,7 @@ function checkout(){
     serviceMode,
     serviceLabel,
     tableId: currentTableId || '',
+    deliveryInfo,
     items: [...cart],
     reprintCount: 0,
     reprintLogs: []
@@ -11292,6 +11428,7 @@ function checkout(){
 
   cart = [];
   currentTableId = null;
+  clearDeliveryInfo();
   if(document.getElementById('customerCash')) customerCash.value = '';
   setPaymentMethod('cash');
   setSaleMode('takeaway');
@@ -11324,6 +11461,14 @@ function printReceipt(total, paymentText = 'Tiền mặt'){
   const printedAt = splitReceiptDateTime(now());
   const storeInfo = getStoreReceiptInfo();
   const copies = getReceiptCopiesSetting();
+  const deliveryInfo = saleMode === 'delivery' ? getDeliveryInfo() : null;
+  const deliveryReceiptHtml = deliveryInfo ? `
+      <div>• Khách: ${escapeHTML(deliveryInfo.customer)}</div>
+      <div>• SĐT: ${escapeHTML(deliveryInfo.phone)}</div>
+      <div>• Địa chỉ: ${escapeHTML(deliveryInfo.address)}</div>
+      <div>• Đơn vị giao: ${escapeHTML(deliveryInfo.partner)}</div>
+      ${deliveryInfo.note ? `<div>• Ghi chú: ${escapeHTML(deliveryInfo.note)}</div>` : ''}
+  ` : '';
   const itemHtml = cart.map(c => `
     <div class="receipt-item">• ${escapeHTML(c.name)}:</div>
     <div class="receipt-money">
@@ -11342,6 +11487,7 @@ function printReceipt(total, paymentText = 'Tiền mặt'){
       <div>• Nhân viên: ${staffName}</div>
       <div>• Phục vụ: ${escapeHTML(getCurrentServiceLabel())}</div>
       <div>• Thanh toán: ${escapeHTML(paymentText)}</div>
+      ${deliveryReceiptHtml}
       <div class="receipt-line"></div>
 
       ${itemHtml}
@@ -16862,7 +17008,7 @@ function renderBillHistory(visibleBills){
         <td><b>${escapeHTML(getBillCode(b, x.globalIndex))}</b></td>
         <td>${escapeHTML(b.time || '')}</td>
         <td>${escapeHTML(b.staff || '')}</td>
-        <td>${escapeHTML(b.paymentMethod || 'Tiền mặt')}</td>
+        <td>${escapeHTML(b.paymentMethod || 'Tiền mặt')}${b.serviceLabel ? `<br><small class="muted">${escapeHTML(b.serviceLabel)}</small>` : ''}</td>
         <td>${itemCount || (b.items || []).length}</td>
         <td>
           ${isCashierUser()
@@ -17302,6 +17448,8 @@ function viewBillDetail(index){
           Ngày: ${escapeHTML(b.time || '')}<br>
           Nhân viên: ${escapeHTML(b.staff || '')}<br>
           Thanh toán: ${escapeHTML(b.paymentMethod || 'Tiền mặt')}<br>
+          ${b.serviceLabel ? `Phục vụ: ${escapeHTML(b.serviceLabel)}<br>` : ''}
+          ${b.deliveryInfo ? getSavedDeliveryInfoHtml(b.deliveryInfo) + '<br>' : ''}
           Số lần in lại: ${getBillReprintCount(b)} lần<br>
           Trạng thái: ${showReturnInfo && isBillReturned(b) ? `<span class="bill-return-badge">${fullReturned ? 'ĐÃ TRẢ HẾT' : 'ĐÃ TRẢ MỘT PHẦN'}</span>` : '<b style="color:#16a34a">Đã bán</b>'}
           ${showReturnInfo && isBillReturned(b) ? `<br>Mã phiếu trả gần nhất: <b>${escapeHTML(b.returnCode || getReturnCode(b, index))}</b><br>Ngày trả gần nhất: ${escapeHTML(b.returnTime || '')}<br>Người xử lý: ${escapeHTML(b.returnBy || '')}<br>Lý do gần nhất: ${escapeHTML(b.returnReason || '')}` : ''}
@@ -17541,6 +17689,12 @@ if(admin){
     <div>• Người in lại: ${escapeHTML(current?.name || '')}</div>
     <div>• Nhân viên bán: ${escapeHTML(b.staff || '')}</div>
     <div>• Thanh toán: ${escapeHTML(b.paymentMethod || 'Tiền mặt')}</div>
+    ${b.serviceLabel ? `<div>• Phục vụ: ${escapeHTML(b.serviceLabel)}</div>` : ''}
+    ${b.deliveryInfo?.customer ? `<div>• Khách: ${escapeHTML(b.deliveryInfo.customer)}</div>` : ''}
+    ${b.deliveryInfo?.phone ? `<div>• SĐT: ${escapeHTML(b.deliveryInfo.phone)}</div>` : ''}
+    ${b.deliveryInfo?.address ? `<div>• Địa chỉ: ${escapeHTML(b.deliveryInfo.address)}</div>` : ''}
+    ${b.deliveryInfo?.partner ? `<div>• Đơn vị giao: ${escapeHTML(b.deliveryInfo.partner)}</div>` : ''}
+    ${b.deliveryInfo?.note ? `<div>• Ghi chú: ${escapeHTML(b.deliveryInfo.note)}</div>` : ''}
     ${(!isCashierUser() && isBillReturned(b)) ? `<div style="text-align:center;font-size:16px;font-weight:900;border:1px solid #000;margin:5px 0;padding:3px">HÓA ĐƠN ĐÃ TRẢ HÀNG</div><div>Mã phiếu trả: ${escapeHTML(b.returnCode || '')}</div>` : ''}
     ${reason ? `<div>• Lý do: ${escapeHTML(reason)}</div>` : ''}
     <div class="receipt-line"></div>
@@ -17998,15 +18152,34 @@ function renderAll(){
     </tr>
   `).join('');
 
-  staffBody.innerHTML = users.map((u, i) => {
+  const staffSource = (Array.isArray(users) ? users : []).map(u => ({...u}));
+  const normalizedStaff = staffSource.map(u => {
+    u.user = String(u.user || '')
+      .replace(/@tiemcuathuy\.com$/,'')
+      .replace(/admin_tiemcuathuy/g,'admin')
+      .replace(/ketoan_tiemcuathuy/g,'ketoan')
+      .replace(/thungan1_tiemcuathuy/g,'thungan1')
+      .replace(/thungan2_tiemcuathuy/g,'thungan2');
+    return u;
+  }).filter(u => {
+    const hay = (String(u.name||'') + ' ' + String(u.user||'') + ' ' + String(u.role||'')).toLowerCase();
+    const allowedUsers = ['admin','ketoan','thungan1','thungan2'];
+    if(allowedUsers.includes(String(u.user||'').toLowerCase())) return true;
+    if(hay.includes('admin') && !hay.includes('greenmarket')) return true;
+    if(hay.includes('kế toán') || hay.includes('ketoan')) return true;
+    if(hay.includes('thu ngân') || hay.includes('thungan')) return true;
+    return false;
+  });
+
+  staffBody.innerHTML = normalizedStaff.map((u, i) => {
     const staffAction = normalizeRole(current?.role) === 'admin'
       ? `<button class="btn-red" onclick="delStaff('${u.user}')">Xóa nhân viên</button>`
       : '<span class="muted"><b>Chỉ xem</b></span>';
     return `
       <tr>
         <td>${i + 1}</td>
-        <td>${u.name}</td>
-        <td>${u.user}</td>
+        <td>${escapeHTML(u.name)}</td>
+        <td>${escapeHTML(u.user)}</td>
         <td>${roleLabel(u.role)}</td>
         <td>${staffAction}</td>
       </tr>
@@ -21779,108 +21952,6 @@ setSyncStatus("ℹ️ Đăng nhập để đồng bộ Firebase", true);
 </script>
 
 
-<script id="tiem-thuy-4q5a-employees-text-fix">
-(function(){
-  function fixEmployeePageText(){
-    // Sửa toàn bộ text node/nút "Xóa món" thành "Xóa nhân viên"
-    document.querySelectorAll('button').forEach(function(btn){
-      var t = (btn.textContent || '').trim();
-      if(t === 'Xóa món' || t === '🗑 Xóa món' || t.includes('Xóa món')){
-        btn.textContent = t.replace('Xóa món', 'Xóa nhân viên');
-        btn.title = 'Xóa nhân viên';
-      }
-      if(t === 'Thêm nhân viên'){
-        btn.textContent = '➕ Thêm nhân viên';
-      }
-    });
-
-    // Placeholder thân thiện hơn
-    document.querySelectorAll('input').forEach(function(inp){
-      var ph = inp.getAttribute('placeholder') || '';
-      if(ph === 'Tên nhân viên') inp.setAttribute('placeholder','Nhập tên nhân viên');
-      if(ph === 'Tên đăng nhập') inp.setAttribute('placeholder','Nhập tài khoản đăng nhập');
-      if(ph.includes('Firebase Auth')) inp.setAttribute('placeholder','Mật khẩu đăng nhập');
-    });
-
-    // Header bảng: Tên -> Tên nhân viên
-    document.querySelectorAll('th').forEach(function(th){
-      if((th.textContent || '').trim() === 'Tên') th.textContent = 'Tên nhân viên';
-    });
-  }
-
-  document.addEventListener('DOMContentLoaded', function(){
-    setTimeout(fixEmployeePageText, 300);
-    setTimeout(fixEmployeePageText, 1000);
-  });
-
-  // Khi chuyển tab/trang trong app thì sửa lại text nếu module render lại
-  document.addEventListener('click', function(){
-    setTimeout(fixEmployeePageText, 250);
-  });
-})();
-</script>
-
-
-<script id="tiem-thuy-4q6-clean-old-employees">
-(function(){
-  const allowed = ['admin@tiemcuathuy.com','thungan1@tiemcuathuy.com','thungan2@tiemcuathuy.com','ketoan@tiemcuathuy.com'];
-  function cleanEmployeeTable(){
-    document.querySelectorAll('table').forEach(table=>{
-      const txt=(table.innerText||'').toLowerCase();
-      if(!txt.includes('tài khoản') || !txt.includes('quyền')) return;
-      table.querySelectorAll('tbody tr').forEach(row=>{
-        const r=(row.innerText||'').toLowerCase();
-        const ok=allowed.some(e=>r.includes(e));
-        const old=r.includes('admin lâm')||r.includes('hiếu thảo')||r.includes('greenmarket')||r.includes('lamnguyenthanh272')||r.includes('quanly')||r.includes('quản lý');
-        if(!ok && old) row.remove();
-      });
-      Array.from(table.querySelectorAll('tbody tr')).forEach((row,i)=>{
-        const td=row.querySelector('td'); if(td) td.textContent=String(i+1);
-      });
-    });
-  }
-  document.addEventListener('DOMContentLoaded',()=>{setTimeout(cleanEmployeeTable,400);setTimeout(cleanEmployeeTable,1200);});
-  document.addEventListener('click',()=>setTimeout(cleanEmployeeTable,300));
-})();
-</script>
-
-
-<script id="tiem-thuy-4q6a-normalize-employee-usernames">
-(function(){
-  function normalizeUsernameText(s){
-    return String(s || '')
-      .replace(/admin_tiemcuathuy/g, 'admin')
-      .replace(/ketoan_tiemcuathuy/g, 'ketoan')
-      .replace(/thungan1_tiemcuathuy/g, 'thungan1')
-      .replace(/thungan2_tiemcuathuy/g, 'thungan2')
-      .replace(/@tiemcuathuy\.com/g, '');
-  }
-
-  function normalizeEmployeeTable(){
-    document.querySelectorAll('table').forEach(table => {
-      const text = (table.innerText || '').toLowerCase();
-      if(!text.includes('tài khoản') || !text.includes('quyền')) return;
-
-      table.querySelectorAll('td').forEach(td => {
-        const before = td.textContent || '';
-        const after = normalizeUsernameText(before);
-        if(before !== after) td.textContent = after;
-      });
-    });
-  }
-
-  document.addEventListener('DOMContentLoaded', function(){
-    setTimeout(normalizeEmployeeTable, 300);
-    setTimeout(normalizeEmployeeTable, 1000);
-  });
-
-  document.addEventListener('click', function(){
-    setTimeout(normalizeEmployeeTable, 250);
-  });
-})();
-</script>
-
-
 <script id="tiem-thuy-4q7K-core-permission-refresh">
 (function(){
   function refreshPermission(){
@@ -21895,35 +21966,6 @@ setSyncStatus("ℹ️ Đăng nhập để đồng bộ Firebase", true);
   });
 })();
 </script>
-
-
-<script id="tiem-thuy-4q7o-fix-stock-delete-label-only">
-(function(){
-  function fixStockDeleteLabel(){
-    try{
-      const stock = document.getElementById('stock');
-      if(!stock) return;
-      stock.querySelectorAll('button').forEach(function(btn){
-        const onclick = btn.getAttribute('onclick') || '';
-        if(onclick.includes('delProduct(')){
-          btn.textContent = 'Xóa món';
-        }
-      });
-    }catch(e){}
-  }
-
-  document.addEventListener('DOMContentLoaded', function(){
-    fixStockDeleteLabel();
-    setTimeout(fixStockDeleteLabel, 300);
-    setTimeout(fixStockDeleteLabel, 1000);
-  });
-  document.addEventListener('click', function(){
-    setTimeout(fixStockDeleteLabel, 80);
-  });
-  setInterval(fixStockDeleteLabel, 700);
-})();
-</script>
-
 
 
 <style id="gm-header-giong-hinh-2-v4">
