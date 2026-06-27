@@ -511,6 +511,61 @@ tr:nth-child(even) td{
   border:1px solid #bae6fd;
 }
 
+.order-history-box{
+  margin-top:12px;
+  padding:12px 14px;
+  border-radius:18px;
+  background:linear-gradient(135deg,#ffffff,#f8fffb);
+  border:1px solid #bae6fd;
+  box-shadow:0 10px 24px rgba(15,76,129,.07);
+}
+.order-history-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  margin-bottom:8px;
+  color:#064e3b;
+  font-weight:900;
+}
+.order-history-head button{
+  min-height:34px!important;
+  padding:6px 10px!important;
+  border-radius:999px!important;
+  font-size:12px!important;
+  background:linear-gradient(135deg,#0ea5e9,#059669)!important;
+}
+.order-history-list{
+  display:none;
+  max-height:220px;
+  overflow:auto;
+  padding:8px;
+  border-radius:14px;
+  background:#f8fcff;
+  border:1px solid #d7e7f5;
+}
+.order-history-box.open .order-history-list{display:block;}
+.order-history-item{
+  padding:8px 10px;
+  margin-bottom:7px;
+  border-radius:12px;
+  background:white;
+  border:1px solid #e2e8f0;
+  color:#334155;
+  font-weight:700;
+  line-height:1.45;
+}
+.order-history-item:last-child{margin-bottom:0;}
+.order-history-time{color:#075985;font-weight:900;margin-right:6px;}
+.order-history-title{color:#064e3b;font-weight:900;}
+.order-history-lines{margin-top:4px;color:#475569;font-size:13px;}
+@media(max-width:768px){
+  .order-history-head{flex-direction:column;align-items:flex-start;}
+  .order-history-head button{width:100%!important;}
+  .order-history-list{max-height:260px;}
+}
+
+
 .table-action-row{
   display:flex;
   gap:10px;
@@ -6610,6 +6665,13 @@ body:has(#loginPage:not(.hidden)) .menu{
         </div>
       </div>
       <div id="currentOrderStrip" class="current-order-strip">🥤 Đang bán mang đi</div>
+      <div id="orderHistoryBox" class="order-history-box hidden">
+        <div class="order-history-head">
+          <span>📜 Nhật ký order theo bàn</span>
+          <button type="button" onclick="toggleOrderHistory()">Xem / ẩn lịch sử</button>
+        </div>
+        <div id="orderHistoryList" class="order-history-list"></div>
+      </div>
       <div id="deliveryPanel" class="delivery-panel hidden">
         <h4>🛵 Thông tin giao hàng</h4>
         <div class="delivery-grid">
@@ -10882,16 +10944,92 @@ function updateAddToCartButton(){
   }
 }
 
+
+function normalizeHistoryItems(items){
+  return (Array.isArray(items) ? items : []).map(x => ({
+    name: String(x.name || ''),
+    qty: Number(x.qty || x.quantity || 0),
+    price: Number(x.price || 0),
+    total: Number(x.total || (Number(x.qty || 0) * Number(x.price || 0)))
+  })).filter(x => x.name && x.qty > 0);
+}
+
+function getCurrentTableHistory(){
+  if(!currentTableId) return [];
+  loadTableOrders();
+  const order = tableOrders[currentTableId];
+  return order && Array.isArray(order.history) ? order.history : [];
+}
+
+function addTableOrderHistory(type, title, items = [], extra = {}){
+  if(saleMode !== 'dinein' || !currentTableId) return;
+  loadTableOrders();
+  const existing = tableOrders[currentTableId] || {tableId: currentTableId, tableName: getCurrentServiceLabel(), items: []};
+  const history = Array.isArray(existing.history) ? existing.history : [];
+  history.push({
+    time: now(),
+    staff: current?.name || '',
+    type: String(type || 'order'),
+    title: String(title || ''),
+    items: normalizeHistoryItems(items),
+    ...extra
+  });
+  tableOrders[currentTableId] = {...existing, history};
+  saveTableOrders();
+}
+
+function formatHistoryTime(v){
+  const d = new Date(v || Date.now());
+  if(isNaN(d.getTime())) return '';
+  return d.toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit'});
+}
+
+function renderOrderHistoryPanel(){
+  const box = document.getElementById('orderHistoryBox');
+  const list = document.getElementById('orderHistoryList');
+  if(!box || !list) return;
+  if(saleMode !== 'dinein' || !currentTableId){
+    box.classList.add('hidden');
+    list.innerHTML = '';
+    return;
+  }
+  const history = getCurrentTableHistory();
+  box.classList.remove('hidden');
+  if(!history.length){
+    list.innerHTML = '<div class="order-history-item muted">Chưa có lịch sử gọi món cho bàn này.</div>';
+    return;
+  }
+  list.innerHTML = history.map(h => {
+    const lines = normalizeHistoryItems(h.items).map(it => `+ ${Number(it.qty)} ${escapeHTML(it.name)}${it.price ? ' • ' + money(it.total || it.qty * it.price) : ''}`).join('<br>');
+    const staff = h.staff ? ` • ${escapeHTML(h.staff)}` : '';
+    return `<div class="order-history-item">
+      <span class="order-history-time">${escapeHTML(formatHistoryTime(h.time))}</span>
+      <span class="order-history-title">${escapeHTML(h.title || h.type || 'Order')}</span>${staff}
+      ${lines ? `<div class="order-history-lines">${lines}</div>` : ''}
+    </div>`;
+  }).join('');
+}
+
+function toggleOrderHistory(){
+  const box = document.getElementById('orderHistoryBox');
+  if(!box) return;
+  box.classList.toggle('open');
+  renderOrderHistoryPanel();
+}
+
 function saveActiveTableOrder(){
   if(saleMode !== 'dinein' || !currentTableId) return;
   loadTableOrders();
   if(cart && cart.length){
+    const oldOrder = tableOrders[currentTableId] || {};
     tableOrders[currentTableId] = {
+      ...oldOrder,
       tableId: currentTableId,
       tableName: getCurrentServiceLabel(),
       items: cart.map(x => ({...x})),
       updatedAt: now(),
-      staff: current?.name || ''
+      staff: current?.name || oldOrder.staff || '',
+      history: Array.isArray(oldOrder.history) ? oldOrder.history : []
     };
   }else{
     delete tableOrders[currentTableId];
@@ -10899,6 +11037,7 @@ function saveActiveTableOrder(){
   saveTableOrders();
   renderTableMap();
   updateCurrentOrderStrip();
+  renderOrderHistoryPanel();
 }
 
 function getCartItemQty(){
@@ -10988,6 +11127,7 @@ function selectCafeTable(tableId){
   renderCart();
   renderTableMap();
   updateCurrentOrderStrip();
+  renderOrderHistoryPanel();
   focusPosSearch();
 }
 
@@ -11050,12 +11190,21 @@ function moveCurrentTableOrder(){
 
   const itemsToMove = currentOrder && Array.isArray(currentOrder.items) ? currentOrder.items.map(x => ({...x})) : cart.map(x => ({...x}));
 
+  const moveHistory = Array.isArray(currentOrder?.history) ? currentOrder.history : [];
+  moveHistory.push({
+    time: now(),
+    staff: current?.name || '',
+    type: 'move',
+    title: `Chuyển từ ${fromTable ? fromTable.name : 'bàn cũ'} sang ${targetTable.name}`,
+    items: []
+  });
   tableOrders[targetTable.id] = {
     tableId: targetTable.id,
     tableName: targetTable.name,
     items: itemsToMove,
     updatedAt: now(),
-    staff: current?.name || ''
+    staff: current?.name || '',
+    history: moveHistory
   };
   delete tableOrders[currentTableId];
   saveTableOrders();
@@ -11156,13 +11305,29 @@ function mergeTableIntoCurrent(){
   if(!ok) return;
 
   const mergedItems = mergeCartItems(currentOrder.items, sourceOrder.items);
+  const mergeHistory = Array.isArray(currentOrder.history) ? [...currentOrder.history] : [];
+  mergeHistory.push({
+    time: now(),
+    staff: current?.name || '',
+    type: 'merge',
+    title: `Gộp ${sourceTable.name} vào ${fromTable ? fromTable.name : currentTableId}`,
+    items: normalizeHistoryItems(sourceOrder.items),
+    fromTable: sourceTable.name
+  });
+  if(Array.isArray(sourceOrder.history) && sourceOrder.history.length){
+    sourceOrder.history.forEach(h => mergeHistory.push({
+      ...h,
+      title: `[${sourceTable.name}] ${h.title || h.type || 'Lịch sử trước khi gộp'}`
+    }));
+  }
   tableOrders[currentTableId] = {
     ...currentOrder,
     tableId: currentTableId,
     tableName: fromTable ? fromTable.name : currentTableId,
     items: mergedItems,
     updatedAt: now(),
-    staff: current?.name || currentOrder.staff || ''
+    staff: current?.name || currentOrder.staff || '',
+    history: mergeHistory
   };
   delete tableOrders[sourceTable.id];
   saveTableOrders();
@@ -11318,6 +11483,11 @@ function ensureOpenShift(clearCartWhenFail = false){
     });
   }
 
+  if(saleMode === 'dinein' && currentTableId){
+    const t = CAFE_TABLES.find(x => x.id === currentTableId);
+    addTableOrderHistory('add', `Gọi thêm tại ${t ? t.name : currentTableId}`, [{name:p.name, qty, price:p.sellPrice, total:qty * p.sellPrice}]);
+  }
+
   renderCart();
   try{ beepScanner(true); }catch(e){}
   return true;
@@ -11384,6 +11554,7 @@ function renderCart(){
   saveActiveTableOrder();
   updateCurrentOrderStrip();
   updateAddToCartButton();
+  renderOrderHistoryPanel();
 }
 
 function getCartTotal(){
@@ -11726,6 +11897,7 @@ function checkout(){
     serviceLabel,
     tableId: currentTableId || '',
     deliveryInfo,
+    orderHistory: (serviceMode === 'dinein' && currentTableId && tableOrders[currentTableId] && Array.isArray(tableOrders[currentTableId].history)) ? tableOrders[currentTableId].history : [],
     items: [...cart],
     reprintCount: 0,
     reprintLogs: []
