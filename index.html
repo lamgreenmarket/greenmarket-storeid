@@ -598,6 +598,90 @@ tr:nth-child(even) td{
 }
 
 
+
+/* =========================================================
+   TIỆM CỦA THÚY V2.7 - TÁCH HÓA ĐƠN
+   ========================================================= */
+.table-action-row .btn-split-bill{
+  background:linear-gradient(135deg,#8b5cf6,#059669)!important;
+  color:#fff!important;
+}
+.split-bill-modal{
+  position:fixed;
+  inset:0;
+  background:rgba(15,23,42,.48);
+  z-index:50000;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:18px;
+}
+.split-bill-modal.hidden{display:none!important;}
+.split-bill-card{
+  width:min(760px,100%);
+  max-height:92vh;
+  overflow:auto;
+  background:#fff;
+  border-radius:26px;
+  padding:22px;
+  box-shadow:0 28px 80px rgba(15,23,42,.30);
+  border:1px solid rgba(14,165,233,.18);
+}
+.split-bill-head{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  align-items:flex-start;
+  margin-bottom:14px;
+}
+.split-bill-head h3{margin:0;color:#064e3b;font-size:22px;}
+.split-bill-head p{margin:5px 0 0;color:#64748b;font-weight:700;}
+.split-bill-list{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.split-bill-row{
+  display:grid;
+  grid-template-columns:34px 1fr 92px 120px;
+  gap:10px;
+  align-items:center;
+  border:1px solid #dbeafe;
+  background:linear-gradient(135deg,#ffffff,#f8fffb);
+  border-radius:18px;
+  padding:10px;
+}
+.split-bill-row b{color:#064e3b;}
+.split-bill-row small{display:block;color:#64748b;font-weight:800;margin-top:3px;}
+.split-bill-row input[type="checkbox"]{width:22px;height:22px;}
+.split-bill-row input[type="number"]{height:40px!important;padding:8px 10px!important;border-radius:12px!important;}
+.split-bill-money{text-align:right;font-weight:900;color:#059669;}
+.split-bill-summary{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+  margin:14px 0;
+}
+.split-bill-summary div{
+  border:1px solid #bbf7d0;
+  border-radius:18px;
+  padding:12px;
+  background:#f0fdf4;
+}
+.split-bill-summary span{display:block;color:#64748b;font-size:13px;font-weight:800;margin-bottom:4px;}
+.split-bill-summary b{font-size:22px;color:#059669;}
+.split-bill-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;}
+.order-history-modal-item.type-split{border-left-color:#8b5cf6;background:#faf5ff;}
+@media(max-width:768px){
+  .split-bill-card{padding:14px;border-radius:22px;}
+  .split-bill-head{flex-direction:column;}
+  .split-bill-row{grid-template-columns:32px 1fr;}
+  .split-bill-row input[type="number"],.split-bill-money{grid-column:2; text-align:left;}
+  .split-bill-summary{grid-template-columns:1fr;}
+  .split-bill-actions{display:grid;grid-template-columns:1fr;}
+  .split-bill-actions button{width:100%!important;}
+}
+
 /* =========================================================
    TIỆM CỦA THÚY V2 - THÔNG TIN GIAO HÀNG
    ========================================================= */
@@ -6836,6 +6920,7 @@ body:has(#loginPage:not(.hidden)) .menu{
         <div class="table-action-row">
           <button type="button" class="btn-move-table" onclick="moveCurrentTableOrder()">🔄 Chuyển bàn</button>
           <button type="button" class="btn-merge-table" onclick="mergeTableIntoCurrent()">🔗 Gộp bàn</button>
+          <button type="button" class="btn-split-bill" onclick="openSplitBillModal()">🧾 Tách hóa đơn</button>
           <button type="button" class="btn-order-history" onclick="openOrderHistoryModal()">📜 Lịch sử Order</button>
         </div>
       </div>
@@ -6863,7 +6948,27 @@ body:has(#loginPage:not(.hidden)) .menu{
           <div id="orderHistoryModalList" class="order-history-modal-list"></div>
         </div>
       </div>
-      <div id="deliveryPanel" class="delivery-panel hidden">
+      <div id="splitBillModal" class="split-bill-modal hidden" onclick="closeSplitBillModal(event)">
+        <div class="split-bill-card" onclick="event.stopPropagation()">
+          <div class="split-bill-head">
+            <div>
+              <h3>🧾 Tách hóa đơn</h3>
+              <p id="splitBillSub">Chọn món muốn thanh toán riêng. Phần còn lại vẫn nằm trên bàn.</p>
+            </div>
+            <button type="button" class="btn-gray" onclick="closeSplitBillModal()">Đóng</button>
+          </div>
+          <div id="splitBillList" class="split-bill-list"></div>
+          <div class="split-bill-summary">
+            <div><span>Món chọn tách</span><b id="splitBillQty">0 món</b></div>
+            <div><span>Tổng phần tách</span><b id="splitBillTotal">0 VNĐ</b></div>
+          </div>
+          <div class="split-bill-actions">
+            <button type="button" class="btn-green" onclick="confirmSplitBill()">✅ Thanh toán phần đã chọn</button>
+            <button type="button" class="btn-gray" onclick="closeSplitBillModal()">Hủy</button>
+          </div>
+        </div>
+      </div>
+            <div id="deliveryPanel" class="delivery-panel hidden">
         <h4>🛵 Thông tin giao hàng</h4>
         <div class="delivery-grid">
           <div>
@@ -11233,13 +11338,14 @@ function getOrderHistoryTypeLabel(type){
   if(type === 'source') return {icon:'📌', label:'Lịch sử nguồn', cls:'source'};
   if(type === 'move') return {icon:'↔️', label:'Chuyển bàn', cls:'move'};
   if(type === 'payment') return {icon:'💳', label:'Thanh toán', cls:'payment'};
+  if(type === 'split') return {icon:'🧾', label:'Tách hóa đơn', cls:'split'};
   if(type === 'cancel') return {icon:'🔴', label:'Hủy món', cls:'cancel'};
   return {icon:'🧾', label:'Order', cls:'order'};
 }
 
 function getOrderHistoryStats(history){
   const arr = Array.isArray(history) ? history : [];
-  const counts = {open:0, first:0, add:0, merge:0, move:0, payment:0, cancel:0};
+  const counts = {open:0, first:0, add:0, merge:0, move:0, split:0, payment:0, cancel:0};
   arr.forEach(h => {
     const t = String(h.type || '').toLowerCase();
     if(counts[t] !== undefined) counts[t]++;
@@ -11329,6 +11435,7 @@ function openOrderHistoryModal(){
     <div><span>Gọi thêm</span>${stats.add} lần</div>
     <div><span>Gộp bàn</span>${stats.merge} lần</div>
     <div><span>Chuyển bàn</span>${stats.move} lần</div>
+    <div><span>Tách hóa đơn</span>${stats.split || 0} lần</div>
   `;
   if(list) list.innerHTML = buildOrderHistoryHtml(history);
   if(modal) modal.classList.remove('hidden');
@@ -11689,6 +11796,235 @@ function mergeTableIntoCurrent(){
   addLog('Gộp bàn', `Gộp ${sourceTable.name} vào ${fromTable ? fromTable.name : currentTableId}`);
   save();
   alert(`Đã gộp ${sourceTable.name} vào ${fromTable ? fromTable.name : currentTableId}.`);
+  focusPosSearch();
+}
+
+
+function openSplitBillModal(){
+  if(saleMode !== 'dinein' || !currentTableId){
+    alert('Chọn bàn đang phục vụ trước khi tách hóa đơn.');
+    return;
+  }
+  saveActiveTableOrder();
+  if(!cart || !cart.length){
+    alert('Bàn hiện tại chưa có món để tách hóa đơn.');
+    return;
+  }
+  const tableName = getCurrentServiceLabel();
+  const sub = document.getElementById('splitBillSub');
+  if(sub) sub.textContent = `Đang tách hóa đơn cho ${tableName}. Chọn số lượng cần thanh toán riêng.`;
+  const list = document.getElementById('splitBillList');
+  if(list){
+    list.innerHTML = cart.map((c,i)=>`
+      <div class="split-bill-row">
+        <input type="checkbox" id="splitCheck${i}" data-index="${i}" onchange="updateSplitBillSummary()">
+        <div>
+          <b>${escapeHTML(c.name)}</b>
+          <small>Đang có: ${Number(c.qty || 0)} × ${money(Number(c.price || 0))}</small>
+        </div>
+        <input type="number" id="splitQty${i}" min="1" max="${Number(c.qty || 0)}" value="${Number(c.qty || 0)}" oninput="updateSplitBillSummary()">
+        <div class="split-bill-money" id="splitLineTotal${i}">0 VNĐ</div>
+      </div>
+    `).join('');
+  }
+  updateSplitBillSummary();
+  document.getElementById('splitBillModal')?.classList.remove('hidden');
+}
+
+function closeSplitBillModal(ev){
+  if(ev && ev.target && ev.currentTarget && ev.target !== ev.currentTarget) return;
+  document.getElementById('splitBillModal')?.classList.add('hidden');
+}
+
+function getSplitBillSelection(){
+  const selected = [];
+  (cart || []).forEach((c,i)=>{
+    const checked = document.getElementById('splitCheck' + i)?.checked;
+    if(!checked) return;
+    const maxQty = Number(c.qty || 0);
+    let qty = Number(document.getElementById('splitQty' + i)?.value || 0);
+    qty = Math.max(0, Math.min(maxQty, qty));
+    if(qty > 0){
+      selected.push({
+        index:i,
+        id:c.id,
+        name:c.name,
+        qty,
+        price:Number(c.price || 0),
+        total:qty * Number(c.price || 0)
+      });
+    }
+  });
+  return selected;
+}
+
+function updateSplitBillSummary(){
+  const selected = getSplitBillSelection();
+  const selectedByIndex = new Map(selected.map(x => [x.index, x]));
+  (cart || []).forEach((c,i)=>{
+    const line = selectedByIndex.get(i);
+    const el = document.getElementById('splitLineTotal' + i);
+    if(el) el.textContent = money(line ? line.total : 0);
+  });
+  const qty = selected.reduce((s,x)=>s+Number(x.qty||0),0);
+  const total = selected.reduce((s,x)=>s+Number(x.total||0),0);
+  const qtyEl = document.getElementById('splitBillQty');
+  const totalEl = document.getElementById('splitBillTotal');
+  if(qtyEl) qtyEl.textContent = qty + ' món';
+  if(totalEl) totalEl.textContent = money(total);
+}
+
+function buildRemainingCartAfterSplit(selected){
+  const byIndex = new Map(selected.map(x => [x.index, Number(x.qty || 0)]));
+  const remaining = [];
+  (cart || []).forEach((c,i)=>{
+    const splitQty = byIndex.get(i) || 0;
+    const leftQty = Number(c.qty || 0) - splitQty;
+    if(leftQty > 0){
+      remaining.push({...c, qty:leftQty, total:leftQty * Number(c.price || 0)});
+    }
+  });
+  return remaining;
+}
+
+function printSplitBillReceipt(items, total, tableName, paymentText){
+  const storeInfo = getStoreReceiptInfo();
+  const printedAt = splitReceiptDateTime(now());
+  const staffName = escapeHTML(String(current?.name || 'Admin'));
+  const itemHtml = (items || []).map(c => `
+    <div class="receipt-item">• ${escapeHTML(c.name)}:</div>
+    <div class="receipt-money">${Number(c.qty)} x ${money(c.price)} = ${money(c.total)}</div>
+  `).join('');
+  receiptPrint.classList.remove('hidden');
+  receiptPrint.classList.add('receipt-sale');
+  receiptPrint.innerHTML = `
+    ${buildReceiptBrandBlock(storeInfo)}
+    <div class="receipt-reprint-stamp">HÓA ĐƠN TÁCH</div>
+    <div class="receipt-line"></div>
+    <div>• Ngày: ${escapeHTML(printedAt.date)}</div>
+    <div>• Giờ: ${escapeHTML(printedAt.time)}</div>
+    <div>• Nhân viên: ${staffName}</div>
+    <div>• Phục vụ: ${escapeHTML(tableName)}</div>
+    <div>• Thanh toán: ${escapeHTML(paymentText)}</div>
+    <div class="receipt-line"></div>
+    ${itemHtml}
+    <div class="receipt-line"></div>
+    <div class="receipt-total"><span>TỔNG:</span><span>${money(total)}</span></div>
+    ${buildReceiptQrBlock()}
+    <div style="text-align:center; margin-top:6px; font-size:14px; font-style:italic; font-weight:500;">
+      ${escapeHTML(storeInfo.receiptFooter).replace(/\n/g,'<br>')}
+    </div>
+    <div class="receipt-spacer"></div>
+  `;
+  setTimeout(() => gmPrint(), 250);
+  setTimeout(() => {
+    receiptPrint.classList.add('hidden');
+    receiptPrint.classList.remove('receipt-sale');
+    receiptPrint.innerHTML = '';
+  }, 700);
+}
+
+function confirmSplitBill(){
+  if(saleMode !== 'dinein' || !currentTableId){
+    alert('Chọn bàn đang phục vụ trước khi tách hóa đơn.');
+    return;
+  }
+  if(!ensureOpenShift(false)) return;
+
+  const selected = getSplitBillSelection();
+  if(!selected.length){
+    alert('Chọn ít nhất một món cần tách hóa đơn.');
+    return;
+  }
+  const total = selected.reduce((s,x)=>s+Number(x.total||0),0);
+  const tableName = getCurrentServiceLabel();
+  const remaining = buildRemainingCartAfterSplit(selected);
+
+  for(const c of selected){
+    const p = products.find(x => String(x.id) === String(c.id));
+    if(!p || Number(p.qty || 0) < Number(c.qty || 0)){
+      alert(`Kho không đủ cho món: ${c.name}`);
+      return;
+    }
+  }
+
+  const ok = confirm(`Xác nhận tách và thanh toán riêng ${selected.reduce((s,x)=>s+Number(x.qty||0),0)} món từ ${tableName}?\n\nTổng phần tách: ${money(total)}\n\nPhần còn lại vẫn giữ trên bàn.`);
+  if(!ok) return;
+
+  const paymentText = getPaymentText();
+  selected.forEach(c => {
+    const p = products.find(x => String(x.id) === String(c.id));
+    if(p) p.qty = Number(p.qty || 0) - Number(c.qty || 0);
+  });
+
+  addTableOrderHistory('split', `Tách hóa đơn từ ${tableName}`, selected, {total, paymentMethod: paymentText});
+  loadTableOrders();
+  const orderHistorySnapshot = (tableOrders[currentTableId] && Array.isArray(tableOrders[currentTableId].history))
+    ? tableOrders[currentTableId].history.map(h => ({...h, items: normalizeHistoryItems(h.items)}))
+    : [];
+
+  const splitCode = makeBillCode();
+  bills.push({
+    code: splitCode,
+    time: now(),
+    staff: current.name,
+    total,
+    itemTotal: total,
+    deliveryFee: 0,
+    paymentMethod: paymentText,
+    serviceMode: 'dinein_split',
+    serviceLabel: `Tách hóa đơn - ${tableName}`,
+    tableId: currentTableId || '',
+    splitFromTable: tableName,
+    splitBill: true,
+    orderHistory: orderHistorySnapshot,
+    items: selected.map(x => ({id:x.id, name:x.name, qty:x.qty, price:x.price, total:x.total})),
+    reprintCount: 0,
+    reprintLogs: []
+  });
+
+  moneyList.push({
+    time: now(),
+    type: 'Thu tách hóa đơn',
+    amount: total,
+    staff: current.name,
+    paymentMethod: paymentText
+  });
+
+  cart = remaining;
+  loadTableOrders();
+  if(cart.length){
+    const oldOrder = tableOrders[currentTableId] || {};
+    tableOrders[currentTableId] = {
+      ...oldOrder,
+      tableId: currentTableId,
+      tableName,
+      items: cart.map(x => ({...x})),
+      updatedAt: now(),
+      staff: current?.name || oldOrder.staff || '',
+      history: Array.isArray(oldOrder.history) ? oldOrder.history : orderHistorySnapshot
+    };
+  }else{
+    delete tableOrders[currentTableId];
+  }
+  saveTableOrders();
+
+  addLog('Tách hóa đơn', `${tableName} | ${selected.length} dòng, ${selected.reduce((s,x)=>s+Number(x.qty||0),0)} món | ${money(total)}`);
+  save();
+  addToShift(total);
+  printSplitBillReceipt(selected, total, tableName, paymentText);
+  closeSplitBillModal();
+
+  if(!cart.length){
+    currentTableId = null;
+    setSaleMode('takeaway');
+  }else{
+    renderCart();
+    renderTableMap();
+    updateCurrentOrderStrip();
+  }
+  renderAll();
+  alert(`Đã tách hóa đơn ${splitCode}.\nSố tiền: ${money(total)}.`);
   focusPosSearch();
 }
 
