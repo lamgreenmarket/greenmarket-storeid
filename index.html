@@ -5626,7 +5626,7 @@ body:has(#loginPage:not(.hidden)) .menu{
 <style id="tiem-thuy-4q5a-employees-polish">
 /* =========================================================
    4Q.5A - POLISH TRANG QUẢN LÝ NHÂN VIÊN
-   - Xóa món -> Xóa nhân viên
+   - Nhân viên: giữ đúng nút Xóa nhân viên, không vá chữ sau render
    - Mật khẩu Firebase Auth -> Mật khẩu đăng nhập
    - Hàng input thoáng hơn
    - Bảng nhân viên dễ đọc hơn
@@ -21492,46 +21492,6 @@ setSyncStatus("ℹ️ Đăng nhập để đồng bộ Firebase", true);
 </script>
 
 
-<script id="tiem-thuy-4q5a-employees-text-fix">
-(function(){
-  function fixEmployeePageText(){
-    // Sửa toàn bộ text node/nút "Xóa món" thành "Xóa nhân viên"
-    document.querySelectorAll('button').forEach(function(btn){
-      var t = (btn.textContent || '').trim();
-      if(t === 'Xóa món' || t === '🗑 Xóa món' || t.includes('Xóa món')){
-        btn.textContent = t.replace('Xóa món', 'Xóa nhân viên');
-        btn.title = 'Xóa nhân viên';
-      }
-      if(t === 'Thêm nhân viên'){
-        btn.textContent = '➕ Thêm nhân viên';
-      }
-    });
-
-    // Placeholder thân thiện hơn
-    document.querySelectorAll('input').forEach(function(inp){
-      var ph = inp.getAttribute('placeholder') || '';
-      if(ph === 'Tên nhân viên') inp.setAttribute('placeholder','Nhập tên nhân viên');
-      if(ph === 'Tên đăng nhập') inp.setAttribute('placeholder','Nhập tài khoản đăng nhập');
-      if(ph.includes('Firebase Auth')) inp.setAttribute('placeholder','Mật khẩu đăng nhập');
-    });
-
-    // Header bảng: Tên -> Tên nhân viên
-    document.querySelectorAll('th').forEach(function(th){
-      if((th.textContent || '').trim() === 'Tên') th.textContent = 'Tên nhân viên';
-    });
-  }
-
-  document.addEventListener('DOMContentLoaded', function(){
-    setTimeout(fixEmployeePageText, 300);
-    setTimeout(fixEmployeePageText, 1000);
-  });
-
-  // Khi chuyển tab/trang trong app thì sửa lại text nếu module render lại
-  document.addEventListener('click', function(){
-    setTimeout(fixEmployeePageText, 250);
-  });
-})();
-</script>
 
 
 <script id="tiem-thuy-4q6-clean-old-employees">
@@ -21610,32 +21570,6 @@ setSyncStatus("ℹ️ Đăng nhập để đồng bộ Firebase", true);
 </script>
 
 
-<script id="tiem-thuy-4q7o-fix-stock-delete-label-only">
-(function(){
-  function fixStockDeleteLabel(){
-    try{
-      const stock = document.getElementById('stock');
-      if(!stock) return;
-      stock.querySelectorAll('button').forEach(function(btn){
-        const onclick = btn.getAttribute('onclick') || '';
-        if(onclick.includes('delProduct(')){
-          btn.textContent = 'Xóa món';
-        }
-      });
-    }catch(e){}
-  }
-
-  document.addEventListener('DOMContentLoaded', function(){
-    fixStockDeleteLabel();
-    setTimeout(fixStockDeleteLabel, 300);
-    setTimeout(fixStockDeleteLabel, 1000);
-  });
-  document.addEventListener('click', function(){
-    setTimeout(fixStockDeleteLabel, 80);
-  });
-  setInterval(fixStockDeleteLabel, 700);
-})();
-</script>
 
 
 
