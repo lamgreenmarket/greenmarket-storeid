@@ -3105,6 +3105,17 @@ body > .print-actions{display:none!important;}
   }
 }
 
+
+/* FIX V2.5B: Nhật ký gộp bàn rõ nguồn bàn */
+.order-history-merge{
+  border-left:5px solid #f59e0b!important;
+  background:#fff7ed!important;
+}
+.order-history-source{
+  border-left:5px solid #0ea5e9!important;
+  background:#eff6ff!important;
+}
+
 </style>
 
 <style id="greenmarket-pos-logo-final-v2">
@@ -10999,12 +11010,19 @@ function renderOrderHistoryPanel(){
     list.innerHTML = '<div class="order-history-item muted">Chưa có lịch sử gọi món cho bàn này.</div>';
     return;
   }
-  list.innerHTML = history.map(h => {
+  const viewHistory = [...history].reverse();
+  list.innerHTML = viewHistory.map(h => {
     const lines = normalizeHistoryItems(h.items).map(it => `+ ${Number(it.qty)} ${escapeHTML(it.name)}${it.price ? ' • ' + money(it.total || it.qty * it.price) : ''}`).join('<br>');
     const staff = h.staff ? ` • ${escapeHTML(h.staff)}` : '';
-    return `<div class="order-history-item">
+    const type = String(h.type || '').toLowerCase();
+    let icon = '🧾';
+    if(type === 'merge') icon = '🔗';
+    if(type === 'source') icon = '📌';
+    if(type === 'move') icon = '↔️';
+    if(type === 'add') icon = '➕';
+    return `<div class="order-history-item ${type ? 'order-history-' + escapeHTML(type) : ''}">
       <span class="order-history-time">${escapeHTML(formatHistoryTime(h.time))}</span>
-      <span class="order-history-title">${escapeHTML(h.title || h.type || 'Order')}</span>${staff}
+      <span class="order-history-title">${icon} ${escapeHTML(h.title || h.type || 'Order')}</span>${staff}
       ${lines ? `<div class="order-history-lines">${lines}</div>` : ''}
     </div>`;
   }).join('');
@@ -11306,18 +11324,26 @@ function mergeTableIntoCurrent(){
 
   const mergedItems = mergeCartItems(currentOrder.items, sourceOrder.items);
   const mergeHistory = Array.isArray(currentOrder.history) ? [...currentOrder.history] : [];
+  const mergeTime = now();
+
+  // Nhật ký gộp bàn phải ghi rõ nguồn bàn để khi khách thắc mắc có thể đối chiếu.
+  // Không biến món từ bàn khác thành "gọi thêm tại bàn hiện tại".
   mergeHistory.push({
-    time: now(),
+    time: mergeTime,
     staff: current?.name || '',
     type: 'merge',
-    title: `Gộp ${sourceTable.name} vào ${fromTable ? fromTable.name : currentTableId}`,
+    title: `Gộp từ ${sourceTable.name} vào ${fromTable ? fromTable.name : currentTableId}`,
     items: normalizeHistoryItems(sourceOrder.items),
-    fromTable: sourceTable.name
+    fromTable: sourceTable.name,
+    toTable: fromTable ? fromTable.name : currentTableId
   });
+
   if(Array.isArray(sourceOrder.history) && sourceOrder.history.length){
     sourceOrder.history.forEach(h => mergeHistory.push({
       ...h,
-      title: `[${sourceTable.name}] ${h.title || h.type || 'Lịch sử trước khi gộp'}`
+      type: 'source',
+      sourceTable: sourceTable.name,
+      title: `Lịch sử nguồn ${sourceTable.name}: ${h.title || h.type || 'Order trước khi gộp'}`
     }));
   }
   tableOrders[currentTableId] = {
