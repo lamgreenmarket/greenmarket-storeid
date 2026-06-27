@@ -565,6 +565,23 @@ tr:nth-child(even) td{
   gap:10px;
   align-items:end;
 }
+.delivery-grid-compact{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:10px;
+  align-items:end;
+  margin-top:8px;
+}
+.delivery-fee-hint{
+  margin-top:8px;
+  padding:10px 12px;
+  border-radius:14px;
+  background:#f0fdf4;
+  border:1px solid #bbf7d0;
+  color:#047857;
+  font-weight:900;
+  line-height:1.45;
+}
 .delivery-grid-full{
   grid-column:1/-1;
 }
@@ -583,7 +600,7 @@ tr:nth-child(even) td{
   font-family:Arial,sans-serif;
 }
 @media(max-width:900px){
-  .delivery-grid{grid-template-columns:1fr!important;}
+  .delivery-grid,.delivery-grid-compact{grid-template-columns:1fr!important;}
 }
 
 /* =========================================================
@@ -6615,9 +6632,27 @@ body:has(#loginPage:not(.hidden)) .menu{
               <option>Grab</option>
               <option>ShopeeFood</option>
               <option>BeFood</option>
+              <option>Ahamove</option>
               <option>Khách tự đặt ship</option>
+              <option>Khác</option>
             </select>
           </div>
+        </div>
+        <div class="delivery-grid-compact">
+          <div>
+            <label>Phí giao hàng</label>
+            <input id="deliveryFee" type="number" min="0" value="0" placeholder="VD: 20000" oninput="updatePaymentBox(); updateCurrentOrderStrip();">
+          </div>
+          <div>
+            <label>Thu hộ / COD</label>
+            <select id="deliveryCOD" onchange="updatePaymentBox(); updateCurrentOrderStrip();">
+              <option value="yes">Có - thu tiền khi giao</option>
+              <option value="no">Không - khách đã chuyển khoản</option>
+            </select>
+          </div>
+          <div class="delivery-fee-hint" id="deliveryFeeHint">Tiền món + phí giao sẽ cộng vào tổng thanh toán.</div>
+        </div>
+        <div class="delivery-grid">
           <div class="delivery-grid-full">
             <label>Ghi chú giao hàng</label>
             <textarea id="deliveryNote" placeholder="VD: ít đá, giao trước 8h, gọi khách trước khi tới..."></textarea>
@@ -10744,13 +10779,26 @@ function saveTableOrders(){
 }
 
 function getDeliveryInfo(){
+  const fee = Math.max(0, Number(document.getElementById('deliveryFee')?.value || 0));
+  const cod = String(document.getElementById('deliveryCOD')?.value || 'yes');
   return {
     customer: cleanText(document.getElementById('deliveryCustomer')?.value || ''),
     phone: cleanText(document.getElementById('deliveryPhone')?.value || ''),
     address: cleanText(document.getElementById('deliveryAddress')?.value || ''),
     partner: cleanText(document.getElementById('deliveryPartner')?.value || 'Nhân viên quán'),
+    fee,
+    cod,
+    codText: cod === 'no' ? 'Không - khách đã chuyển khoản' : 'Có - thu tiền khi giao',
     note: cleanText(document.getElementById('deliveryNote')?.value || '')
   };
+}
+
+function getDeliveryFee(){
+  return saleMode === 'delivery' ? Math.max(0, Number(document.getElementById('deliveryFee')?.value || 0)) : 0;
+}
+
+function getPayableTotal(){
+  return getCartTotal() + getDeliveryFee();
 }
 
 function getSavedDeliveryInfoHtml(info){
@@ -10760,18 +10808,23 @@ function getSavedDeliveryInfoHtml(info){
   if(info.phone) rows.push('SĐT: ' + escapeHTML(info.phone));
   if(info.address) rows.push('Địa chỉ: ' + escapeHTML(info.address));
   if(info.partner) rows.push('Đơn vị giao: ' + escapeHTML(info.partner));
+  if(Number(info.fee || 0) > 0) rows.push('Phí giao: ' + money(Number(info.fee || 0)));
+  if(info.codText || info.cod) rows.push('Thu hộ/COD: ' + escapeHTML(info.codText || (info.cod === 'no' ? 'Không - khách đã chuyển khoản' : 'Có - thu tiền khi giao')));
   if(info.note) rows.push('Ghi chú: ' + escapeHTML(info.note));
   return rows.length ? rows.join('<br>') : '';
 }
 
 function clearDeliveryInfo(){
-  ['deliveryCustomer','deliveryPhone','deliveryAddress','deliveryNote'].forEach(id => {
+  ['deliveryCustomer','deliveryPhone','deliveryAddress','deliveryNote','deliveryFee'].forEach(id => {
     const el = document.getElementById(id);
-    if(el) el.value = '';
+    if(el) el.value = id === 'deliveryFee' ? '0' : '';
   });
   const partner = document.getElementById('deliveryPartner');
   if(partner) partner.value = 'Nhân viên quán';
+  const cod = document.getElementById('deliveryCOD');
+  if(cod) cod.value = 'yes';
 }
+
 
 function validateDeliveryInfo(){
   if(saleMode !== 'delivery') return true;
@@ -10816,7 +10869,8 @@ function saveActiveTableOrder(){
 function updateCurrentOrderStrip(){
   const el = document.getElementById('currentOrderStrip');
   if(!el) return;
-  const total = typeof getCartTotal === 'function' ? getCartTotal() : 0;
+  const itemTotal = typeof getCartTotal === 'function' ? getCartTotal() : 0;
+  const total = typeof getPayableTotal === 'function' ? getPayableTotal() : itemTotal;
   if(saleMode === 'dinein'){
     el.innerHTML = currentTableId
       ? `🍽️ Đang phục vụ <b>${escapeHTML(getCurrentServiceLabel())}</b> • ${cart.length} dòng món • ${money(total)}`
@@ -11271,9 +11325,7 @@ function renderCart(){
   `).join('');
 
   if(typeof cartTotal !== 'undefined'){
-    cartTotal.textContent = money(
-      cart.reduce((s, c) => s + c.total, 0)
-    );
+    cartTotal.textContent = money(getPayableTotal());
   }
 
   if(document.getElementById('posItemCount')){
@@ -11335,12 +11387,18 @@ function getPaymentText(){
 }
 
 function updatePaymentBox(){
-  const total = getCartTotal();
+  const itemTotal = getCartTotal();
+  const deliveryFee = getDeliveryFee();
+  const total = itemTotal + deliveryFee;
   const cash = Number(document.getElementById('customerCash')?.value || 0);
   const change = cash - total;
 
   if(document.getElementById('posGrandTotal')) posGrandTotal.textContent = money(total);
   if(document.getElementById('posPayTotal')) posPayTotal.textContent = money(total);
+  const hint = document.getElementById('deliveryFeeHint');
+  if(hint){
+    hint.innerHTML = 'Tiền món: <b>' + money(itemTotal) + '</b> · Phí giao: <b>' + money(deliveryFee) + '</b> · Tổng: <b>' + money(total) + '</b>';
+  }
 
   if(paymentMethod === 'cash'){
     if(document.getElementById('posCashText')) posCashText.textContent = money(cash);
@@ -11580,7 +11638,10 @@ function checkout(){
     }
   }
 
-  const total = cart.reduce((s, c) => s + c.total, 0);
+  const serviceMode = saleMode;
+  const itemTotal = getCartTotal();
+  const deliveryFee = serviceMode === 'delivery' ? getDeliveryFee() : 0;
+  const total = itemTotal + deliveryFee;
 
   if(paymentMethod === 'cash'){
     const cash = Number(document.getElementById('customerCash')?.value || 0);
@@ -11603,7 +11664,6 @@ function checkout(){
   });
 
   const serviceLabel = getCurrentServiceLabel();
-  const serviceMode = saleMode;
   const deliveryInfo = serviceMode === 'delivery' ? getDeliveryInfo() : null;
 
   bills.push({
@@ -11611,6 +11671,8 @@ function checkout(){
     time: now(),
     staff: current.name,
     total,
+    itemTotal,
+    deliveryFee,
     paymentMethod: getPaymentText(),
     serviceMode,
     serviceLabel,
@@ -11681,6 +11743,8 @@ function printReceipt(total, paymentText = 'Tiền mặt'){
       <div>• SĐT: ${escapeHTML(deliveryInfo.phone)}</div>
       <div>• Địa chỉ: ${escapeHTML(deliveryInfo.address)}</div>
       <div>• Đơn vị giao: ${escapeHTML(deliveryInfo.partner)}</div>
+      <div>• Thu hộ/COD: ${escapeHTML(deliveryInfo.codText || (deliveryInfo.cod === 'no' ? 'Không - khách đã chuyển khoản' : 'Có - thu tiền khi giao'))}</div>
+      ${Number(deliveryInfo.fee || 0) > 0 ? `<div>• Phí giao: ${money(Number(deliveryInfo.fee || 0))}</div>` : ''}
       ${deliveryInfo.note ? `<div>• Ghi chú: ${escapeHTML(deliveryInfo.note)}</div>` : ''}
   ` : '';
   const itemHtml = cart.map(c => `
@@ -11707,6 +11771,8 @@ function printReceipt(total, paymentText = 'Tiền mặt'){
       ${itemHtml}
 
       <div class="receipt-line"></div>
+      ${deliveryInfo ? `<div class="receipt-total"><span>TIỀN MÓN:</span><span>${money(total - Number(deliveryInfo.fee || 0))}</span></div>` : ''}
+      ${deliveryInfo && Number(deliveryInfo.fee || 0) > 0 ? `<div class="receipt-total"><span>PHÍ GIAO:</span><span>${money(Number(deliveryInfo.fee || 0))}</span></div>` : ''}
       <div class="receipt-total">
         <span>TỔNG:</span>
         <span>${money(total)}</span>
@@ -17908,6 +17974,8 @@ if(admin){
     ${b.deliveryInfo?.phone ? `<div>• SĐT: ${escapeHTML(b.deliveryInfo.phone)}</div>` : ''}
     ${b.deliveryInfo?.address ? `<div>• Địa chỉ: ${escapeHTML(b.deliveryInfo.address)}</div>` : ''}
     ${b.deliveryInfo?.partner ? `<div>• Đơn vị giao: ${escapeHTML(b.deliveryInfo.partner)}</div>` : ''}
+    ${b.deliveryInfo ? `<div>• Thu hộ/COD: ${escapeHTML(b.deliveryInfo.codText || (b.deliveryInfo.cod === 'no' ? 'Không - khách đã chuyển khoản' : 'Có - thu tiền khi giao'))}</div>` : ''}
+    ${Number(b.deliveryInfo?.fee || 0) > 0 ? `<div>• Phí giao: ${money(Number(b.deliveryInfo.fee || 0))}</div>` : ''}
     ${b.deliveryInfo?.note ? `<div>• Ghi chú: ${escapeHTML(b.deliveryInfo.note)}</div>` : ''}
     ${(!isCashierUser() && isBillReturned(b)) ? `<div style="text-align:center;font-size:16px;font-weight:900;border:1px solid #000;margin:5px 0;padding:3px">HÓA ĐƠN ĐÃ TRẢ HÀNG</div><div>Mã phiếu trả: ${escapeHTML(b.returnCode || '')}</div>` : ''}
     ${reason ? `<div>• Lý do: ${escapeHTML(reason)}</div>` : ''}
@@ -17916,6 +17984,8 @@ if(admin){
     ${itemHtml}
 
     <div class="receipt-line"></div>
+    ${b.deliveryInfo ? `<div class="receipt-total"><span>TIỀN MÓN:</span><span>${money(Number(b.itemTotal || ((b.total || 0) - Number(b.deliveryFee || b.deliveryInfo?.fee || 0))))}</span></div>` : ''}
+    ${Number(b.deliveryFee || b.deliveryInfo?.fee || 0) > 0 ? `<div class="receipt-total"><span>PHÍ GIAO:</span><span>${money(Number(b.deliveryFee || b.deliveryInfo?.fee || 0))}</span></div>` : ''}
     <div class="receipt-total">
       <span>TỔNG:</span>
       <span>${money((isCashierUser() && isBillReturned(b)) ? getBillOriginalTotal(b) : b.total)}</span>
